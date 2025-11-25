@@ -1,0 +1,98 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: dark;
+  --gradient-start: #050819;
+  --gradient-mid: #111936;
+  --gradient-purple: #4b2ad1;
+  --gradient-magenta: #ff1b9c;
+  --gradient-cyan: #3dd5ff;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: radial-gradient(1200px circle at 20% 20%, rgba(99, 83, 255, 0.18), transparent 50%),
+    radial-gradient(800px circle at 80% 30%, rgba(255, 27, 156, 0.16), transparent 50%),
+    radial-gradient(900px circle at 40% 70%, rgba(61, 213, 255, 0.12), transparent 55%),
+    linear-gradient(130deg, #050819 0%, #0d1026 40%, #111936 70%, #15172f 100%),
+    linear-gradient(160deg, rgba(75, 42, 209, 0.25), rgba(255, 27, 156, 0.1), rgba(61, 213, 255, 0.12));
+  color: #ecf1ff;
+  font-smooth: always;
+  -webkit-font-smoothing: antialiased;
+}
+
+.bg-starfield {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image:
+    radial-gradient(2px 2px at 20% 30%, rgba(255, 255, 255, 0.4), transparent),
+    radial-gradient(2px 2px at 70% 40%, rgba(255, 255, 255, 0.35), transparent),
+    radial-gradient(1.5px 1.5px at 40% 80%, rgba(255, 255, 255, 0.4), transparent),
+    radial-gradient(1px 1px at 80% 70%, rgba(255, 255, 255, 0.4), transparent),
+    radial-gradient(1.5px 1.5px at 10% 70%, rgba(255, 255, 255, 0.35), transparent);
+  background-size: 100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%;
+  filter: drop-shadow(0 0 6px rgba(255, 255, 255, 0.4));
+  opacity: 0.75;
+}
+
+.soft-spot {
+  position: absolute;
+  width: 420px;
+  height: 420px;
+  filter: blur(120px);
+  opacity: 0.35;
+  background: radial-gradient(circle at center, rgba(109, 74, 255, 0.6), transparent 60%);
+}
+
+.glass {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04), 0 20px 60px rgba(0, 0, 0, 0.35);
+  backdrop-filter: blur(8px);
+}
+
+.neon-edge {
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.05), 0 10px 50px rgba(111, 66, 255, 0.35),
+    0 20px 80px rgba(255, 27, 156, 0.22);
+}
+
+.gradient-border {
+  position: relative;
+}
+
+.gradient-border::before {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(120deg, rgba(111, 66, 255, 0.6), rgba(255, 27, 156, 0.35), rgba(61, 213, 255, 0.55));
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+  opacity: 0.9;
+}
+
+@layer utilities {
+  .inner-glow {
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06), inset 0 -6px 30px rgba(0, 0, 0, 0.45);
+  }
+
+  .blurred-beam {
+    background: radial-gradient(circle at 20% 20%, rgba(61, 213, 255, 0.2), transparent 40%),
+      radial-gradient(circle at 80% 40%, rgba(255, 27, 156, 0.2), transparent 50%);
+  }
+
+  .spotlight {
+    background: radial-gradient(circle at center, rgba(255, 255, 255, 0.08), transparent 55%);
+  }
+}
