@@ -10,7 +10,7 @@ const NeonButton = React.forwardRef<HTMLButtonElement, NeonButtonProps>(
     <button
       ref={ref}
       className={cn(
-        "relative inline-flex items-center justify-center overflow-hidden rounded-xxlcard px-6 py-3 text-sm font-semibold tracking-wide uppercase text-white transition-all duration-300",
+        "magnetic relative inline-flex items-center justify-center overflow-hidden rounded-xxlcard px-6 py-3 text-sm font-semibold tracking-wide uppercase text-white transition-all duration-300",
         "bg-gradient-to-r from-plasma via-aurora to-cyanflare shadow-glow",
         "hover:scale-[1.02] hover:shadow-[0_20px_60px_rgba(111,66,255,0.45)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-aurora",
         glow && "animate-pulse-glow",

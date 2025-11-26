@@ -9,7 +9,7 @@ export function GlassCard({ children, className }: GlassCardProps) {
   return (
     <div
       className={cn(
-        "gradient-border relative overflow-hidden rounded-xxlcard border border-white/10 bg-white/5 text-slate-100 shadow-[0_25px_80px_rgba(0,0,0,0.45)] backdrop-blur-md",
+        "magnetic gradient-border relative overflow-hidden rounded-xxlcard border border-white/10 bg-white/5 text-slate-100 shadow-[0_25px_80px_rgba(0,0,0,0.45)] backdrop-blur-md",
         "inner-glow",
         className
       )}
