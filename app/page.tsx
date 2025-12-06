@@ -1,14 +1,48 @@
 'use client';
 
 import { useState } from 'react';
-import { ChevronDown, Brain, ChartBar as BarChart, Cog, Zap, Code, Smartphone, Check, Star, Mail, Phone, MapPin, Search } from 'lucide-react';
+import { Brain, ChartBar as BarChart, Cog, Zap, Code, Smartphone, Check, Star } from 'lucide-react';
 import GrowthGraph from '@/components/GrowthGraph';
 
 export default function Home() {
-  const [activePackage, setActivePackage] = useState(1);
+  const translations = {
+    en: {
+      nav: { solutions: 'Solutions', contact: 'Contact Us', about: 'About Us', pricing: 'Pricing' },
+      badge: { first: 'Predict', second: 'Plan', third: 'Perform perfectly' },
+      heading1: 'Reimagining Business Success',
+      heading2: 'With Scalable AI Solutions',
+      subheading: 'Automate tasks, make data-driven decisions, and grow faster with intelligent technology.',
+      cta: 'Get Started',
+      trust: 'Trusted by businesses of all sizes worldwide.',
+      ytd: 'Year to Date',
+      monthlyProfit: 'Monthly Profit',
+      newClients: 'New Clients',
+      thisMonth: 'This month',
+      september: 'September',
+      performanceScore: 'Performance score',
+    },
+    ar: {
+      nav: { solutions: 'الحلول', contact: 'اتصل بنا', about: 'من نحن', pricing: 'الأسعار' },
+      badge: { first: 'تنبأ', second: 'خطط', third: 'نفّذ بإتقان' },
+      heading1: 'إعادة تصور نجاح الأعمال',
+      heading2: 'بحلول ذكاء اصطناعي قابلة للتوسع',
+      subheading: 'أتمت المهام، واتخذ قرارات مبنية على البيانات، وانمُ أسرع مع التكنولوجيا الذكية.',
+      cta: 'ابدأ الآن',
+      trust: 'موثوق من شركات بكل الأحجام حول العالم.',
+      ytd: 'منذ بداية العام',
+      monthlyProfit: 'الربح الشهري',
+      newClients: 'عملاء جدد',
+      thisMonth: 'هذا الشهر',
+      september: 'سبتمبر',
+      performanceScore: 'درجة الأداء',
+    },
+  } as const;
+
+  const [locale, setLocale] = useState<'en' | 'ar'>('en');
+  const t = translations[locale];
 
   return (
-    <div className="min-h-screen bg-[#0a0e14] text-white relative overflow-hidden">
+    <div className="min-h-screen bg-[#0a0e14] text-white relative overflow-hidden" lang={locale} dir={locale === 'ar' ? 'rtl' : 'ltr'}>
       {/* Animated Starfield Background */}
       <div className="fixed inset-0 z-0">
         <div className="absolute inset-0 bg-[#0a0e14]"></div>
@@ -79,156 +113,119 @@ export default function Home() {
         <div className="max-w-7xl mx-auto flex justify-between items-center">
           <div className="text-2xl font-bold tracking-tight">Trimindes AI</div>
           <div className="hidden lg:flex items-center space-x-8">
-            <button className="flex items-center space-x-1 hover:text-[#00d9ff] transition-colors">
-              <span>Products</span>
-              <ChevronDown className="w-4 h-4" />
-            </button>
-            <button className="flex items-center space-x-1 hover:text-[#00d9ff] transition-colors">
-              <span>Solutions</span>
-              <ChevronDown className="w-4 h-4" />
-            </button>
-            <button className="flex items-center space-x-1 hover:text-[#00d9ff] transition-colors">
-              <span>Resources</span>
-              <ChevronDown className="w-4 h-4" />
-            </button>
-            <button className="flex items-center space-x-1 hover:text-[#00d9ff] transition-colors">
-              <span>Devs</span>
-              <ChevronDown className="w-4 h-4" />
-            </button>
-            <a href="#enterprise" className="hover:text-[#00d9ff] transition-colors">Enterprise</a>
-            <a href="#pricing" className="hover:text-[#00d9ff] transition-colors">Pricing</a>
+            <a href="#services" className="hover:text-[#00d9ff] transition-colors">{t.nav.solutions}</a>
+            <a href="#contact" className="hover:text-[#00d9ff] transition-colors">{t.nav.contact}</a>
+            <a href="#about" className="hover:text-[#00d9ff] transition-colors">{t.nav.about}</a>
+            <a href="#packages" className="hover:text-[#00d9ff] transition-colors">{t.nav.pricing}</a>
           </div>
-          <div className="flex items-center space-x-4">
-            <button className="p-2 hover:text-[#00d9ff] transition-colors">
-              <Search className="w-5 h-5" />
-            </button>
-            <button className="px-5 py-2 border border-[#00d9ff] text-[#00d9ff] rounded-md hover:bg-[#00d9ff]/10 transition-all">
-              Get A Demo
-            </button>
-            <button className="px-5 py-2 border border-white/20 text-white rounded-md hover:bg-white/5 transition-all">
-              Log In
-            </button>
-            <button className="px-5 py-2 bg-white text-[#0a0e14] rounded-md hover:bg-gray-100 transition-all font-medium">
-              Sign Up Free
+          <div className="flex items-center">
+            <button
+              className="px-4 py-2 rounded-md border border-white/15 text-sm hover:border-[#00d9ff] transition-colors"
+              onClick={() => setLocale((prev) => (prev === 'en' ? 'ar' : 'en'))}
+            >
+              {locale === 'en' ? 'العربية' : 'English'}
             </button>
           </div>
         </div>
       </nav>
 
       {/* Hero Section */}
-      <section id="home" className="relative z-10 min-h-screen flex items-center justify-center px-6 pt-20 overflow-hidden">
-        <div className="absolute inset-0 pointer-events-none">
-          {[...Array(8)].map((_, i) => (
-            <div
-              key={`particle-${i}`}
-              className="absolute w-1 h-1 bg-[#00ff88] rounded-full opacity-20"
-              style={{
-                left: `${15 + i * 12}%`,
-                top: `${20 + (i % 3) * 20}%`,
-                animation: `float ${15 + i * 3}s ease-in-out infinite`,
-                animationDelay: `${i * 1.5}s`,
-              }}
-            />
-          ))}
+      <section id="home" className="relative z-10 min-h-screen flex items-center justify-center px-6 pt-16 overflow-hidden">
+        <div className="max-w-6xl mx-auto relative w-full">
+          <div className="flex flex-col items-center text-center gap-5">
+            <span className="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-white/5 border border-[#00d9ff]/30 text-xs uppercase tracking-[0.2em] text-[#00d9ff] shadow-[0_10px_60px_rgba(0,217,255,0.25)]">
+              {t.badge.first}
+              <span className="h-1 w-1 rounded-full bg-[#00d9ff]" />
+              {t.badge.second}
+              <span className="h-1 w-1 rounded-full bg-[#00d9ff]" />
+              {t.badge.third}
+            </span>
 
-          <div
-            className="absolute inset-0 opacity-30"
-            style={{
-              background: 'radial-gradient(ellipse at 30% 40%, rgba(0, 255, 136, 0.03) 0%, transparent 50%)',
-              animation: 'pulse-glow 8s ease-in-out infinite',
-            }}
-          />
-          <div
-            className="absolute inset-0 opacity-30"
-            style={{
-              background: 'radial-gradient(ellipse at 70% 60%, rgba(0, 255, 136, 0.03) 0%, transparent 50%)',
-              animation: 'pulse-glow 8s ease-in-out infinite',
-              animationDelay: '4s',
-            }}
-          />
-        </div>
-
-        <style jsx>{`
-          @keyframes float {
-            0%, 100% { transform: translate(0, 0) scale(1); }
-            25% { transform: translate(20px, -30px) scale(1.2); }
-            50% { transform: translate(-15px, -50px) scale(0.8); }
-            75% { transform: translate(25px, -35px) scale(1.1); }
-          }
-          @keyframes pulse-glow {
-            0%, 100% { opacity: 0.2; transform: scale(1); }
-            50% { opacity: 0.4; transform: scale(1.1); }
-          }
-        `}</style>
-
-        <div className="max-w-7xl mx-auto">
-          <div
-            className="relative rounded-2xl p-8 md:p-16 backdrop-blur-sm bg-[#0a0e14]/40"
-            style={{
-              background: 'linear-gradient(90deg, rgba(0, 102, 255, 0.1) 0%, rgba(0, 217, 255, 0.1) 100%)',
-              border: '1px solid transparent',
-              backgroundClip: 'padding-box',
-              position: 'relative',
-            }}
-          >
-            <div
-              className="absolute inset-0 rounded-2xl"
-              style={{
-                background: 'linear-gradient(90deg, #0066ff 0%, #00e5cc 100%)',
-                WebkitMask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
-                WebkitMaskComposite: 'xor',
-                maskComposite: 'exclude',
-                padding: '1px',
-              }}
-            />
-
-            <div className="relative z-10 text-center mb-12">
-              <h1 className="text-5xl md:text-7xl font-bold mb-8 leading-tight">
-                Unlock voice AI at
-                <br />
-                scale with an API Call
+            <div className="space-y-6 max-w-4xl">
+              <h1 className="text-4xl md:text-6xl font-bold leading-[1.35] py-2">
+                <span className="block whitespace-nowrap">{t.heading1}</span>
+                <span className="block mt-6 whitespace-nowrap">{t.heading2}</span>
               </h1>
-              <p className="text-xl md:text-2xl text-gray-300 mb-8 max-w-4xl mx-auto leading-relaxed">
-                Get conversational intelligence with transcription and understanding on
-                the world's best speech AI platform.
+              <p className="text-lg md:text-xl text-gray-300 leading-relaxed">
+                {t.subheading}
               </p>
             </div>
 
-            <div className="relative z-10 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 max-w-6xl mx-auto">
-              <div className="opacity-0 animate-fade-in" style={{ animationDelay: '0.3s' }}>
-                <GrowthGraph
-                  title="Productivity Growth"
-                  value="$33,928.92"
-                  increase="+127%"
-                  delay={300}
-                />
+            <button className="px-7 py-3 rounded-full bg-gradient-to-r from-[#00d9ff] to-[#6be8ff] text-[#04100a] font-semibold shadow-[0_15px_50px_rgba(0,217,255,0.35)] hover:scale-[1.02] transition-transform">
+              {t.cta}
+            </button>
+
+            <div className="flex items-center gap-1 text-amber-400 mt-1">
+              {[...Array(6)].map((_, i) => (
+                <Star key={i} className="w-5 h-5 fill-amber-400 text-amber-400" />
+              ))}
+            </div>
+            <p className="text-sm text-gray-300">{t.trust}</p>
+          </div>
+
+          <div className="relative mt-10 grid gap-6 lg:grid-cols-[0.8fr_1fr] items-start">
+            <div className="space-y-4">
+              <div className="rounded-2xl border border-white/10 bg-black/40 p-4 shadow-[0_25px_80px_rgba(0,0,0,0.45)]">
+                <div className="text-xs text-gray-400 mb-2">{t.ytd}</div>
+                <div className="text-2xl font-semibold">$192,092</div>
+                <div className="mt-3 flex items-center justify-between text-sm">
+                  <span className="text-gray-400">{t.monthlyProfit}</span>
+                  <span className="text-[#00d9ff] font-semibold">+11%</span>
+                </div>
+                <div className="mt-3 h-1.5 w-full rounded-full bg-white/5">
+                  <div className="h-full w-[78%] rounded-full bg-gradient-to-r from-[#00d9ff] to-[#6be8ff]" />
+                </div>
               </div>
 
-              <div className="opacity-0 animate-fade-in" style={{ animationDelay: '0.5s' }}>
-                <GrowthGraph
-                  title="Revenue Increase"
-                  value="$48,256.14"
-                  increase="+184%"
-                  delay={500}
-                />
+              <div className="rounded-2xl border border-white/10 bg-black/40 p-4 shadow-[0_25px_80px_rgba(0,0,0,0.45)]">
+                <div className="flex items-center justify-between text-xs text-gray-400 mb-3">
+                  <span>{t.newClients}</span>
+                  <span>{t.september}</span>
+                </div>
+                <div className="text-2xl font-semibold text-[#00d9ff]">92</div>
+                <p className="text-sm text-gray-400 mt-1">{t.thisMonth}</p>
+                <div className="mt-3 h-28 rounded-xl bg-gradient-to-b from-white/5 via-white/0 to-white/5 border border-white/5 flex items-end gap-2 px-3 pb-3">
+                  {[55, 38, 72, 44, 68, 92].map((value, index) => (
+                    <div
+                      key={index}
+                      className="flex-1 rounded-full bg-gradient-to-t from-[#00d9ff]/35 to-[#6be8ff]/70 shadow-[0_10px_30px_rgba(0,217,255,0.25)]"
+                      style={{ height: `${Math.max(value, 24)}%` }}
+                    />
+                  ))}
+                </div>
               </div>
+            </div>
 
-              <div className="opacity-0 animate-fade-in" style={{ animationDelay: '0.7s' }}>
-                <GrowthGraph
-                  title="Workflow Speed"
-                  value="$21,442.58"
-                  increase="+95%"
-                  delay={700}
-                />
+            <div className="rounded-2xl border border-white/10 bg-black/40 p-5 shadow-[0_30px_110px_rgba(0,0,0,0.5)]">
+              <div className="flex items-center justify-between text-sm text-gray-300">
+                <span>{t.monthlyProfit}</span>
+                <span className="text-xs px-2 py-1 rounded-full bg-white/5 border border-white/10">{t.september}</span>
               </div>
-
-              <div className="opacity-0 animate-fade-in" style={{ animationDelay: '0.9s' }}>
-                <GrowthGraph
-                  title="Time Saved"
-                  value="$29,873.21"
-                  increase="+156%"
-                  delay={900}
-                />
+              <div className="mt-2 text-2xl font-semibold">$33,828.82</div>
+              <div className="mt-6 h-40 rounded-xl border border-white/10 bg-gradient-to-b from-white/10 to-white/0 relative overflow-hidden">
+                <div className="absolute inset-0" style={{ background: 'radial-gradient(circle at 10% 80%, rgba(0,217,255,0.25), transparent 55%)' }} />
+                <svg viewBox="0 0 200 100" className="absolute inset-0" preserveAspectRatio="none">
+                  <defs>
+                    <linearGradient id="profit-line" x1="0%" y1="0%" x2="100%" y2="0%">
+                      <stop offset="0%" stopColor="#00d9ff" stopOpacity="0.5" />
+                      <stop offset="100%" stopColor="#6be8ff" stopOpacity="0.9" />
+                    </linearGradient>
+                  </defs>
+                  <path
+                    d="M0 70 C 30 40, 50 30, 75 55 S 130 90, 200 42"
+                    fill="none"
+                    stroke="url(#profit-line)"
+                    strokeWidth="3"
+                    strokeLinecap="round"
+                    className="drop-shadow-[0_0_18px_rgba(74,222,128,0.35)]"
+                  />
+                  <circle cx="200" cy="42" r="6" fill="#6be8ff" />
+                  <circle cx="200" cy="42" r="14" fill="#6be8ff" opacity="0.15" />
+                </svg>
+              </div>
+              <div className="mt-4 flex items-center justify-between text-sm text-gray-300">
+                <span>{t.performanceScore}</span>
+                <span className="text-[#00d9ff] font-semibold">+24%</span>
               </div>
             </div>
           </div>
