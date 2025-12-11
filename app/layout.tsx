@@ -1,16 +1,25 @@
-import './globals.css';
-import type { Metadata } from 'next';
-import { Inter } from 'next/font/google';
+import "./globals.css";
+import type { Metadata } from "next";
+import { Inter } from "next/font/google";
+import { I18nProvider } from "@/lib/i18n";
 
 const inter = Inter({
-  subsets: ['latin'],
-  display: 'swap',
-  fallback: ['system-ui', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif'],
+  subsets: ["latin"],
+  display: "swap",
+  fallback: [
+    "system-ui",
+    "-apple-system",
+    "BlinkMacSystemFont",
+    "Segoe UI",
+    "Roboto",
+    "sans-serif",
+  ],
 });
 
 export const metadata: Metadata = {
-  title: 'Trimindes AI - Advanced AI Solutions & Automation',
-  description: 'Transform your business with cutting-edge AI automation, analytics, and custom solutions. From LLM integrations to end-to-end AI development.',
+  title: "Trimindes AI - Advanced AI Solutions & Automation",
+  description:
+    "Transform your business with cutting-edge AI automation, analytics, and custom solutions. From LLM integrations to end-to-end AI development.",
 };
 
 export default function RootLayout({
@@ -20,7 +29,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className="scroll-smooth">
-      <body className={inter.className}>{children}</body>
+      <body className={inter.className}>
+        <I18nProvider>{children}</I18nProvider>
+      </body>
     </html>
   );
 }
