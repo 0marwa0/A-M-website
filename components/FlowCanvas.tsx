@@ -1,449 +1,483 @@
 import React from "react";
 
-const FlowCanvas: React.FC = () => {
-  const center = { x: 550, y: 250 };
+interface FlowCanvasProps {
+  t: (key: string) => any;
+  locale: string;
+}
 
-  const leftConnections = [
+const FlowCanvas: React.FC<FlowCanvasProps> = ({ t, locale }) => {
+  const center = { x: 600, y: 300 };
+
+  // Left side - Application icons with scattered, organic positioning (2 columns)
+  const leftApps = [
+    // First column (closer to edge)
+    { x: 50, y: 60, size: 60, label: "Gmail", color: "#EA4335", icon: "gmail" },
+    { x: 55, y: 180, size: 60, label: "Calendar", color: "#4285F4", icon: "calendar" },
+    { x: 45, y: 280, size: 60, label: "Browser", color: "#4285F4", icon: "chrome" },
+    { x: 50, y: 380, size: 60, label: "Moodle", color: "#F98012", icon: "moodle" },
+    { x: 40, y: 480, size: 60, label: "Slack", color: "#4A154B", icon: "slack" },
+
+    // Second column (further from edge)
+    { x: 140, y: 40, size: 60, label: "Drive", color: "#4285F4", icon: "drive" },
+    { x: 150, y: 130, size: 60, label: "Outlook", color: "#0078D4", icon: "outlook" },
+    { x: 135, y: 220, size: 60, label: "Teams", color: "#6264A7", icon: "teams" },
+    { x: 145, y: 310, size: 60, label: "Zoom", color: "#2D8CFF", icon: "zoom" },
+    { x: 140, y: 400, size: 60, label: "Notion", color: "#000000", icon: "notion" },
+    { x: 150, y: 490, size: 60, label: "Trello", color: "#0079BF", icon: "trello" },
+    { x: 135, y: 560, size: 60, label: "Asana", color: "#F06A6A", icon: "asana" },
+  ];
+
+  // User groups around the center
+  const userGroups = [
+    { x: center.x, y: center.y - 180, label: "Students", color: "#E44CFF", angle: -90 },
+    { x: center.x - 180, y: center.y, label: "Faculty", color: "#5861F2", angle: 180 },
+    { x: center.x + 180, y: center.y, label: "Admin", color: "#4EF0FF", angle: 0 },
+  ];
+
+  // Right side - Notification boxes
+  const notifications = [
     {
-      d: `M180 80 Q 260 40 ${center.x} ${center.y}`,
-      price: "$180",
-      pill: { x: 235, y: 72 },
+      x: 1000,
+      y: 150,
+      title: t("hero.notifications.first.title"),
+      subtitle: t("hero.notifications.first.subtitle"),
+      color: "#E44CFF"
     },
     {
-      d: `M180 200 Q 250 150 ${center.x} ${center.y}`,
-      price: "$90",
-      pill: { x: 215, y: 190 },
+      x: 1000,
+      y: 300,
+      title: t("hero.notifications.second.title"),
+      subtitle: t("hero.notifications.second.subtitle"),
+      color: "#5861F2"
     },
     {
-      d: `M180 320 Q 250 310 ${center.x} ${center.y - 8}`,
-      price: "$250",
-      pill: { x: 215, y: 302 },
-    },
-    {
-      d: `M180 440 Q 270 400 ${center.x} ${center.y - 20}`,
-      price: "$310",
-      pill: { x: 240, y: 404 },
+      x: 1000,
+      y: 450,
+      title: t("hero.notifications.third.title"),
+      subtitle: t("hero.notifications.third.subtitle"),
+      color: "#4EF0FF"
     },
   ];
 
-  const rightConnections = [
-    {
-      d: `M${center.x} ${center.y} Q 720 120 960 80`,
-      price: "$180",
-      color: "url(#purplePath)",
-      pill: { x: 735, y: 130 },
-      stroke: "#7c3aed",
-    },
-    {
-      d: `M${center.x} ${center.y} Q 700 200 960 200`,
-      price: "$90",
-      color: "url(#greenPath)",
-      pill: { x: 715, y: 220 },
-      stroke: "#31c77f",
-    },
-    {
-      d: `M${center.x} ${center.y + 10} Q 700 330 960 360`,
-      price: "$250",
-      color: "url(#orangePath)",
-      pill: { x: 715, y: 330 },
-      stroke: "#f99a3c",
-    },
-    {
-      d: `M${center.x} ${center.y + 20} Q 720 420 960 500`,
-      price: "$310",
-      color: "url(#purplePath)",
-      pill: { x: 735, y: 420 },
-      stroke: "#7c3aed",
-    },
-  ];
+  // Generate connections from apps to center with smooth curves
+  const generateAppConnections = () => {
+    const connections = [];
+    leftApps.forEach((app, idx) => {
+      const startX = app.x + app.size;
+      const startY = app.y + app.size / 2;
+      const endX = center.x - 120;
+      const endY = center.y;
 
-  const leftNodes = [
-    { y: 60, label: "Employee", icon: "briefcase" },
-    { y: 180, label: "Client", icon: "user" },
-    { y: 300, label: "Employer", icon: "case" },
-    { y: 420, label: "Groups", icon: "group" },
-  ];
+      // Create smooth curved path with rounded corners
+      const horizontalDist = 150; // How far to go straight before curving
+      const point1X = startX + horizontalDist;
+      const point1Y = startY;
 
-  const rightNodes = [
-    { y: 50, label: "Docs", color: "url(#purplePath)", icon: "doc" },
-    { y: 170, label: "Analytics", color: "url(#greenPath)", icon: "pie" },
-    { y: 290, label: "Payroll", color: "url(#orangePath)", icon: "dollar" },
-    { y: 410, label: "Collaboration", color: "url(#purplePath)", icon: "chat" },
-  ];
+      // Control points for smooth S-curve
+      const controlX1 = point1X + 50;
+      const controlY1 = startY;
+      const controlX2 = endX - 80;
+      const controlY2 = endY;
+
+      // Path: straight line, then smooth curve to center
+      const path = `M ${startX} ${startY} L ${point1X} ${point1Y} C ${controlX1} ${controlY1}, ${controlX2} ${controlY2}, ${endX} ${endY}`;
+
+      connections.push({
+        id: `app-${idx}`,
+        path: path,
+        color: app.color,
+      });
+    });
+    return connections;
+  };
+
+  // Generate connections from center to user groups
+  const generateUserConnections = () => {
+    const connections = [];
+    userGroups.forEach((group, idx) => {
+      const rad = (group.angle * Math.PI) / 180;
+      const startX = center.x + Math.cos(rad) * 120;
+      const startY = center.y + Math.sin(rad) * 120;
+      const endX = group.x;
+      const endY = group.y;
+
+      connections.push({
+        id: `user-${idx}`,
+        path: `M ${startX} ${startY} L ${endX} ${endY}`,
+        color: group.color,
+      });
+    });
+    return connections;
+  };
+
+  // Generate connections from user groups to notifications
+  const generateNotificationConnections = () => {
+    const connections = [];
+    notifications.forEach((notif, idx) => {
+      const group = userGroups[idx % userGroups.length];
+      const startX = group.x;
+      const startY = group.y;
+      const endX = notif.x - 10;
+      const endY = notif.y;
+
+      const midX1 = startX + (endX - startX) * 0.3;
+      const midY1 = startY + (endY - startY) * 0.4 + (Math.random() - 0.5) * 50;
+      const midX2 = startX + (endX - startX) * 0.7;
+      const midY2 = startY + (endY - startY) * 0.6 + (Math.random() - 0.5) * 50;
+
+      connections.push({
+        id: `notif-${idx}`,
+        path: `M ${startX} ${startY} C ${midX1} ${midY1}, ${midX2} ${midY2}, ${endX} ${endY}`,
+        color: notif.color,
+      });
+    });
+    return connections;
+  };
+
+  const appConnections = generateAppConnections();
+  const userConnections = generateUserConnections();
+  const notifConnections = generateNotificationConnections();
+
+  // Render authentic app icons
+  const renderAppIcon = (app: any) => {
+    switch (app.icon) {
+      case "gmail":
+        return (
+          <g>
+            {/* White background envelope */}
+            <rect x="2" y="6" width="20" height="14" rx="1" fill="white" />
+            {/* Red top flap */}
+            <path d="M 2 6 L 12 14 L 22 6 Z" fill="#EA4335" />
+            {/* Blue left side */}
+            <path d="M 2 6 L 2 20 L 7 15 L 12 14 Z" fill="#4285F4" />
+            {/* Green right side */}
+            <path d="M 22 6 L 22 20 L 17 15 L 12 14 Z" fill="#34A853" />
+            {/* Yellow bottom left */}
+            <path d="M 2 20 L 7 15 L 7 20 Z" fill="#FBBC04" />
+            {/* Red bottom right */}
+            <path d="M 22 20 L 17 15 L 17 20 Z" fill="#EA4335" />
+          </g>
+        );
+      case "drive":
+        return (
+          <g>
+            <path d="M 8 6 L 16 6 L 24 20 L 20 20 Z" fill="#4285F4" />
+            <path d="M 0 20 L 12 38 L 16 32 L 4 20 Z" fill="#0F9D58" />
+            <path d="M 16 6 L 24 20 L 12 38 L 4 24 Z" fill="#F4B400" />
+          </g>
+        );
+      case "outlook":
+        return (
+          <g>
+            <rect width="24" height="24" fill="#0078D4" rx="2" />
+            <text x="12" y="17" textAnchor="middle" fontSize="16" fontWeight="bold" fill="white">O</text>
+          </g>
+        );
+      case "calendar":
+        return (
+          <g>
+            <rect x="2" y="4" width="20" height="18" rx="2" fill="white" stroke="#4285F4" strokeWidth="2" />
+            <rect x="2" y="4" width="20" height="6" fill="#4285F4" rx="2" />
+            <text x="12" y="18" textAnchor="middle" fontSize="10" fontWeight="bold" fill="#4285F4">31</text>
+          </g>
+        );
+      case "teams":
+        return (
+          <g>
+            <rect width="24" height="24" fill="#6264A7" rx="2" />
+            <text x="12" y="17" textAnchor="middle" fontSize="14" fontWeight="bold" fill="white">T</text>
+          </g>
+        );
+      case "chrome":
+        return (
+          <g>
+            <circle cx="12" cy="12" r="11" fill="#4285F4" />
+            <circle cx="12" cy="12" r="7" fill="white" />
+            <path d="M 12 5 A 7 7 0 0 1 19 12 L 12 12 Z" fill="#EA4335" />
+            <path d="M 5 12 A 7 7 0 0 1 12 5 L 12 12 Z" fill="#FBBC04" />
+            <path d="M 12 19 A 7 7 0 0 1 5 12 L 12 12 Z" fill="#34A853" />
+            <circle cx="12" cy="12" r="4" fill="#4285F4" />
+          </g>
+        );
+      case "moodle":
+        return (
+          <g>
+            <circle cx="12" cy="12" r="11" fill="#F98012" />
+            <text x="12" y="17" textAnchor="middle" fontSize="12" fontWeight="bold" fill="white">M</text>
+          </g>
+        );
+      case "slack":
+        return (
+          <g>
+            <rect width="24" height="24" fill="#4A154B" rx="4" />
+            <text x="12" y="17" textAnchor="middle" fontSize="12" fontWeight="bold" fill="white">#</text>
+          </g>
+        );
+      case "zoom":
+        return (
+          <g>
+            <circle cx="12" cy="12" r="11" fill="#2D8CFF" />
+            <text x="12" y="17" textAnchor="middle" fontSize="14" fontWeight="bold" fill="white">Z</text>
+          </g>
+        );
+      case "notion":
+        return (
+          <g>
+            <rect width="24" height="24" fill="white" rx="4" />
+            <rect x="2" y="2" width="20" height="20" fill="#000000" rx="3" />
+            <text x="12" y="17" textAnchor="middle" fontSize="12" fontWeight="bold" fill="white">N</text>
+          </g>
+        );
+      case "trello":
+        return (
+          <g>
+            <rect width="24" height="24" fill="#0079BF" rx="2" />
+            <rect x="5" y="6" width="5" height="12" fill="white" rx="1" />
+            <rect x="14" y="6" width="5" height="8" fill="white" rx="1" />
+          </g>
+        );
+      case "asana":
+        return (
+          <g>
+            <circle cx="12" cy="12" r="11" fill="#F06A6A" />
+            <circle cx="8" cy="10" r="3" fill="white" />
+            <circle cx="16" cy="10" r="3" fill="white" />
+            <circle cx="12" cy="16" r="3" fill="white" />
+          </g>
+        );
+      default:
+        return <circle cx="12" cy="12" r="11" fill={app.color} />;
+    }
+  };
 
   return (
     <div className="flow-wrapper">
       <svg
-        width="1100"
-        height="500"
-        viewBox="0 0 1100 500"
+        width="1400"
+        height="650"
+        viewBox="0 0 1400 650"
         className="flow-svg"
         xmlns="http://www.w3.org/2000/svg"
       >
         <defs>
-          <radialGradient id="bgRadial" cx="50%" cy="50%" r="65%">
-            <stop offset="0%" stopColor="#151125" />
-            <stop offset="70%" stopColor="#0b0a12" />
-            <stop offset="100%" stopColor="#08070d" />
-          </radialGradient>
-          <linearGradient id="purplePath" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" stopColor="#8b5cf6" />
-            <stop offset="100%" stopColor="#7c3aed" />
-          </linearGradient>
-          <linearGradient id="greenPath" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" stopColor="#31c77f" />
-            <stop offset="100%" stopColor="#8ae672" />
-          </linearGradient>
-          <linearGradient id="orangePath" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" stopColor="#f99a3c" />
-            <stop offset="100%" stopColor="#ffbe6a" />
-          </linearGradient>
-          <linearGradient id="nodeGrey" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" stopColor="#1f2a35" />
-            <stop offset="100%" stopColor="#0f161d" />
-          </linearGradient>
+          {/* Glow filter */}
           <filter id="glow">
-            <feGaussianBlur stdDeviation="6" result="blur" />
+            <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
             <feMerge>
-              <feMergeNode in="blur" />
-              <feMergeNode in="SourceGraphic" />
+              <feMergeNode in="coloredBlur"/>
+              <feMergeNode in="SourceGraphic"/>
             </feMerge>
           </filter>
+
+          {/* Gradients for center */}
+          <linearGradient id="centerGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stopColor="#E44CFF" />
+            <stop offset="50%" stopColor="#5861F2" />
+            <stop offset="100%" stopColor="#4EF0FF" />
+          </linearGradient>
         </defs>
 
-        <rect width="1100" height="500" fill="url(#bgRadial)" />
+        {/* Background */}
+        <rect width="1400" height="650" fill="transparent" />
 
-        {/* Left dashed connectors */}
-        {leftConnections.map((item, idx) => (
-          <g key={`ld-${idx}`}>
-            <path
-              d={item.d}
-              fill="none"
-              stroke="url(#nodeGrey)"
-              strokeWidth="6"
-              strokeLinecap="round"
-              strokeDasharray="12 10"
-              strokeOpacity="0.7"
-              className="flow-dash"
-            />
-            <g transform={`translate(${item.pill.x} ${item.pill.y})`}>
-              <rect
-                width="60"
-                height="28"
-                rx="10"
-                fill="#1f2a35"
-                stroke="#2e3b49"
-                strokeWidth="1"
-              />
-              <text
-                x="30"
-                y="18"
-                textAnchor="middle"
-                fontSize="12"
-                fontWeight="700"
-                fill="#dbe3ef"
-              >
-                {item.price}
-              </text>
-            </g>
-          </g>
+        {/* Connection lines from apps to center */}
+        {appConnections.map((conn) => (
+          <path
+            key={conn.id}
+            d={conn.path}
+            stroke={conn.color}
+            strokeWidth="2"
+            strokeOpacity="0.4"
+            fill="none"
+            filter="url(#glow)"
+            className="connection-line"
+          />
         ))}
 
-        {/* Right solid connectors */}
-        {rightConnections.map((item, idx) => (
-          <g key={`rd-${idx}`}>
+        {/* Connection lines from center to notifications */}
+        {notifications.map((notif, idx) => {
+          const startX = center.x + 120;
+          const startY = center.y;
+          const endX = notif.x - 10;
+          const endY = notif.y;
+
+          const midX1 = startX + (endX - startX) * 0.3;
+          const midY1 = startY + (endY - startY) * 0.4 + (Math.random() - 0.5) * 50;
+          const midX2 = startX + (endX - startX) * 0.7;
+          const midY2 = startY + (endY - startY) * 0.6 + (Math.random() - 0.5) * 50;
+
+          const path = `M ${startX} ${startY} C ${midX1} ${midY1}, ${midX2} ${midY2}, ${endX} ${endY}`;
+
+          return (
             <path
-              d={item.d}
+              key={`center-notif-${idx}`}
+              d={path}
+              stroke={notif.color}
+              strokeWidth="2"
+              strokeOpacity="0.4"
               fill="none"
-              stroke={item.color}
-              strokeWidth="8"
-              strokeLinecap="round"
-              className="flow-line"
-            />
-            <g
-              transform={`translate(${item.pill.x} ${item.pill.y})`}
               filter="url(#glow)"
-            >
-              <rect
-                width="70"
-                height="32"
-                rx="12"
-                fill="#0b1117"
-                stroke={item.stroke}
-                strokeWidth="1.5"
-              />
-              <text
-                x="35"
-                y="21"
-                textAnchor="middle"
-                fontSize="12"
-                fontWeight="800"
-                fill="#e8f2ff"
-              >
-                {item.price}
-              </text>
+              className="connection-line"
+            />
+          );
+        })}
+
+        {/* LEFT SIDE - Application Icons */}
+        {leftApps.map((app, idx) => (
+          <g key={`app-${idx}`} transform={`translate(${app.x}, ${app.y})`}>
+            {/* Glow background */}
+            <circle
+              cx={app.size / 2}
+              cy={app.size / 2}
+              r={app.size / 2 + 4}
+              fill={app.color}
+              opacity="0.2"
+              filter="url(#glow)"
+            />
+
+            {/* Icon container */}
+            <g transform={`translate(${app.size / 2 - 12}, ${app.size / 2 - 12})`}>
+              {renderAppIcon(app)}
             </g>
           </g>
         ))}
 
-        {/* Left nodes */}
-        {leftNodes.map((item, idx) => (
-          <g key={`ln-${idx}`} transform={`translate(50 ${item.y})`}>
-            <rect width="110" height="70" rx="14" fill="url(#nodeGrey)" />
-            {item.icon === "briefcase" && (
-              <>
-                <rect
-                  x="32"
-                  y="28"
-                  width="46"
-                  height="26"
-                  rx="6"
-                  fill="#aeb7c5"
-                />
-                <rect
-                  x="46"
-                  y="22"
-                  width="18"
-                  height="8"
-                  rx="2"
-                  fill="#c8d1de"
-                />
-              </>
-            )}
-            {item.icon === "user" && (
-              <>
-                <circle cx="55" cy="32" r="12" fill="#c8d1de" />
-                <rect
-                  x="38"
-                  y="46"
-                  width="34"
-                  height="14"
-                  rx="7"
-                  fill="#aeb7c5"
-                />
-              </>
-            )}
-            {item.icon === "case" && (
-              <>
-                <rect
-                  x="30"
-                  y="34"
-                  width="50"
-                  height="26"
-                  rx="6"
-                  fill="#c8d1de"
-                />
-                <rect
-                  x="44"
-                  y="28"
-                  width="22"
-                  height="8"
-                  rx="2"
-                  fill="#dbe3ef"
-                />
-              </>
-            )}
-            {item.icon === "group" && (
-              <>
-                <circle cx="45" cy="32" r="10" fill="#c8d1de" />
-                <circle cx="65" cy="32" r="10" fill="#c8d1de" />
-                <rect
-                  x="35"
-                  y="44"
-                  width="40"
-                  height="12"
-                  rx="6"
-                  fill="#aeb7c5"
-                />
-              </>
-            )}
-            <text x="75" y="24" fill="#e5eaf2" fontSize="14" fontWeight="600">
-              {item.label}
-            </text>
-          </g>
-        ))}
+        {/* CENTER - AI Hub Circle */}
+        <g transform={`translate(${center.x}, ${center.y})`}>
+          {/* Outer ring */}
+          <circle
+            r="130"
+            fill="none"
+            stroke="url(#centerGradient)"
+            strokeWidth="4"
+            opacity="0.5"
+            filter="url(#glow)"
+          />
 
-        {/* Right nodes */}
-        {rightNodes.map((item, idx) => (
-          <g key={`rn-${idx}`} transform={`translate(960 ${item.y})`}>
+          {/* Main circle */}
+          <circle
+            r="110"
+            fill="rgba(24, 27, 53, 0.95)"
+            stroke="url(#centerGradient)"
+            strokeWidth="3"
+            filter="url(#glow)"
+          />
+
+          {/* AI System Label */}
+          <text
+            y="8"
+            textAnchor="middle"
+            fontSize="24"
+            fontWeight="600"
+            fill="white"
+          >
+            Trimindes AI
+          </text>
+        </g>
+
+
+        {/* RIGHT SIDE - Notification Boxes */}
+        {notifications.map((notif, idx) => (
+          <g key={`notif-${idx}`}>
+            {/* Notification card */}
             <rect
-              width="110"
-              height="70"
-              rx="16"
-              fill={item.color}
+              x={notif.x}
+              y={notif.y - 40}
+              width="350"
+              height="80"
+              rx="12"
+              fill="rgba(24, 27, 53, 0.95)"
+              stroke={notif.color}
+              strokeWidth="2"
               filter="url(#glow)"
+              className="notification-card"
             />
-            {item.icon === "doc" && (
-              <>
-                <rect
-                  x="38"
-                  y="22"
-                  width="34"
-                  height="26"
-                  rx="5"
-                  fill="#f9fbff"
-                  opacity="0.9"
-                />
-                <rect
-                  x="44"
-                  y="28"
-                  width="22"
-                  height="4"
-                  rx="2"
-                  fill="#8b5cf6"
-                />
-                <rect
-                  x="44"
-                  y="36"
-                  width="16"
-                  height="4"
-                  rx="2"
-                  fill="#8b5cf6"
-                />
-              </>
-            )}
-            {item.icon === "pie" && (
-              <>
-                <circle cx="55" cy="35" r="14" fill="#e8f5e9" />
-                <path d="M55 21 A14 14 0 0 1 69 35 L55 35 Z" fill="#6bcf70" />
-              </>
-            )}
-            {item.icon === "dollar" && (
-              <>
-                <circle cx="55" cy="35" r="16" fill="#fff2e3" />
-                <text
-                  x="55"
-                  y="40"
-                  textAnchor="middle"
-                  fontSize="16"
-                  fontWeight="800"
-                  fill="#f59f3f"
-                >
-                  $
-                </text>
-              </>
-            )}
-            {item.icon === "chat" && (
-              <>
-                <rect
-                  x="38"
-                  y="26"
-                  width="34"
-                  height="22"
-                  rx="6"
-                  fill="#f9fbff"
-                  opacity="0.95"
-                />
-                <rect
-                  x="42"
-                  y="32"
-                  width="26"
-                  height="4"
-                  rx="2"
-                  fill="#a855f7"
-                />
-                <rect
-                  x="42"
-                  y="40"
-                  width="18"
-                  height="4"
-                  rx="2"
-                  fill="#a855f7"
-                />
-              </>
-            )}
+
+            {/* Icon */}
+            <circle
+              cx={notif.x + 35}
+              cy={notif.y}
+              r="18"
+              fill={notif.color}
+            />
             <text
-              x="55"
-              y="62"
+              x={notif.x + 35}
+              y={notif.y + 6}
               textAnchor="middle"
-              fill="#0b1117"
-              fontSize="13"
-              fontWeight="700"
+              fontSize="18"
             >
-              {item.label}
+              🤖
             </text>
+
+            {/* Title and Subtitle using foreignObject for proper RTL */}
+            <foreignObject
+              x={notif.x + 65}
+              y={notif.y - 30}
+              width="270"
+              height="60"
+            >
+              <div style={{
+                direction: locale === 'ar' ? 'rtl' : 'ltr',
+                textAlign: locale === 'ar' ? 'right' : 'left'
+              }}>
+                <div style={{
+                  fontSize: '15px',
+                  fontWeight: '600',
+                  color: 'white',
+                  marginBottom: '4px'
+                }}>
+                  {notif.title}
+                </div>
+                <div style={{
+                  fontSize: '12px',
+                  color: 'rgba(255, 255, 255, 0.7)'
+                }}>
+                  {notif.subtitle}
+                </div>
+              </div>
+            </foreignObject>
           </g>
         ))}
       </svg>
 
-      {/* Absolute hub overlay to keep perfect center */}
-      <div
-        className="hub-abs"
-        aria-hidden="true"
-        style={{ left: `450px`, top: `150px`, zIndex: "999" }}
-      >
-        <svg width="220" height="220" viewBox="0 0 220 220">
-          <circle cx="110" cy="110" r="90" fill="#7c3aed" opacity="0.08" />
-          <circle cx="110" cy="110" r="66" fill="#7c3aed" opacity="0.14" />
-          <circle cx="110" cy="110" r="42" fill="#7c3aed" opacity="0.2" />
-          <circle cx="110" cy="110" r="26" fill="#8b5cf6" />
-          <text
-            x="110"
-            y="118"
-            textAnchor="middle"
-            fill="#f9fbff"
-            fontSize="30"
-            fontWeight="800"
-          >
-            Triminds AI
-          </text>
-        </svg>
-      </div>
-
       <style jsx>{`
         .flow-wrapper {
           position: relative;
-          width: 1100px;
-          height: 500px;
+          width: 100%;
+          max-width: 1400px;
+          margin: 0 auto;
         }
+
         .flow-svg {
-          border-radius: 20px;
-          overflow: hidden;
+          width: 100%;
+          height: auto;
           display: block;
         }
-        .hub-abs {
-          position: absolute;
-          transform: translate(-50%, -50%);
-          filter: drop-shadow(0 0 32px rgba(123, 92, 246, 0.75));
-          animation: pulse 3.5s ease-in-out infinite;
-          pointer-events: none;
+
+        .connection-line {
+          animation: linePulse 3s ease-in-out infinite;
         }
-        .flow-line {
-          stroke-dasharray: 200 600;
-          animation: flow 5s linear infinite;
+
+        .notification-card {
+          transition: all 0.3s ease;
         }
-        .flow-dash {
-          stroke-dashoffset: 120;
-          animation: dash 4s linear infinite;
+
+        .notification-card:hover {
+          transform: scale(1.02);
         }
-        @keyframes pulse {
-          0% {
-            transform: scale(1);
-            opacity: 1;
+
+        @keyframes linePulse {
+          0%, 100% {
+            stroke-opacity: 0.3;
           }
           50% {
-            transform: scale(1.04);
-            opacity: 0.92;
-          }
-          100% {
-            transform: scale(1);
-            opacity: 1;
+            stroke-opacity: 0.6;
           }
         }
-        @keyframes flow {
-          0% {
-            stroke-dashoffset: 0;
-          }
-          100% {
-            stroke-dashoffset: -800;
-          }
-        }
-        @keyframes dash {
-          0% {
-            stroke-dashoffset: 120;
-          }
-          100% {
-            stroke-dashoffset: -200;
+
+        @media (max-width: 768px) {
+          .flow-svg {
+            height: 400px;
           }
         }
       `}</style>

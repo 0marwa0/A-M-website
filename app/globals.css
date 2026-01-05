@@ -95,3 +95,27 @@
 .animate-fade-in {
   animation: fade-in 0.8s ease-out forwards;
 }
+
+@keyframes orbit {
+  from {
+    transform: translate(-50%, -50%) rotate(0deg);
+  }
+  to {
+    transform: translate(-50%, -50%) rotate(360deg);
+  }
+}
+
+@keyframes counter-rotate {
+  from {
+    transform: translate(-50%, -50%) rotate(0deg);
+  }
+  to {
+    transform: translate(-50%, -50%) rotate(-360deg);
+  }
+}
+
+.orbital-item {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+}

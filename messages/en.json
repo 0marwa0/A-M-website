@@ -1,9 +1,12 @@
 {
   "nav": {
     "home": "Home",
+    "solutions": "Solutions",
+    "contact": "Contact Us",
+    "about": "About Us",
+    "pricing": "Pricing",
     "technology": "Technology",
     "features": "Features",
-    "pricing": "Pricing",
     "faq": "FAQ",
     "cta": "Get Started"
   },
@@ -13,10 +16,28 @@
       "second": "Plan",
       "third": "Perform perfectly"
     },
+    "heading": "Integrate AI Into Your",
+    "headingHighlight": "Business",
     "heading1": "Reimagine Your Business with AI-Powered Innovation",
     "subheading": "Transform your operations, unlock new possibilities, and accelerate growth with intelligent AI solutions tailored to your business.",
     "cta": "Get Started",
+    "cta1": "Get a Demo",
+    "cta2": "Start Integrating",
     "trust": "Trusted by businesses of all sizes worldwide.",
+    "notifications": {
+      "first": {
+        "title": "Process completed",
+        "subtitle": "as expected."
+      },
+      "second": {
+        "title": "Execution completed",
+        "subtitle": "No further action required"
+      },
+      "third": {
+        "title": "The workflow has",
+        "subtitle": "finished running."
+      }
+    },
     "stats": {
       "clients": {
         "value": "98%",
@@ -33,7 +54,41 @@
     }
   },
   "about": {
-    "heading": "About",
+    "heading": "Our",
+    "headingHighlight": "AI Integration Process",
+    "subheading": "We follow a proven methodology to seamlessly integrate AI into your business operations",
+    "steps": {
+      "discovery": {
+        "title": "Discovery",
+        "line1": "Initial meetings to understand",
+        "line2": "client needs in detail"
+      },
+      "planning": {
+        "title": "Planning",
+        "line1": "Solution architecture, wireframes",
+        "line2": "and technical planning"
+      },
+      "development": {
+        "title": "Development",
+        "line1": "Build custom AI solutions",
+        "line2": "tailored to your needs"
+      },
+      "testing": {
+        "title": "Testing/QA",
+        "line1": "Quality assurance before",
+        "line2": "deployment"
+      },
+      "training": {
+        "title": "Training",
+        "line1": "User onboarding and",
+        "line2": "training sessions"
+      },
+      "support": {
+        "title": "Support",
+        "line1": "Ongoing support after",
+        "line2": "deployment"
+      }
+    },
     "company": "Trimindes AI",
     "services": {
       "aiAutomation": {
@@ -224,7 +279,7 @@
     }
   },
   "community": {
-    "kicker": "Community",
+    "kicker": "TRIMINDS Community",
     "title": "Join Our",
     "highlight": "Community",
     "cta": "Join Us"

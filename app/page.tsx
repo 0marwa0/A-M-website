@@ -1,15 +1,6 @@
 "use client";
 
-import {
-  Brain,
-  ChartBar as BarChart,
-  Cog,
-  Zap,
-  Code,
-  Smartphone,
-  Check,
-  Star,
-} from "lucide-react";
+import { Check, Star } from "lucide-react";
 import { useI18n } from "@/lib/i18n";
 import FlowCanvas from "@/components/FlowCanvas";
 
@@ -19,68 +10,150 @@ export default function Home() {
   const communityMembers = [
     {
       name: "Syed Muhammad Haris",
-      role: "CEO HiBOON",
-      position: { left: "42%", top: "44%" },
-      badgeWidth: "15rem",
+      role: "CEO",
+      orbit: 640,
+      initialAngle: 0,
+      duration: 60,
+      badgeWidth: "14rem",
       image:
-        "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=facearea&w=120&h=120&q=80",
+        "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=120&h=120&q=80&crop=faces",
     },
     {
       name: "Malik Murtaza",
-      role: "CEO HiBOON",
-      position: { left: "74%", top: "30%" },
+      role: "CTO",
+      orbit: 640,
+      initialAngle: 90,
+      duration: 60,
       badgeWidth: "13rem",
       image:
-        "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=facearea&w=120&h=120&q=80",
+        "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=120&h=120&q=80&crop=faces",
     },
     {
       name: "Haseeb Arshad",
-      role: "Sales Assistant",
-      position: { left: "25%", top: "70%" },
+      role: "Sales Manager",
+      orbit: 640,
+      initialAngle: 180,
+      duration: 60,
       badgeWidth: "14.5rem",
       image:
-        "https://images.unsplash.com/photo-1502685104226-ee32379fefbe?auto=format&fit=facearea&w=120&h=120&q=80",
+        "https://images.unsplash.com/photo-1502685104226-ee32379fefbe?auto=format&fit=crop&w=120&h=120&q=80&crop=faces",
     },
     {
       name: "Saffuan Mushtaq",
-      role: "Junior Developer",
-      position: { left: "79%", top: "57%" },
+      role: "Developer",
+      orbit: 640,
+      initialAngle: 270,
+      duration: 60,
+      badgeWidth: "13.5rem",
+      image:
+        "https://images.unsplash.com/photo-1544723795-3fb6469f5b39?auto=format&fit=crop&w=120&h=120&q=80&crop=faces",
+    },
+    {
+      name: "Sarah Chen",
+      role: "Designer",
+      orbit: 480,
+      initialAngle: 45,
+      duration: 50,
+      badgeWidth: "13rem",
+      image:
+        "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&w=120&h=120&q=80&crop=faces",
+    },
+    {
+      name: "James Wilson",
+      role: "Product Lead",
+      orbit: 480,
+      initialAngle: 135,
+      duration: 50,
       badgeWidth: "14rem",
       image:
-        "https://images.unsplash.com/photo-1544723795-3fb6469f5b39?auto=format&fit=facearea&w=120&h=120&q=80",
+        "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=120&h=120&q=80&crop=faces",
+    },
+    {
+      name: "Emily Parker",
+      role: "Marketing",
+      orbit: 480,
+      initialAngle: 225,
+      duration: 50,
+      badgeWidth: "13.5rem",
+      image:
+        "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=120&h=120&q=80&crop=faces",
+    },
+    {
+      name: "Alex Kumar",
+      role: "Engineer",
+      orbit: 480,
+      initialAngle: 315,
+      duration: 50,
+      badgeWidth: "13rem",
+      image:
+        "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=120&h=120&q=80&crop=faces",
     },
   ];
 
   const floatingAvatars = [
     {
-      position: { left: "52%", top: "12%" },
-      size: "52px",
-      image:
-        "https://images.unsplash.com/photo-1521119989659-a83eee488004?auto=format&fit=facearea&w=120&h=120&q=80",
-    },
-    {
-      position: { left: "16%", top: "35%" },
-      size: "56px",
-      image:
-        "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=facearea&w=120&h=120&q=80",
-    },
-    {
-      position: { left: "68%", top: "82%" },
-      size: "54px",
-      image:
-        "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=facearea&w=120&h=120&q=80",
-    },
-    {
-      position: { left: "32%", top: "86%" },
+      orbit: 320,
+      initialAngle: 0,
+      duration: 40,
       size: "50px",
       image:
-        "https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?auto=format&fit=facearea&w=120&h=120&q=80",
+        "https://images.unsplash.com/photo-1521119989659-a83eee488004?auto=format&fit=crop&w=120&h=120&q=80&crop=faces",
     },
     {
-      position: { left: "88%", top: "44%" },
+      orbit: 320,
+      initialAngle: 72,
+      duration: 40,
       size: "52px",
       image:
-        "https://images.unsplash.com/photo-1520813792240-56fc4a3765a7?auto=format&fit=facearea&w=120&h=120&q=80",
+        "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=120&h=120&q=80&crop=faces",
+    },
+    {
+      orbit: 320,
+      initialAngle: 144,
+      duration: 40,
+      size: "48px",
+      image:
+        "https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?auto=format&fit=crop&w=120&h=120&q=80&crop=faces",
+    },
+    {
+      orbit: 320,
+      initialAngle: 216,
+      duration: 40,
+      size: "50px",
+      image:
+        "https://images.unsplash.com/photo-1520813792240-56fc4a3765a7?auto=format&fit=crop&w=120&h=120&q=80&crop=faces",
+    },
+    {
+      orbit: 320,
+      initialAngle: 288,
+      duration: 40,
+      size: "52px",
+      image:
+        "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=120&h=120&q=80&crop=faces",
+    },
+    {
+      orbit: 760,
+      initialAngle: 30,
+      duration: 70,
+      size: "46px",
+      image:
+        "https://images.unsplash.com/photo-1531427186611-ecfd6d936c79?auto=format&fit=crop&w=120&h=120&q=80&crop=faces",
+    },
+    {
+      orbit: 760,
+      initialAngle: 150,
+      duration: 70,
+      size: "48px",
+      image:
+        "https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&w=120&h=120&q=80&crop=faces",
+    },
+    {
+      orbit: 760,
+      initialAngle: 270,
+      duration: 70,
+      size: "46px",
+      image:
+        "https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=120&h=120&q=80&crop=faces",
     },
   ];
 
@@ -96,115 +169,56 @@ export default function Home() {
 
   return (
     <div
-      className="min-h-screen bg-[#0a0e14] text-white relative overflow-hidden"
+      className="min-h-screen text-white relative overflow-hidden"
       lang={locale}
       dir={locale === "ar" ? "rtl" : "ltr"}
+      style={{
+        background: "radial-gradient(circle at 30% 30%, #1b1f3b, #0a0f2a 70%)",
+      }}
     >
-      {/* Animated Starfield Background */}
-      <div className="fixed inset-0 z-0">
-        <div className="absolute inset-0 bg-[#0a0e14]"></div>
-
-        {/* Gradient Layer - Static */}
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#0d1a1f] to-transparent opacity-40"></div>
-
-        {/* Star Layers - Static */}
-        <div className="absolute inset-0">
-          {[...Array(50)].map((_, i) => (
-            <div
-              key={`far-${i}`}
-              className="absolute bg-white rounded-full"
-              style={{
-                width: Math.random() * 1.5 + 0.5 + "px",
-                height: Math.random() * 1.5 + 0.5 + "px",
-                left: Math.random() * 100 + "%",
-                top: Math.random() * 100 + "%",
-                opacity: Math.random() * 0.4 + 0.2,
-              }}
-            />
-          ))}
-        </div>
-
-        <div className="absolute inset-0">
-          {[...Array(50)].map((_, i) => (
-            <div
-              key={`mid-${i}`}
-              className="absolute bg-white rounded-full"
-              style={{
-                width: Math.random() * 2 + 0.5 + "px",
-                height: Math.random() * 2 + 0.5 + "px",
-                left: Math.random() * 100 + "%",
-                top: Math.random() * 100 + "%",
-                opacity: Math.random() * 0.6 + 0.3,
-              }}
-            />
-          ))}
-        </div>
-
-        <div className="absolute inset-0">
-          {[...Array(50)].map((_, i) => (
-            <div
-              key={`near-${i}`}
-              className="absolute bg-white rounded-full"
-              style={{
-                width: Math.random() * 2.5 + 0.5 + "px",
-                height: Math.random() * 2.5 + 0.5 + "px",
-                left: Math.random() * 100 + "%",
-                top: Math.random() * 100 + "%",
-                opacity: Math.random() * 0.8 + 0.4,
-              }}
-            />
-          ))}
-        </div>
-
-        {/* Subtle Glow Layer - Static */}
-        <div
-          className="absolute inset-0"
-          style={{
-            background:
-              "radial-gradient(circle at 50% 50%, rgba(0, 217, 255, 0.03) 0%, transparent 50%)",
-          }}
-        ></div>
-      </div>
-
       {/* Navigation */}
       <nav className="relative z-50 px-6 py-5">
         <div className="max-w-7xl mx-auto flex justify-between items-center">
-          <div className="flex items-center gap-3">
-            <img
-              src="/logoo.svg"
-              alt="Trimindes AI Logo"
-              className="h-12 w-12"
-            />
-            <div className="text-2xl font-bold tracking-tight">
-              Trimindes AI
+          <div className="flex items-center">
+            <div className="text-3xl font-bold tracking-tight flex items-center gap-1">
+              <span className="bg-gradient-to-r from-[#4EF0FF] to-[#5861F2] bg-clip-text text-transparent">
+                TRI
+              </span>
+              <span className="text-white">MINDS</span>
             </div>
           </div>
-          <div className="hidden lg:flex items-center space-x-8">
+          <div
+            style={{ fontSize: "23px" }}
+            className="hidden lg:flex items-center gap-8"
+          >
             <a
               href="#services"
-              className="hover:text-[#00d9ff] transition-colors"
+              className="text-white/90 hover:text-transparent hover:bg-clip-text hover:bg-gradient-to-r hover:from-[#E44CFF] hover:to-[#5861F2] transition-all duration-300"
             >
               {t("nav.solutions")}
             </a>
             <a
               href="#contact"
-              className="hover:text-[#00d9ff] transition-colors"
+              className="text-white/90 hover:text-transparent hover:bg-clip-text hover:bg-gradient-to-r hover:from-[#E44CFF] hover:to-[#5861F2] transition-all duration-300"
             >
               {t("nav.contact")}
             </a>
-            <a href="#about" className="hover:text-[#00d9ff] transition-colors">
+            <a
+              href="#about"
+              className="text-white/90 hover:text-transparent hover:bg-clip-text hover:bg-gradient-to-r hover:from-[#E44CFF] hover:to-[#5861F2] transition-all duration-300"
+            >
               {t("nav.about")}
             </a>
             <a
               href="#packages"
-              className="hover:text-[#00d9ff] transition-colors"
+              className="text-white/90 hover:text-transparent hover:bg-clip-text hover:bg-gradient-to-r hover:from-[#E44CFF] hover:to-[#5861F2] transition-all duration-300"
             >
               {t("nav.pricing")}
             </a>
           </div>
           <div className="flex items-center">
             <button
-              className="px-4 py-2 rounded-md border border-white/15 text-sm hover:border-[#00d9ff] transition-colors"
+              className="px-4 py-2 rounded-xl border border-white/30 text-sm text-white/90 hover:border-[#E44CFF] hover:bg-[#E44CFF]/10 transition-all duration-300"
               onClick={() => setLocale(locale === "en" ? "ar" : "en")}
             >
               {locale === "en" ? "العربية" : "English"}
@@ -216,116 +230,484 @@ export default function Home() {
       {/* Hero Section */}
       <section
         id="home"
-        className="relative z-10 min-h-screen flex items-center justify-center px-6 pt-16 overflow-hidden"
+        className="relative z-10 min-h-screen flex flex-col items-center justify-center px-6 overflow-visible pt-20"
       >
-        <div className="max-w-6xl mx-auto relative w-full">
-          <div className="flex flex-col items-center text-center gap-5">
-            <span className="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-white/5 border border-[#00d9ff]/30 text-xs uppercase tracking-[0.2em] text-[#00d9ff] shadow-[0_10px_60px_rgba(0,217,255,0.25)]">
-              {t("hero.badge.first")}
-              <span className="h-1 w-1 rounded-full bg-[#00d9ff]" />
-              {t("hero.badge.second")}
-              <span className="h-1 w-1 rounded-full bg-[#00d9ff]" />
-              {t("hero.badge.third")}
-            </span>
+        <div className="max-w-7xl mx-auto relative w-full">
+          {/* Centered Content */}
+          <div className="flex flex-col items-center text-center space-y-6 mb-16 animate-fade-in">
+            {/* Headline with toggle emphasis */}
+            <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold leading-[1.2] max-w-4xl">
+              <span className="inline-flex items-center gap-3 flex-wrap justify-center">
+                <span className="text-white">{t("hero.heading")}</span>
+                <span className="text-white/40">{t("hero.headingHighlight")}</span>
+              </span>
+            </h1>
 
-            <div className="space-y-6 max-w-4xl">
-              <h1 className="text-4xl md:text-6xl font-bold leading-[1.35] py-2">
-                <span className="block">
-                  {t("hero.heading1")}
-                </span>
-              </h1>
-              <p className="text-lg md:text-xl text-gray-300 leading-relaxed">
-                {t("hero.subheading")}
-              </p>
+            {/* Secondary heading */}
+            <h2 className="text-lg md:text-xl lg:text-2xl text-gray-300 max-w-4xl font-normal">
+              {t("hero.heading1")}
+            </h2>
+
+            {/* CTA Buttons */}
+            <div className="flex flex-col sm:flex-row gap-4 items-center mt-4">
+              <a
+                href="#contact"
+                className="group relative px-10 py-5 bg-gradient-to-r from-[#E44CFF] to-[#5861F2] rounded-full font-semibold text-lg overflow-hidden transition-all duration-300 hover:scale-[1.05] hover:shadow-[0_0_40px_rgba(228,76,255,0.6)]"
+              >
+                <span className="relative z-10">{t("hero.cta1")}</span>
+                <div className="absolute inset-0 bg-gradient-to-r from-[#5861F2] to-[#E44CFF] opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+              </a>
+              <a
+                href="#services"
+                className="px-10 py-5 border-2 border-white/30 rounded-full font-semibold text-lg hover:border-[#E44CFF] hover:bg-[#E44CFF]/10 transition-all duration-300 backdrop-blur-sm"
+              >
+                {t("hero.cta2")}
+              </a>
             </div>
+          </div>
 
-            <button className="px-7 py-3 rounded-full bg-gradient-to-r from-[#00d9ff] to-[#6be8ff] text-[#04100a] font-semibold shadow-[0_15px_50px_rgba(0,217,255,0.35)] hover:scale-[1.02] transition-transform">
-              {t("hero.cta")}
-            </button>
-
-            <div className="flex items-center gap-1 text-amber-400 mt-1">
-              {[...Array(6)].map((_, i) => (
-                <Star
-                  key={i}
-                  className="w-5 h-5 fill-amber-400 text-amber-400"
-                />
-              ))}
-            </div>
-            <p className="text-sm text-gray-300">{t("hero.trust")}</p>
+          {/* Visual Diagram - FlowCanvas */}
+          <div className="relative flex items-center justify-center animate-fade-in mt-12">
+            <FlowCanvas t={t} locale={locale} />
           </div>
         </div>
       </section>
 
-      {/* Flow Map Section */}
-      <section className="relative z-10 px-6 py-12">
-        <div className="max-w-6xl mx-auto rounded-3xl border border-white/10 bg-[#0a0e14]/80 backdrop-blur shadow-[0_20px_80px_rgba(0,0,0,0.4)] p-6 md:p-10">
-          <h3 className="text-2xl md:text-3xl font-bold text-center mb-8">
-            Intelligent Workflows
-          </h3>
-          <FlowCanvas />
-        </div>
-      </section>
+      {/* AI Integration Process Section */}
+      <section
+        id="about"
+        className="relative z-10 py-20"
+        style={{ paddingLeft: "60px", paddingRight: "60px" }}
+      >
+        <div>
+          <div className="text-center mb-16">
+            <h2 className="text-4xl md:text-5xl font-bold mb-6 tracking-tight">
+              {t("about.heading")}{" "}
+              <span className="bg-gradient-to-r from-[#E44CFF] to-[#4EF0FF] bg-clip-text text-transparent">
+                {t("about.headingHighlight")}
+              </span>
+            </h2>
+            <p className="text-xl text-gray-400 max-w-3xl mx-auto">
+              {t("about.subheading")}
+            </p>
+          </div>
 
-      {/* About Section */}
-      <section id="about" className="relative z-10 py-20 px-6">
-        <div className="max-w-6xl mx-auto text-center">
-          <h2 className="text-4xl md:text-5xl font-bold mb-12">
-            {t("about.heading")}{" "}
-            <span className="text-[#00d9ff]">{t("about.company")}</span>
-          </h2>
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {[
-              {
-                icon: Brain,
-                title: t("about.services.aiAutomation.title"),
-                desc: t("about.services.aiAutomation.desc"),
-              },
-              {
-                icon: BarChart,
-                title: t("about.services.analytics.title"),
-                desc: t("about.services.analytics.desc"),
-              },
-              {
-                icon: Cog,
-                title: t("about.services.industryAI.title"),
-                desc: t("about.services.industryAI.desc"),
-              },
-              {
-                icon: Zap,
-                title: t("about.services.llm.title"),
-                desc: t("about.services.llm.desc"),
-              },
-              {
-                icon: Code,
-                title: t("about.services.development.title"),
-                desc: t("about.services.development.desc"),
-              },
-              {
-                icon: Smartphone,
-                title: t("about.services.apps.title"),
-                desc: t("about.services.apps.desc"),
-              },
-            ].map((item, index) => (
-              <div
-                key={index}
-                className="p-6 border border-[#00d9ff]/20 rounded-xl backdrop-blur-sm bg-[#0a0e14]/60 hover:border-[#00d9ff]/40 transition-all transform hover:scale-105"
-              >
-                <item.icon className="w-12 h-12 text-[#00d9ff] mx-auto mb-4" />
-                <h3 className="text-xl font-semibold mb-3">{item.title}</h3>
-                <p className="text-gray-400">{item.desc}</p>
-              </div>
-            ))}
+          {/* Process Flow Diagram */}
+          <div className="relative flex items-center justify-center">
+            <svg
+              width="2000"
+              height="450"
+              viewBox="0 0 2000 450"
+              className="w-full h-auto"
+            >
+              <defs>
+                <filter id="processGlow">
+                  <feGaussianBlur stdDeviation="10" result="coloredBlur" />
+                  <feMerge>
+                    <feMergeNode in="coloredBlur" />
+                    <feMergeNode in="SourceGraphic" />
+                  </feMerge>
+                </filter>
+                <linearGradient
+                  id="waveGradientFull"
+                  x1="0%"
+                  y1="0%"
+                  x2="100%"
+                  y2="0%"
+                >
+                  <stop offset="0%" stopColor="#7B4CFF" />
+                  <stop offset="16%" stopColor="#8B56FF" />
+                  <stop offset="33%" stopColor="#5861F2" />
+                  <stop offset="50%" stopColor="#5BA8F7" />
+                  <stop offset="66%" stopColor="#4ECFFC" />
+                  <stop offset="100%" stopColor="#4EF0FF" />
+                </linearGradient>
+              </defs>
+
+              {/* Single Continuous Wave Line connecting all 6 steps */}
+              <path
+                d="M 80 225 Q 200 130, 330 200 T 630 160 Q 780 110, 930 180 T 1230 140 Q 1380 90, 1530 160 T 1920 225"
+                stroke="url(#waveGradientFull)"
+                strokeWidth="5"
+                fill="none"
+                opacity="0.8"
+              />
+
+              {/* Step 1 - Discovery */}
+              <g transform="translate(220, 200)">
+                <circle
+                  cx="0"
+                  cy="0"
+                  r="65"
+                  fill="#7B4CFF"
+                  opacity="0.15"
+                  filter="url(#processGlow)"
+                />
+                <circle
+                  cx="0"
+                  cy="0"
+                  r="50"
+                  fill="#7B4CFF"
+                  opacity="0.2"
+                  filter="url(#processGlow)"
+                />
+                <text
+                  x="0"
+                  y="22"
+                  textAnchor="middle"
+                  fontSize="70"
+                  fontWeight="900"
+                  fill="#7B4CFF"
+                  filter="url(#processGlow)"
+                >
+                  1
+                </text>
+              </g>
+              <foreignObject x="70" y="300" width="300" height="100">
+                <div style={{
+                  direction: locale === 'ar' ? 'rtl' : 'ltr',
+                  textAlign: 'center'
+                }}>
+                  <div style={{
+                    fontSize: '24px',
+                    fontWeight: '700',
+                    color: 'white',
+                    marginBottom: '8px'
+                  }}>
+                    {t("about.steps.discovery.title")}
+                  </div>
+                  <div style={{
+                    fontSize: '15px',
+                    color: 'rgba(255,255,255,0.7)',
+                    lineHeight: '1.6'
+                  }}>
+                    {t("about.steps.discovery.line1")}
+                  </div>
+                  <div style={{
+                    fontSize: '15px',
+                    color: 'rgba(255,255,255,0.7)',
+                    lineHeight: '1.6'
+                  }}>
+                    {t("about.steps.discovery.line2")}
+                  </div>
+                </div>
+              </foreignObject>
+
+              {/* Step 2 - Planning */}
+              <g transform="translate(540, 160)">
+                <circle
+                  cx="0"
+                  cy="0"
+                  r="65"
+                  fill="#8B56FF"
+                  opacity="0.15"
+                  filter="url(#processGlow)"
+                />
+                <circle
+                  cx="0"
+                  cy="0"
+                  r="50"
+                  fill="#8B56FF"
+                  opacity="0.2"
+                  filter="url(#processGlow)"
+                />
+                <text
+                  x="0"
+                  y="22"
+                  textAnchor="middle"
+                  fontSize="70"
+                  fontWeight="900"
+                  fill="#8B56FF"
+                  filter="url(#processGlow)"
+                >
+                  2
+                </text>
+              </g>
+              <foreignObject x="390" y="260" width="300" height="100">
+                <div style={{
+                  direction: locale === 'ar' ? 'rtl' : 'ltr',
+                  textAlign: 'center'
+                }}>
+                  <div style={{
+                    fontSize: '24px',
+                    fontWeight: '700',
+                    color: 'white',
+                    marginBottom: '8px'
+                  }}>
+                    {t("about.steps.planning.title")}
+                  </div>
+                  <div style={{
+                    fontSize: '15px',
+                    color: 'rgba(255,255,255,0.7)',
+                    lineHeight: '1.6'
+                  }}>
+                    {t("about.steps.planning.line1")}
+                  </div>
+                  <div style={{
+                    fontSize: '15px',
+                    color: 'rgba(255,255,255,0.7)',
+                    lineHeight: '1.6'
+                  }}>
+                    {t("about.steps.planning.line2")}
+                  </div>
+                </div>
+              </foreignObject>
+
+              {/* Step 3 - Development */}
+              <g transform="translate(860, 180)">
+                <circle
+                  cx="0"
+                  cy="0"
+                  r="65"
+                  fill="#5861F2"
+                  opacity="0.15"
+                  filter="url(#processGlow)"
+                />
+                <circle
+                  cx="0"
+                  cy="0"
+                  r="50"
+                  fill="#5861F2"
+                  opacity="0.2"
+                  filter="url(#processGlow)"
+                />
+                <text
+                  x="0"
+                  y="22"
+                  textAnchor="middle"
+                  fontSize="70"
+                  fontWeight="900"
+                  fill="#5861F2"
+                  filter="url(#processGlow)"
+                >
+                  3
+                </text>
+              </g>
+              <foreignObject x="710" y="280" width="300" height="100">
+                <div style={{
+                  direction: locale === 'ar' ? 'rtl' : 'ltr',
+                  textAlign: 'center'
+                }}>
+                  <div style={{
+                    fontSize: '24px',
+                    fontWeight: '700',
+                    color: 'white',
+                    marginBottom: '8px'
+                  }}>
+                    {t("about.steps.development.title")}
+                  </div>
+                  <div style={{
+                    fontSize: '15px',
+                    color: 'rgba(255,255,255,0.7)',
+                    lineHeight: '1.6'
+                  }}>
+                    {t("about.steps.development.line1")}
+                  </div>
+                  <div style={{
+                    fontSize: '15px',
+                    color: 'rgba(255,255,255,0.7)',
+                    lineHeight: '1.6'
+                  }}>
+                    {t("about.steps.development.line2")}
+                  </div>
+                </div>
+              </foreignObject>
+
+              {/* Step 4 - Testing/QA */}
+              <g transform="translate(1180, 140)">
+                <circle
+                  cx="0"
+                  cy="0"
+                  r="65"
+                  fill="#5BA8F7"
+                  opacity="0.15"
+                  filter="url(#processGlow)"
+                />
+                <circle
+                  cx="0"
+                  cy="0"
+                  r="50"
+                  fill="#5BA8F7"
+                  opacity="0.2"
+                  filter="url(#processGlow)"
+                />
+                <text
+                  x="0"
+                  y="22"
+                  textAnchor="middle"
+                  fontSize="70"
+                  fontWeight="900"
+                  fill="#5BA8F7"
+                  filter="url(#processGlow)"
+                >
+                  4
+                </text>
+              </g>
+              <foreignObject x="1030" y="240" width="300" height="100">
+                <div style={{
+                  direction: locale === 'ar' ? 'rtl' : 'ltr',
+                  textAlign: 'center'
+                }}>
+                  <div style={{
+                    fontSize: '24px',
+                    fontWeight: '700',
+                    color: 'white',
+                    marginBottom: '8px'
+                  }}>
+                    {t("about.steps.testing.title")}
+                  </div>
+                  <div style={{
+                    fontSize: '15px',
+                    color: 'rgba(255,255,255,0.7)',
+                    lineHeight: '1.6'
+                  }}>
+                    {t("about.steps.testing.line1")}
+                  </div>
+                  <div style={{
+                    fontSize: '15px',
+                    color: 'rgba(255,255,255,0.7)',
+                    lineHeight: '1.6'
+                  }}>
+                    {t("about.steps.testing.line2")}
+                  </div>
+                </div>
+              </foreignObject>
+
+              {/* Step 5 - Training */}
+              <g transform="translate(1500, 160)">
+                <circle
+                  cx="0"
+                  cy="0"
+                  r="65"
+                  fill="#4ECFFC"
+                  opacity="0.15"
+                  filter="url(#processGlow)"
+                />
+                <circle
+                  cx="0"
+                  cy="0"
+                  r="50"
+                  fill="#4ECFFC"
+                  opacity="0.2"
+                  filter="url(#processGlow)"
+                />
+                <text
+                  x="0"
+                  y="22"
+                  textAnchor="middle"
+                  fontSize="70"
+                  fontWeight="900"
+                  fill="#4ECFFC"
+                  filter="url(#processGlow)"
+                >
+                  5
+                </text>
+              </g>
+              <foreignObject x="1350" y="260" width="300" height="100">
+                <div style={{
+                  direction: locale === 'ar' ? 'rtl' : 'ltr',
+                  textAlign: 'center'
+                }}>
+                  <div style={{
+                    fontSize: '24px',
+                    fontWeight: '700',
+                    color: 'white',
+                    marginBottom: '8px'
+                  }}>
+                    {t("about.steps.training.title")}
+                  </div>
+                  <div style={{
+                    fontSize: '15px',
+                    color: 'rgba(255,255,255,0.7)',
+                    lineHeight: '1.6'
+                  }}>
+                    {t("about.steps.training.line1")}
+                  </div>
+                  <div style={{
+                    fontSize: '15px',
+                    color: 'rgba(255,255,255,0.7)',
+                    lineHeight: '1.6'
+                  }}>
+                    {t("about.steps.training.line2")}
+                  </div>
+                </div>
+              </foreignObject>
+
+              {/* Step 6 - Support */}
+              <g transform="translate(1820, 225)">
+                <circle
+                  cx="0"
+                  cy="0"
+                  r="65"
+                  fill="#4EF0FF"
+                  opacity="0.15"
+                  filter="url(#processGlow)"
+                />
+                <circle
+                  cx="0"
+                  cy="0"
+                  r="50"
+                  fill="#4EF0FF"
+                  opacity="0.2"
+                  filter="url(#processGlow)"
+                />
+                <text
+                  x="0"
+                  y="22"
+                  textAnchor="middle"
+                  fontSize="70"
+                  fontWeight="900"
+                  fill="#4EF0FF"
+                  filter="url(#processGlow)"
+                >
+                  6
+                </text>
+              </g>
+              <foreignObject x="1670" y="325" width="300" height="100">
+                <div style={{
+                  direction: locale === 'ar' ? 'rtl' : 'ltr',
+                  textAlign: 'center'
+                }}>
+                  <div style={{
+                    fontSize: '24px',
+                    fontWeight: '700',
+                    color: 'white',
+                    marginBottom: '8px'
+                  }}>
+                    {t("about.steps.support.title")}
+                  </div>
+                  <div style={{
+                    fontSize: '15px',
+                    color: 'rgba(255,255,255,0.7)',
+                    lineHeight: '1.6'
+                  }}>
+                    {t("about.steps.support.line1")}
+                  </div>
+                  <div style={{
+                    fontSize: '15px',
+                    color: 'rgba(255,255,255,0.7)',
+                    lineHeight: '1.6'
+                  }}>
+                    {t("about.steps.support.line2")}
+                  </div>
+                </div>
+              </foreignObject>
+            </svg>
           </div>
         </div>
       </section>
 
       {/* Services Section */}
-      <section id="services" className="relative z-10 py-20 px-6">
-        <div className="max-w-6xl mx-auto">
+      <section
+        id="services"
+        className="relative z-10 py-20"
+        style={{ paddingLeft: "60px", paddingRight: "60px" }}
+      >
+        <div>
           <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold mb-6">
+            <h2 className="text-4xl md:text-5xl font-bold mb-6 tracking-tight">
               {t("services.heading")}{" "}
-              <span className="text-[#00d9ff]">
+              <span className="bg-gradient-to-r from-[#E44CFF] to-[#4EF0FF] bg-clip-text text-transparent">
                 {t("services.headingHighlight")}
               </span>
             </h2>
@@ -369,20 +751,36 @@ export default function Home() {
             ].map((service, index) => (
               <div
                 key={index}
-                className="p-8 border border-[#00d9ff]/20 rounded-xl backdrop-blur-sm bg-[#0a0e14]/60 hover:border-[#00d9ff]/40 transition-all transform hover:scale-105"
+                className="p-8 rounded-2xl transition-all duration-300 hover:scale-105"
+                style={{
+                  background: "rgba(24, 27, 53, 0.4)",
+                  backdropFilter: "blur(20px)",
+                  border: "1px solid rgba(88, 97, 242, 0.2)",
+                  boxShadow: "0 0 20px rgba(88, 97, 242, 0.1)",
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.boxShadow =
+                    "0 0 40px rgba(88, 97, 242, 0.3)";
+                  e.currentTarget.style.borderColor = "rgba(88, 97, 242, 0.4)";
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.boxShadow =
+                    "0 0 20px rgba(88, 97, 242, 0.1)";
+                  e.currentTarget.style.borderColor = "rgba(88, 97, 242, 0.2)";
+                }}
               >
-                <h3 className="text-2xl font-bold mb-4 text-[#00d9ff]">
+                <h3 className="text-2xl font-bold mb-4 bg-gradient-to-r from-[#E44CFF] to-[#5861F2] bg-clip-text text-transparent">
                   {service.title}
                 </h3>
-                <p className="text-gray-400 mb-6">{service.description}</p>
-                <ul className="space-y-2">
+                <p className="text-gray-300 mb-6">{service.description}</p>
+                <ul className="space-y-3">
                   {service.features.map(
                     (feature: string, featureIndex: number) => (
                       <li
                         key={featureIndex}
-                        className="flex items-center text-gray-400"
+                        className="flex items-center text-gray-300"
                       >
-                        <Check className="w-4 h-4 text-[#00d9ff] mr-3" />
+                        <Check className="w-4 h-4 text-[#4EF0FF] mr-3 drop-shadow-[0_0_6px_rgba(78,240,255,0.6)]" />
                         {feature}
                       </li>
                     )
@@ -395,11 +793,15 @@ export default function Home() {
       </section>
 
       {/* Packages Section */}
-      <section id="packages" className="relative z-10 py-20 px-6">
-        <div className="max-w-6xl mx-auto text-center">
-          <h2 className="text-4xl md:text-5xl font-bold mb-6">
+      <section
+        id="packages"
+        className="relative z-10 py-20"
+        style={{ paddingLeft: "60px", paddingRight: "60px" }}
+      >
+        <div className="text-center">
+          <h2 className="text-4xl md:text-5xl font-bold mb-6 tracking-tight">
             {t("packages.heading")}{" "}
-            <span className="text-[#00d9ff]">
+            <span className="bg-gradient-to-r from-[#E44CFF] via-[#5861F2] to-[#4EF0FF] bg-clip-text text-transparent">
               {t("packages.headingHighlight")}
             </span>
           </h2>
@@ -440,44 +842,80 @@ export default function Home() {
             ].map((pkg, index) => (
               <div
                 key={index}
-                className={`relative p-8 rounded-xl backdrop-blur-sm transition-all transform hover:scale-105 ${
-                  pkg.popular
-                    ? "border-2 border-[#00d9ff] bg-[#0a0e14]/60 shadow-2xl shadow-[#00d9ff]/20"
-                    : "border border-[#00d9ff]/20 bg-[#0a0e14]/60 hover:border-[#00d9ff]/40"
-                }`}
+                className="relative p-8 rounded-2xl transition-all duration-300 hover:scale-105"
+                style={{
+                  background: pkg.popular
+                    ? "rgba(228, 76, 255, 0.1)"
+                    : "rgba(24, 27, 53, 0.4)",
+                  backdropFilter: "blur(20px)",
+                  border: pkg.popular
+                    ? "2px solid rgba(228, 76, 255, 0.4)"
+                    : "1px solid rgba(88, 97, 242, 0.2)",
+                  boxShadow: pkg.popular
+                    ? "0 0 50px rgba(228, 76, 255, 0.3)"
+                    : "0 0 20px rgba(88, 97, 242, 0.1)",
+                }}
               >
                 {pkg.popular && (
                   <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
-                    <span className="bg-[#00d9ff] text-[#0a0e14] px-4 py-2 rounded-full text-sm font-bold">
+                    <span
+                      className="px-4 py-2 rounded-full text-sm font-bold"
+                      style={{
+                        background: "linear-gradient(135deg, #E44CFF, #5861F2)",
+                        boxShadow: "0 0 20px rgba(228, 76, 255, 0.5)",
+                      }}
+                    >
                       {pkg.popularText}
                     </span>
                   </div>
                 )}
                 <h3 className="text-2xl font-bold mb-4">{pkg.name}</h3>
                 <div className="mb-6">
-                  <span className="text-4xl font-bold text-[#00d9ff]">
+                  <span className="text-4xl font-bold bg-gradient-to-r from-[#E44CFF] to-[#4EF0FF] bg-clip-text text-transparent">
                     {pkg.price}
                   </span>
                   <span className="text-gray-500">{pkg.period}</span>
                 </div>
-                <p className="text-gray-400 mb-8">{pkg.description}</p>
+                <p className="text-gray-300 mb-8">{pkg.description}</p>
                 <ul className="space-y-3 mb-8">
                   {pkg.features.map((feature: string, featureIndex: number) => (
                     <li
                       key={featureIndex}
-                      className="flex items-center text-gray-400"
+                      className="flex items-center text-gray-300"
                     >
-                      <Check className="w-4 h-4 text-[#00d9ff] mr-3" />
+                      <Check className="w-4 h-4 text-[#4EF0FF] mr-3 drop-shadow-[0_0_6px_rgba(78,240,255,0.6)]" />
                       {feature}
                     </li>
                   ))}
                 </ul>
                 <button
-                  className={`w-full py-3 px-6 rounded-lg font-semibold transition-all ${
+                  className="w-full py-3 px-6 rounded-xl font-semibold transition-all duration-300 hover:scale-105"
+                  style={
                     pkg.popular
-                      ? "bg-[#00d9ff] text-[#0a0e14] hover:bg-[#00c5e6]"
-                      : "border border-[#00d9ff] text-[#00d9ff] hover:bg-[#00d9ff] hover:text-[#0a0e14]"
-                  }`}
+                      ? {
+                          background:
+                            "linear-gradient(135deg, #E44CFF, #5861F2)",
+                          boxShadow: "0 0 30px rgba(228, 76, 255, 0.4)",
+                        }
+                      : {
+                          border: "1px solid rgba(228, 76, 255, 0.3)",
+                          background: "transparent",
+                        }
+                  }
+                  onMouseEnter={(e) => {
+                    if (!pkg.popular) {
+                      e.currentTarget.style.background =
+                        "linear-gradient(135deg, #E44CFF, #5861F2)";
+                      e.currentTarget.style.boxShadow =
+                        "0 0 30px rgba(228, 76, 255, 0.4)";
+                    }
+                  }}
+                  onMouseLeave={(e) => {
+                    if (!pkg.popular) {
+                      e.currentTarget.style.background = "transparent";
+                      e.currentTarget.style.boxShadow = "none";
+                    }
+                  }}
                 >
                   {pkg.cta}
                 </button>
@@ -488,11 +926,15 @@ export default function Home() {
       </section>
 
       {/* Target Customers Section */}
-      <section id="customers" className="relative z-10 py-20 px-6">
-        <div className="max-w-6xl mx-auto text-center">
-          <h2 className="text-4xl md:text-5xl font-bold mb-6">
+      <section
+        id="customers"
+        className="relative z-10 py-20"
+        style={{ paddingLeft: "60px", paddingRight: "60px" }}
+      >
+        <div className="text-center">
+          <h2 className="text-4xl md:text-5xl font-bold mb-6 tracking-tight">
             {t("customers.heading")}{" "}
-            <span className="text-[#00d9ff]">
+            <span className="bg-gradient-to-r from-[#E44CFF] to-[#4EF0FF] bg-clip-text text-transparent">
               {t("customers.headingHighlight")}
             </span>
           </h2>
@@ -517,51 +959,71 @@ export default function Home() {
             ].map((customer, index) => (
               <div
                 key={index}
-                className="p-6 border border-[#00d9ff]/20 rounded-xl backdrop-blur-sm bg-[#0a0e14]/60 hover:border-[#00d9ff]/40 transition-all"
+                className="p-8 rounded-2xl transition-all duration-300"
+                style={{
+                  background: "rgba(24, 27, 53, 0.4)",
+                  backdropFilter: "blur(20px)",
+                  border: "1px solid rgba(228, 76, 255, 0.2)",
+                  boxShadow: "0 0 20px rgba(228, 76, 255, 0.1)",
+                }}
               >
-                <h3 className="text-xl font-bold mb-3 text-[#00d9ff]">
+                <h3 className="text-xl font-bold mb-3 text-[#E44CFF]">
                   {customer.title}
                 </h3>
-                <p className="text-gray-400">{customer.desc}</p>
+                <p className="text-gray-300">{customer.desc}</p>
               </div>
             ))}
-          </div>
-
-          <div>
-            <h3 className="text-2xl font-bold mb-8">
-              {t("customers.industries.heading")}
-            </h3>
-            <div className="grid grid-cols-2 md:grid-cols-5 gap-6">
-              {[
-                t("customers.industries.education"),
-                t("customers.industries.realEstate"),
-                t("customers.industries.healthcare"),
-                t("customers.industries.logistics"),
-                t("customers.industries.finance"),
-              ].map((industry, index) => (
-                <div
-                  key={index}
-                  className="p-4 border border-[#00d9ff]/20 rounded-lg backdrop-blur-sm bg-[#0a0e14]/60 hover:border-[#00d9ff]/40 transition-all transform hover:scale-105"
-                >
-                  <span className="font-semibold text-[#00d9ff]">
-                    {industry}
-                  </span>
-                </div>
-              ))}
-            </div>
           </div>
         </div>
       </section>
 
       {/* Community Section */}
-      <section id="community" className="relative z-10 py-24 px-6">
-        <div className="max-w-6xl mx-auto">
-          <div className="relative overflow-hidden rounded-[32px] border border-[#00d9ff]/15 bg-gradient-to-b from-[#0f1724]/80 via-[#0d1420]/70 to-[#0a0e14]/90 shadow-[0_30px_120px_rgba(0,0,0,0.45)] px-6 py-16 md:px-12">
+      <section id="community" className="relative z-10 py-24">
+        <div className="w-full">
+          {/* Section Heading - Outside the visual container */}
+          <div className="text-center mb-16">
+            <p className="text-sm uppercase tracking-[0.35em] text-gray-300 mb-4">
+              {t("community.kicker")}
+            </p>
+            <h2 className="text-4xl md:text-5xl font-bold mb-6 tracking-tight">
+              {t("community.title")}{" "}
+              <span className="bg-gradient-to-r from-[#E44CFF] to-[#4EF0FF] bg-clip-text text-transparent">
+                {t("community.highlight")}
+              </span>
+            </h2>
+          </div>
+
+          <div
+            className="relative overflow-hidden px-6 py-16 md:px-12"
+            style={{
+              background: "rgba(24, 27, 53, 0.3)",
+              backdropFilter: "blur(24px)",
+            }}
+          >
             <div className="absolute inset-0">
-              <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[520px] h-[520px] md:w-[620px] md:h-[620px] border border-[#00d9ff]/15 rounded-full" />
-              <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[360px] h-[360px] md:w-[450px] md:h-[450px] border border-[#00d9ff]/12 rounded-full" />
-              <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[240px] h-[240px] md:w-[300px] md:h-[300px] border border-[#00d9ff]/10 rounded-full" />
-              <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(0,217,255,0.08),transparent_55%)]" />
+              <div
+                className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[1520px] h-[1520px] md:w-[1720px] md:h-[1720px] rounded-full"
+                style={{ border: "1px solid rgba(228, 76, 255, 0.15)" }}
+              />
+              <div
+                className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[1280px] h-[1280px] md:w-[1480px] md:h-[1480px] rounded-full"
+                style={{ border: "1px solid rgba(228, 76, 255, 0.12)" }}
+              />
+              <div
+                className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[960px] h-[960px] md:w-[1160px] md:h-[1160px] rounded-full"
+                style={{ border: "1px solid rgba(228, 76, 255, 0.11)" }}
+              />
+              <div
+                className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[640px] h-[640px] md:w-[840px] md:h-[840px] rounded-full"
+                style={{ border: "1px solid rgba(228, 76, 255, 0.1)" }}
+              />
+              <div
+                className="absolute inset-0"
+                style={{
+                  background:
+                    "radial-gradient(circle at center, rgba(228, 76, 255, 0.08), transparent 55%)",
+                }}
+              />
               {orbitDots.map((dot, index) => (
                 <div
                   key={index}
@@ -575,18 +1037,15 @@ export default function Home() {
               ))}
             </div>
 
-            <div className="relative h-[560px] md:h-[680px]">
-              <div className="absolute left-1/2 top-1/2 flex -translate-x-1/2 -translate-y-1/2 flex-col items-center text-center space-y-4">
-                <p className="text-sm uppercase tracking-[0.35em] text-gray-300">
-                  {t("community.kicker")}
-                </p>
-                <h2 className="text-4xl md:text-5xl font-bold leading-tight">
-                  <span className="block text-white">{t("community.title")}</span>
-                  <span className="block text-[#00d9ff]">
-                    {t("community.highlight")}
-                  </span>
-                </h2>
-                <button className="px-7 py-3 rounded-full bg-[#00d9ff] text-[#04100a] font-semibold shadow-[0_15px_40px_rgba(0,217,255,0.35)] hover:bg-[#06c6e3] transition-all hover:scale-[1.03]">
+            <div className="relative h-[1600px] md:h-[1840px]">
+              <div className="absolute left-1/2 top-1/2 flex -translate-x-1/2 -translate-y-1/2 flex-col items-center text-center">
+                <button
+                  className="px-7 py-3 rounded-full font-semibold transition-all duration-300 hover:scale-[1.05]"
+                  style={{
+                    background: "linear-gradient(135deg, #E44CFF, #5861F2)",
+                    boxShadow: "0 0 30px rgba(228, 76, 255, 0.4)",
+                  }}
+                >
                   {t("community.cta")}
                 </button>
               </div>
@@ -594,30 +1053,51 @@ export default function Home() {
               {communityMembers.map((member, index) => (
                 <div
                   key={member.name}
-                  className="absolute"
+                  className="absolute left-1/2 top-1/2 orbital-item"
                   style={{
-                    left: member.position.left,
-                    top: member.position.top,
+                    animation: `orbit ${member.duration}s linear infinite`,
+                    animationDelay: `${
+                      -(member.initialAngle / 360) * member.duration
+                    }s`,
+                    width: `${member.orbit * 2}px`,
+                    height: `${member.orbit * 2}px`,
                     transform: "translate(-50%, -50%)",
                   }}
                 >
                   <div
-                    className="flex items-center gap-3 rounded-full bg-[#0c151d]/90 border border-[#00d9ff]/25 px-3 py-2 backdrop-blur shadow-[0_10px_40px_rgba(0,217,255,0.15)]"
-                    style={{ width: member.badgeWidth }}
+                    className="flex items-center gap-3 rounded-full px-3 py-2 absolute top-0 left-1/2"
+                    style={{
+                      width: member.badgeWidth,
+                      animation: `counter-rotate ${member.duration}s linear infinite`,
+                      animationDelay: `${
+                        -(member.initialAngle / 360) * member.duration
+                      }s`,
+                      transform: "translate(-50%, -50%)",
+                      background: "rgba(24, 27, 53, 0.8)",
+                      backdropFilter: "blur(16px)",
+                      border: "1px solid rgba(228, 76, 255, 0.3)",
+                      boxShadow: "0 0 20px rgba(228, 76, 255, 0.2)",
+                    }}
                   >
                     <div className="relative">
                       <img
                         src={member.image}
                         alt={member.name}
-                        className="w-10 h-10 rounded-full object-cover border border-[#00d9ff]/60"
+                        className="w-10 h-10 rounded-full object-cover"
+                        style={{ border: "2px solid rgba(228, 76, 255, 0.5)" }}
                       />
-                      <span className="absolute -right-1 -bottom-1 w-2 h-2 rounded-full bg-[#00d9ff] shadow-[0_0_10px_rgba(0,217,255,0.8)]" />
+                      <span
+                        className="absolute -right-1 -bottom-1 w-2 h-2 rounded-full bg-[#4EF0FF]"
+                        style={{
+                          boxShadow: "0 0 10px rgba(78, 240, 255, 0.8)",
+                        }}
+                      />
                     </div>
                     <div className="leading-tight text-left">
                       <div className="text-sm font-semibold text-white">
                         {member.name}
                       </div>
-                      <div className="text-[11px] text-[#9adfff]">
+                      <div className="text-[11px] text-[#E44CFF]">
                         {member.role}
                       </div>
                     </div>
@@ -628,14 +1108,31 @@ export default function Home() {
               {floatingAvatars.map((avatar, index) => (
                 <div
                   key={index}
-                  className="absolute"
+                  className="absolute left-1/2 top-1/2 orbital-item"
                   style={{
-                    left: avatar.position.left,
-                    top: avatar.position.top,
+                    animation: `orbit ${avatar.duration}s linear infinite`,
+                    animationDelay: `${
+                      -(avatar.initialAngle / 360) * avatar.duration
+                    }s`,
+                    width: `${avatar.orbit * 2}px`,
+                    height: `${avatar.orbit * 2}px`,
                     transform: "translate(-50%, -50%)",
                   }}
                 >
-                  <div className="rounded-full border border-[#00d9ff]/30 p-1 bg-[#0c151d]/80 shadow-[0_10px_30px_rgba(0,217,255,0.12)]">
+                  <div
+                    className="rounded-full p-1 absolute top-0 left-1/2"
+                    style={{
+                      animation: `counter-rotate ${avatar.duration}s linear infinite`,
+                      animationDelay: `${
+                        -(avatar.initialAngle / 360) * avatar.duration
+                      }s`,
+                      transform: "translate(-50%, -50%)",
+                      border: "1px solid rgba(228, 76, 255, 0.3)",
+                      background: "rgba(24, 27, 53, 0.6)",
+                      backdropFilter: "blur(12px)",
+                      boxShadow: "0 0 20px rgba(228, 76, 255, 0.15)",
+                    }}
+                  >
                     <img
                       src={avatar.image}
                       alt="Community member"
@@ -651,12 +1148,16 @@ export default function Home() {
       </section>
 
       {/* Contact Section */}
-      <section id="contact" className="relative z-10 py-20 px-6">
+      <section
+        id="contact"
+        className="relative z-10 py-20"
+        style={{ paddingLeft: "60px", paddingRight: "60px" }}
+      >
         <div className="max-w-4xl mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold mb-6">
+            <h2 className="text-4xl md:text-5xl font-bold mb-6 tracking-tight">
               {t("contact.heading")}{" "}
-              <span className="text-[#00d9ff]">
+              <span className="bg-gradient-to-r from-[#E44CFF] to-[#4EF0FF] bg-clip-text text-transparent">
                 {t("contact.headingHighlight")}
               </span>
             </h2>
@@ -665,44 +1166,95 @@ export default function Home() {
             </p>
           </div>
 
-          <div className="border border-[#00d9ff]/20 rounded-xl p-8 md:p-12 backdrop-blur-sm bg-[#0a0e14]/60">
+          <div
+            className="rounded-2xl p-8 md:p-12"
+            style={{
+              background: "rgba(24, 27, 53, 0.4)",
+              backdropFilter: "blur(20px)",
+              border: "1px solid rgba(228, 76, 255, 0.2)",
+              boxShadow: "0 0 40px rgba(228, 76, 255, 0.15)",
+            }}
+          >
             <form className="space-y-6">
               <div className="grid md:grid-cols-2 gap-6">
                 <div>
-                  <label className="block text-sm font-semibold mb-2 text-[#00d9ff]">
+                  <label className="block text-sm font-semibold mb-2 text-[#E44CFF]">
                     {t("contact.form.name")}
                   </label>
                   <input
                     type="text"
-                    className="w-full p-4 bg-[#0a0e14] border border-[#00d9ff]/30 rounded-lg focus:border-[#00d9ff] focus:outline-none transition-colors text-white"
+                    className="w-full p-4 rounded-xl focus:outline-none transition-all text-white"
+                    style={{
+                      background: "rgba(10, 15, 42, 0.6)",
+                      border: "1px solid rgba(228, 76, 255, 0.2)",
+                    }}
+                    onFocus={(e) => {
+                      e.target.style.borderColor = "rgba(228, 76, 255, 0.5)";
+                      e.target.style.boxShadow =
+                        "0 0 20px rgba(228, 76, 255, 0.2)";
+                    }}
+                    onBlur={(e) => {
+                      e.target.style.borderColor = "rgba(228, 76, 255, 0.2)";
+                      e.target.style.boxShadow = "none";
+                    }}
                     placeholder={t("contact.form.namePlaceholder")}
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-semibold mb-2 text-[#00d9ff]">
+                  <label className="block text-sm font-semibold mb-2 text-[#E44CFF]">
                     {t("contact.form.email")}
                   </label>
                   <input
                     type="email"
-                    className="w-full p-4 bg-[#0a0e14] border border-[#00d9ff]/30 rounded-lg focus:border-[#00d9ff] focus:outline-none transition-colors text-white"
+                    className="w-full p-4 rounded-xl focus:outline-none transition-all text-white"
+                    style={{
+                      background: "rgba(10, 15, 42, 0.6)",
+                      border: "1px solid rgba(228, 76, 255, 0.2)",
+                    }}
+                    onFocus={(e) => {
+                      e.target.style.borderColor = "rgba(228, 76, 255, 0.5)";
+                      e.target.style.boxShadow =
+                        "0 0 20px rgba(228, 76, 255, 0.2)";
+                    }}
+                    onBlur={(e) => {
+                      e.target.style.borderColor = "rgba(228, 76, 255, 0.2)";
+                      e.target.style.boxShadow = "none";
+                    }}
                     placeholder={t("contact.form.emailPlaceholder")}
                   />
                 </div>
               </div>
               <div>
-                <label className="block text-sm font-semibold mb-2 text-[#00d9ff]">
+                <label className="block text-sm font-semibold mb-2 text-[#E44CFF]">
                   {t("contact.form.message")}
                 </label>
                 <textarea
                   rows={6}
-                  className="w-full p-4 bg-[#0a0e14] border border-[#00d9ff]/30 rounded-lg focus:border-[#00d9ff] focus:outline-none transition-colors text-white resize-none"
+                  className="w-full p-4 rounded-xl focus:outline-none transition-all text-white resize-none"
+                  style={{
+                    background: "rgba(10, 15, 42, 0.6)",
+                    border: "1px solid rgba(228, 76, 255, 0.2)",
+                  }}
+                  onFocus={(e) => {
+                    e.target.style.borderColor = "rgba(228, 76, 255, 0.5)";
+                    e.target.style.boxShadow =
+                      "0 0 20px rgba(228, 76, 255, 0.2)";
+                  }}
+                  onBlur={(e) => {
+                    e.target.style.borderColor = "rgba(228, 76, 255, 0.2)";
+                    e.target.style.boxShadow = "none";
+                  }}
                   placeholder={t("contact.form.messagePlaceholder")}
                 />
               </div>
               <div className="text-center">
                 <button
                   type="submit"
-                  className="px-8 py-4 bg-[#00d9ff] text-[#0a0e14] text-lg font-semibold rounded-lg hover:bg-[#00c5e6] transition-all transform hover:scale-105"
+                  className="px-8 py-4 text-lg font-semibold rounded-xl transition-all duration-300 hover:scale-105"
+                  style={{
+                    background: "linear-gradient(135deg, #E44CFF, #5861F2)",
+                    boxShadow: "0 0 30px rgba(228, 76, 255, 0.4)",
+                  }}
                 >
                   {t("contact.form.submit")}
                 </button>
@@ -713,14 +1265,26 @@ export default function Home() {
       </section>
 
       {/* Footer */}
-      <footer className="relative z-10 border-t border-[#00d9ff]/20 py-12 px-6">
-        <div className="max-w-6xl mx-auto text-center">
-          <div className="text-2xl font-bold mb-6">{t("footer.company")}</div>
-          <p className="text-gray-400 mb-8 max-w-2xl mx-auto">
+      <footer
+        className="relative z-10 py-12 px-6"
+        style={{
+          borderTop: "1px solid rgba(228, 76, 255, 0.2)",
+        }}
+      >
+        <div className="text-center">
+          <div className="text-2xl font-bold mb-6 bg-gradient-to-r from-[#E44CFF] to-[#4EF0FF] bg-clip-text text-transparent">
+            {t("footer.company")}
+          </div>
+          <p className="text-gray-300 mb-8 max-w-2xl mx-auto">
             {t("footer.description")}
           </p>
-          <div className="border-t border-[#00d9ff]/20 pt-6">
-            <p className="text-gray-500">{t("footer.copyright")}</p>
+          <div
+            className="pt-6"
+            style={{
+              borderTop: "1px solid rgba(228, 76, 255, 0.2)",
+            }}
+          >
+            <p className="text-gray-400">{t("footer.copyright")}</p>
           </div>
         </div>
       </footer>
