@@ -60,8 +60,8 @@ const FlowCanvas: React.FC<FlowCanvasProps> = ({ t, locale }) => {
   ];
 
   // Generate connections from apps to center with smooth curves
-  const generateAppConnections = () => {
-    const connections = [];
+  const generateAppConnections = (): Array<{ id: string; path: string; color: string }> => {
+    const connections: Array<{ id: string; path: string; color: string }> = [];
     leftApps.forEach((app, idx) => {
       const startX = app.x + app.size;
       const startY = app.y + app.size / 2;
@@ -92,8 +92,8 @@ const FlowCanvas: React.FC<FlowCanvasProps> = ({ t, locale }) => {
   };
 
   // Generate connections from center to user groups
-  const generateUserConnections = () => {
-    const connections = [];
+  const generateUserConnections = (): Array<{ id: string; path: string; color: string }> => {
+    const connections: Array<{ id: string; path: string; color: string }> = [];
     userGroups.forEach((group, idx) => {
       const rad = (group.angle * Math.PI) / 180;
       const startX = center.x + Math.cos(rad) * 120;
@@ -111,8 +111,8 @@ const FlowCanvas: React.FC<FlowCanvasProps> = ({ t, locale }) => {
   };
 
   // Generate connections from user groups to notifications
-  const generateNotificationConnections = () => {
-    const connections = [];
+  const generateNotificationConnections = (): Array<{ id: string; path: string; color: string }> => {
+    const connections: Array<{ id: string; path: string; color: string }> = [];
     notifications.forEach((notif, idx) => {
       const group = userGroups[idx % userGroups.length];
       const startX = group.x;
