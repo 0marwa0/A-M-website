@@ -239,7 +239,9 @@ export default function Home() {
             <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold leading-[1.2] max-w-4xl">
               <span className="inline-flex items-center gap-3 flex-wrap justify-center">
                 <span className="text-white">{t("hero.heading")}</span>
-                <span className="text-white/40">{t("hero.headingHighlight")}</span>
+                <span className="text-white/40">
+                  {t("hero.headingHighlight")}
+                </span>
               </span>
             </h1>
 
@@ -364,30 +366,38 @@ export default function Home() {
                 </text>
               </g>
               <foreignObject x="70" y="300" width="300" height="100">
-                <div style={{
-                  direction: locale === 'ar' ? 'rtl' : 'ltr',
-                  textAlign: 'center'
-                }}>
-                  <div style={{
-                    fontSize: '24px',
-                    fontWeight: '700',
-                    color: 'white',
-                    marginBottom: '8px'
-                  }}>
+                <div
+                  style={{
+                    direction: locale === "ar" ? "rtl" : "ltr",
+                    textAlign: "center",
+                  }}
+                >
+                  <div
+                    style={{
+                      fontSize: "24px",
+                      fontWeight: "700",
+                      color: "white",
+                      marginBottom: "8px",
+                    }}
+                  >
                     {t("about.steps.discovery.title")}
                   </div>
-                  <div style={{
-                    fontSize: '15px',
-                    color: 'rgba(255,255,255,0.7)',
-                    lineHeight: '1.6'
-                  }}>
+                  <div
+                    style={{
+                      fontSize: "15px",
+                      color: "rgba(255,255,255,0.7)",
+                      lineHeight: "1.6",
+                    }}
+                  >
                     {t("about.steps.discovery.line1")}
                   </div>
-                  <div style={{
-                    fontSize: '15px',
-                    color: 'rgba(255,255,255,0.7)',
-                    lineHeight: '1.6'
-                  }}>
+                  <div
+                    style={{
+                      fontSize: "15px",
+                      color: "rgba(255,255,255,0.7)",
+                      lineHeight: "1.6",
+                    }}
+                  >
                     {t("about.steps.discovery.line2")}
                   </div>
                 </div>
@@ -424,30 +434,38 @@ export default function Home() {
                 </text>
               </g>
               <foreignObject x="390" y="260" width="300" height="100">
-                <div style={{
-                  direction: locale === 'ar' ? 'rtl' : 'ltr',
-                  textAlign: 'center'
-                }}>
-                  <div style={{
-                    fontSize: '24px',
-                    fontWeight: '700',
-                    color: 'white',
-                    marginBottom: '8px'
-                  }}>
+                <div
+                  style={{
+                    direction: locale === "ar" ? "rtl" : "ltr",
+                    textAlign: "center",
+                  }}
+                >
+                  <div
+                    style={{
+                      fontSize: "24px",
+                      fontWeight: "700",
+                      color: "white",
+                      marginBottom: "8px",
+                    }}
+                  >
                     {t("about.steps.planning.title")}
                   </div>
-                  <div style={{
-                    fontSize: '15px',
-                    color: 'rgba(255,255,255,0.7)',
-                    lineHeight: '1.6'
-                  }}>
+                  <div
+                    style={{
+                      fontSize: "15px",
+                      color: "rgba(255,255,255,0.7)",
+                      lineHeight: "1.6",
+                    }}
+                  >
                     {t("about.steps.planning.line1")}
                   </div>
-                  <div style={{
-                    fontSize: '15px',
-                    color: 'rgba(255,255,255,0.7)',
-                    lineHeight: '1.6'
-                  }}>
+                  <div
+                    style={{
+                      fontSize: "15px",
+                      color: "rgba(255,255,255,0.7)",
+                      lineHeight: "1.6",
+                    }}
+                  >
                     {t("about.steps.planning.line2")}
                   </div>
                 </div>
@@ -484,30 +502,38 @@ export default function Home() {
                 </text>
               </g>
               <foreignObject x="710" y="280" width="300" height="100">
-                <div style={{
-                  direction: locale === 'ar' ? 'rtl' : 'ltr',
-                  textAlign: 'center'
-                }}>
-                  <div style={{
-                    fontSize: '24px',
-                    fontWeight: '700',
-                    color: 'white',
-                    marginBottom: '8px'
-                  }}>
+                <div
+                  style={{
+                    direction: locale === "ar" ? "rtl" : "ltr",
+                    textAlign: "center",
+                  }}
+                >
+                  <div
+                    style={{
+                      fontSize: "24px",
+                      fontWeight: "700",
+                      color: "white",
+                      marginBottom: "8px",
+                    }}
+                  >
                     {t("about.steps.development.title")}
                   </div>
-                  <div style={{
-                    fontSize: '15px',
-                    color: 'rgba(255,255,255,0.7)',
-                    lineHeight: '1.6'
-                  }}>
+                  <div
+                    style={{
+                      fontSize: "15px",
+                      color: "rgba(255,255,255,0.7)",
+                      lineHeight: "1.6",
+                    }}
+                  >
                     {t("about.steps.development.line1")}
                   </div>
-                  <div style={{
-                    fontSize: '15px',
-                    color: 'rgba(255,255,255,0.7)',
-                    lineHeight: '1.6'
-                  }}>
+                  <div
+                    style={{
+                      fontSize: "15px",
+                      color: "rgba(255,255,255,0.7)",
+                      lineHeight: "1.6",
+                    }}
+                  >
                     {t("about.steps.development.line2")}
                   </div>
                 </div>
@@ -544,30 +570,38 @@ export default function Home() {
                 </text>
               </g>
               <foreignObject x="1030" y="240" width="300" height="100">
-                <div style={{
-                  direction: locale === 'ar' ? 'rtl' : 'ltr',
-                  textAlign: 'center'
-                }}>
-                  <div style={{
-                    fontSize: '24px',
-                    fontWeight: '700',
-                    color: 'white',
-                    marginBottom: '8px'
-                  }}>
+                <div
+                  style={{
+                    direction: locale === "ar" ? "rtl" : "ltr",
+                    textAlign: "center",
+                  }}
+                >
+                  <div
+                    style={{
+                      fontSize: "24px",
+                      fontWeight: "700",
+                      color: "white",
+                      marginBottom: "8px",
+                    }}
+                  >
                     {t("about.steps.testing.title")}
                   </div>
-                  <div style={{
-                    fontSize: '15px',
-                    color: 'rgba(255,255,255,0.7)',
-                    lineHeight: '1.6'
-                  }}>
+                  <div
+                    style={{
+                      fontSize: "15px",
+                      color: "rgba(255,255,255,0.7)",
+                      lineHeight: "1.6",
+                    }}
+                  >
                     {t("about.steps.testing.line1")}
                   </div>
-                  <div style={{
-                    fontSize: '15px',
-                    color: 'rgba(255,255,255,0.7)',
-                    lineHeight: '1.6'
-                  }}>
+                  <div
+                    style={{
+                      fontSize: "15px",
+                      color: "rgba(255,255,255,0.7)",
+                      lineHeight: "1.6",
+                    }}
+                  >
                     {t("about.steps.testing.line2")}
                   </div>
                 </div>
@@ -604,30 +638,38 @@ export default function Home() {
                 </text>
               </g>
               <foreignObject x="1350" y="260" width="300" height="100">
-                <div style={{
-                  direction: locale === 'ar' ? 'rtl' : 'ltr',
-                  textAlign: 'center'
-                }}>
-                  <div style={{
-                    fontSize: '24px',
-                    fontWeight: '700',
-                    color: 'white',
-                    marginBottom: '8px'
-                  }}>
+                <div
+                  style={{
+                    direction: locale === "ar" ? "rtl" : "ltr",
+                    textAlign: "center",
+                  }}
+                >
+                  <div
+                    style={{
+                      fontSize: "24px",
+                      fontWeight: "700",
+                      color: "white",
+                      marginBottom: "8px",
+                    }}
+                  >
                     {t("about.steps.training.title")}
                   </div>
-                  <div style={{
-                    fontSize: '15px',
-                    color: 'rgba(255,255,255,0.7)',
-                    lineHeight: '1.6'
-                  }}>
+                  <div
+                    style={{
+                      fontSize: "15px",
+                      color: "rgba(255,255,255,0.7)",
+                      lineHeight: "1.6",
+                    }}
+                  >
                     {t("about.steps.training.line1")}
                   </div>
-                  <div style={{
-                    fontSize: '15px',
-                    color: 'rgba(255,255,255,0.7)',
-                    lineHeight: '1.6'
-                  }}>
+                  <div
+                    style={{
+                      fontSize: "15px",
+                      color: "rgba(255,255,255,0.7)",
+                      lineHeight: "1.6",
+                    }}
+                  >
                     {t("about.steps.training.line2")}
                   </div>
                 </div>
@@ -664,30 +706,38 @@ export default function Home() {
                 </text>
               </g>
               <foreignObject x="1670" y="325" width="300" height="100">
-                <div style={{
-                  direction: locale === 'ar' ? 'rtl' : 'ltr',
-                  textAlign: 'center'
-                }}>
-                  <div style={{
-                    fontSize: '24px',
-                    fontWeight: '700',
-                    color: 'white',
-                    marginBottom: '8px'
-                  }}>
+                <div
+                  style={{
+                    direction: locale === "ar" ? "rtl" : "ltr",
+                    textAlign: "center",
+                  }}
+                >
+                  <div
+                    style={{
+                      fontSize: "24px",
+                      fontWeight: "700",
+                      color: "white",
+                      marginBottom: "8px",
+                    }}
+                  >
                     {t("about.steps.support.title")}
                   </div>
-                  <div style={{
-                    fontSize: '15px',
-                    color: 'rgba(255,255,255,0.7)',
-                    lineHeight: '1.6'
-                  }}>
+                  <div
+                    style={{
+                      fontSize: "15px",
+                      color: "rgba(255,255,255,0.7)",
+                      lineHeight: "1.6",
+                    }}
+                  >
                     {t("about.steps.support.line1")}
                   </div>
-                  <div style={{
-                    fontSize: '15px',
-                    color: 'rgba(255,255,255,0.7)',
-                    lineHeight: '1.6'
-                  }}>
+                  <div
+                    style={{
+                      fontSize: "15px",
+                      color: "rgba(255,255,255,0.7)",
+                      lineHeight: "1.6",
+                    }}
+                  >
                     {t("about.steps.support.line2")}
                   </div>
                 </div>
@@ -783,7 +833,7 @@ export default function Home() {
                         <Check className="w-4 h-4 text-[#4EF0FF] mr-3 drop-shadow-[0_0_6px_rgba(78,240,255,0.6)]" />
                         {feature}
                       </li>
-                    )
+                    ),
                   )}
                 </ul>
               </div>
@@ -793,7 +843,7 @@ export default function Home() {
       </section>
 
       {/* Packages Section */}
-      <section
+      {/* <section
         id="packages"
         className="relative z-10 py-20"
         style={{ paddingLeft: "60px", paddingRight: "60px" }}
@@ -923,7 +973,7 @@ export default function Home() {
             ))}
           </div>
         </div>
-      </section>
+      </section> */}
 
       {/* Target Customers Section */}
       <section
