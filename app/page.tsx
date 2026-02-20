@@ -2,7 +2,8 @@
 
 import { Check, Star } from "lucide-react";
 import { useI18n } from "@/lib/i18n";
-import FlowCanvas from "@/components/FlowCanvas";
+import SplineScene from "@/components/SplineScene";
+import CosmicBackground from "@/components/CosmicBackground";
 
 export default function Home() {
   const { locale, setLocale, t } = useI18n();
@@ -173,7 +174,7 @@ export default function Home() {
       lang={locale}
       dir={locale === "ar" ? "rtl" : "ltr"}
       style={{
-        background: "radial-gradient(circle at 30% 30%, #1b1f3b, #0a0f2a 70%)",
+        background: "#050816",
       }}
     >
       {/* Navigation */}
@@ -230,47 +231,54 @@ export default function Home() {
       {/* Hero Section */}
       <section
         id="home"
-        className="relative z-10 min-h-screen flex flex-col items-center justify-center px-6 overflow-visible pt-20"
+        className="relative z-10 flex flex-col items-center justify-center px-6 overflow-hidden min-h-screen pt-16 pb-8"
       >
-        <div className="max-w-7xl mx-auto relative w-full">
-          {/* Centered Content */}
-          <div className="flex flex-col items-center text-center space-y-6 mb-16 animate-fade-in">
-            {/* Headline with toggle emphasis */}
-            <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold leading-[1.2] max-w-4xl">
-              <span className="inline-flex items-center gap-3 flex-wrap justify-center">
-                <span className="text-white">{t("hero.heading")}</span>
-                <span className="text-white/40">
-                  {t("hero.headingHighlight")}
-                </span>
+        {/* Cinematic cosmic background */}
+        <CosmicBackground />
+
+        <div className="max-w-7xl mx-auto relative w-full z-10">
+          {/* Glowing badge */}
+          <div className="flex justify-center mb-6 animate-fade-in">
+            <div className="inline-flex items-center gap-2 px-5 py-2 rounded-full border border-white/10 bg-white/5 backdrop-blur-md text-xs tracking-widest uppercase text-white/70">
+              <span className="w-2 h-2 rounded-full bg-gradient-to-r from-[#E44CFF] to-[#4EF0FF] animate-pulse" />
+              {t("hero.badge.first")} · {t("hero.badge.second")} · {t("hero.badge.third")}
+            </div>
+          </div>
+
+          {/* Headline */}
+          <div className="flex flex-col items-center text-center space-y-5 mb-10 animate-fade-in">
+            <h1 className="text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-extrabold leading-[1.15] max-w-5xl tracking-tight">
+              <span className="text-white">{t("hero.heading")}</span>{" "}
+              <span className="bg-gradient-to-r from-[#E44CFF] via-[#5861F2] to-[#4EF0FF] bg-clip-text text-transparent">
+                {t("hero.headingHighlight")}
               </span>
             </h1>
 
-            {/* Secondary heading */}
-            <h2 className="text-lg md:text-xl lg:text-2xl text-gray-300 max-w-4xl font-normal">
-              {t("hero.heading1")}
-            </h2>
+            <p className="text-base md:text-lg lg:text-xl text-gray-400 max-w-3xl leading-relaxed">
+              {t("hero.subheading")}
+            </p>
 
             {/* CTA Buttons */}
-            <div className="flex flex-col sm:flex-row gap-4 items-center mt-4">
+            <div className="flex flex-col sm:flex-row gap-4 items-center pt-2">
               <a
                 href="#contact"
-                className="group relative px-10 py-5 bg-gradient-to-r from-[#E44CFF] to-[#5861F2] rounded-full font-semibold text-lg overflow-hidden transition-all duration-300 hover:scale-[1.05] hover:shadow-[0_0_40px_rgba(228,76,255,0.6)]"
+                className="group relative px-10 py-4 bg-gradient-to-r from-[#E44CFF] to-[#5861F2] rounded-full font-semibold text-base overflow-hidden transition-all duration-300 hover:scale-[1.05] hover:shadow-[0_0_50px_rgba(228,76,255,0.5)]"
               >
                 <span className="relative z-10">{t("hero.cta1")}</span>
-                <div className="absolute inset-0 bg-gradient-to-r from-[#5861F2] to-[#E44CFF] opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                <div className="absolute inset-0 bg-gradient-to-r from-[#5861F2] to-[#E44CFF] opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
               </a>
               <a
                 href="#services"
-                className="px-10 py-5 border-2 border-white/30 rounded-full font-semibold text-lg hover:border-[#E44CFF] hover:bg-[#E44CFF]/10 transition-all duration-300 backdrop-blur-sm"
+                className="px-10 py-4 border border-white/20 rounded-full font-semibold text-base hover:border-[#4EF0FF]/60 hover:bg-[#4EF0FF]/5 transition-all duration-300 backdrop-blur-sm"
               >
                 {t("hero.cta2")}
               </a>
             </div>
           </div>
 
-          {/* Visual Diagram - FlowCanvas */}
-          <div className="relative flex items-center justify-center animate-fade-in mt-12">
-            <FlowCanvas t={t} locale={locale} />
+          {/* 3D Spline Scene */}
+          <div className="relative flex items-center justify-center animate-fade-in">
+            <SplineScene />
           </div>
         </div>
       </section>
@@ -1106,9 +1114,8 @@ export default function Home() {
                   className="absolute left-1/2 top-1/2 orbital-item"
                   style={{
                     animation: `orbit ${member.duration}s linear infinite`,
-                    animationDelay: `${
-                      -(member.initialAngle / 360) * member.duration
-                    }s`,
+                    animationDelay: `${-(member.initialAngle / 360) * member.duration
+                      }s`,
                     width: `${member.orbit * 2}px`,
                     height: `${member.orbit * 2}px`,
                     transform: "translate(-50%, -50%)",
@@ -1119,9 +1126,8 @@ export default function Home() {
                     style={{
                       width: member.badgeWidth,
                       animation: `counter-rotate ${member.duration}s linear infinite`,
-                      animationDelay: `${
-                        -(member.initialAngle / 360) * member.duration
-                      }s`,
+                      animationDelay: `${-(member.initialAngle / 360) * member.duration
+                        }s`,
                       transform: "translate(-50%, -50%)",
                       background: "rgba(24, 27, 53, 0.8)",
                       backdropFilter: "blur(16px)",
@@ -1161,9 +1167,8 @@ export default function Home() {
                   className="absolute left-1/2 top-1/2 orbital-item"
                   style={{
                     animation: `orbit ${avatar.duration}s linear infinite`,
-                    animationDelay: `${
-                      -(avatar.initialAngle / 360) * avatar.duration
-                    }s`,
+                    animationDelay: `${-(avatar.initialAngle / 360) * avatar.duration
+                      }s`,
                     width: `${avatar.orbit * 2}px`,
                     height: `${avatar.orbit * 2}px`,
                     transform: "translate(-50%, -50%)",
@@ -1173,9 +1178,8 @@ export default function Home() {
                     className="rounded-full p-1 absolute top-0 left-1/2"
                     style={{
                       animation: `counter-rotate ${avatar.duration}s linear infinite`,
-                      animationDelay: `${
-                        -(avatar.initialAngle / 360) * avatar.duration
-                      }s`,
+                      animationDelay: `${-(avatar.initialAngle / 360) * avatar.duration
+                        }s`,
                       transform: "translate(-50%, -50%)",
                       border: "1px solid rgba(228, 76, 255, 0.3)",
                       background: "rgba(24, 27, 53, 0.6)",
