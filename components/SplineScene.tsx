@@ -1,24 +1,12 @@
 "use client";
 
-import React, { useState, useCallback } from "react";
-import dynamic from "next/dynamic";
+import React, { useState } from "react";
 
-// Dynamically import Spline with SSR disabled for performance
-const Spline = dynamic(() => import("@splinetool/react-spline"), {
-  ssr: false,
-  loading: () => (
-    <div className="spline-loader">
-      <div className="spline-loader-ring" />
-    </div>
-  ),
-});
+const SPLINE_VIEWER_URL =
+  "https://my.spline.design/r4xbot-lgYNdEmt4BLtmHHZkoD0ykzU/";
 
 const SplineScene: React.FC = () => {
   const [isLoaded, setIsLoaded] = useState(false);
-
-  const handleLoad = useCallback(() => {
-    setIsLoaded(true);
-  }, []);
 
   return (
     <div className="spline-scene-wrapper">
@@ -31,18 +19,20 @@ const SplineScene: React.FC = () => {
         </div>
       )}
 
-      {/* Spline 3D scene */}
-      <div
-        className={`spline-canvas ${isLoaded ? "spline-canvas-visible" : ""}`}
-      >
-        <Spline
-          scene="https://prod.spline.design/kaxk39NUR04e45pU/scene.splinecode"
-          onLoad={handleLoad}
-        />
-      </div>
+      {/* Spline 3D scene via iframe */}
+      <iframe
+        src={SPLINE_VIEWER_URL}
+        className={`spline-iframe ${isLoaded ? "spline-iframe-visible" : ""}`}
+        onLoad={() => setIsLoaded(true)}
+        allow="autoplay"
+        title="3D Robot Scene"
+      />
 
       {/* Bottom gradient mask to blend into site background */}
       <div className="spline-bottom-mask" />
+
+      {/* Cover the Spline watermark */}
+      <div className="spline-watermark-cover" />
 
       <style jsx>{`
         .spline-scene-wrapper {
@@ -55,6 +45,18 @@ const SplineScene: React.FC = () => {
           border-radius: 16px;
         }
 
+        .spline-iframe {
+          width: 100%;
+          height: 100%;
+          border: none;
+          border-radius: 16px;
+          opacity: 0;
+          transition: opacity 0.8s ease-out;
+        }
+        .spline-iframe-visible {
+          opacity: 1;
+        }
+
         /* Bottom gradient fade to blend Spline ground into dark bg */
         .spline-bottom-mask {
           position: absolute;
@@ -62,10 +64,23 @@ const SplineScene: React.FC = () => {
           left: 0;
           right: 0;
           height: 120px;
-          background: linear-gradient(to bottom, transparent, #0a0f2a);
+          background: linear-gradient(to bottom, transparent, #050816);
           pointer-events: none;
           z-index: 3;
           border-radius: 0 0 16px 16px;
+        }
+
+        /* Cover watermark in bottom-right */
+        .spline-watermark-cover {
+          position: absolute;
+          bottom: 0;
+          right: 0;
+          width: 200px;
+          height: 60px;
+          background: #050816;
+          pointer-events: none;
+          z-index: 4;
+          border-radius: 8px 0 16px 0;
         }
 
         /* Loading overlay */
@@ -76,7 +91,7 @@ const SplineScene: React.FC = () => {
           align-items: center;
           justify-content: center;
           z-index: 2;
-          background: rgba(10, 15, 42, 0.4);
+          background: rgba(5, 8, 22, 0.6);
           backdrop-filter: blur(4px);
           border-radius: 16px;
         }
@@ -101,30 +116,6 @@ const SplineScene: React.FC = () => {
           to {
             transform: rotate(360deg);
           }
-        }
-
-        /* Spline canvas container */
-        .spline-canvas {
-          width: 100%;
-          height: 100%;
-          opacity: 0;
-          transition: opacity 0.8s ease-out;
-        }
-        .spline-canvas-visible {
-          opacity: 1;
-        }
-
-        /* Ensure the Spline canvas fills its container properly */
-        .spline-canvas :global(canvas) {
-          width: 100% !important;
-          height: 100% !important;
-          outline: none;
-          border-radius: 16px;
-        }
-
-        /* Hide the Spline watermark for cleaner look */
-        .spline-canvas :global(a[href*="spline"]) {
-          display: none !important;
         }
 
         /* Responsive */
