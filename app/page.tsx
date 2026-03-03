@@ -4,6 +4,7 @@ import { Check, Star } from "lucide-react";
 import { useI18n } from "@/lib/i18n";
 import SplineScene from "@/components/SplineScene";
 import CosmicBackground from "@/components/CosmicBackground";
+import { Component as TypewriterTestimonial } from "@/components/ui/typewriter-testimonial";
 
 export default function Home() {
   const { locale, setLocale, t } = useI18n();
@@ -302,456 +303,92 @@ export default function Home() {
             </p>
           </div>
 
-          {/* Process Flow Diagram */}
-          <div className="relative flex items-center justify-center">
-            <svg
-              width="2000"
-              height="450"
-              viewBox="0 0 2000 450"
-              className="w-full h-auto"
-            >
-              <defs>
-                <filter id="processGlow">
-                  <feGaussianBlur stdDeviation="10" result="coloredBlur" />
-                  <feMerge>
-                    <feMergeNode in="coloredBlur" />
-                    <feMergeNode in="SourceGraphic" />
-                  </feMerge>
-                </filter>
-                <linearGradient
-                  id="waveGradientFull"
-                  x1="0%"
-                  y1="0%"
-                  x2="100%"
-                  y2="0%"
-                >
-                  <stop offset="0%" stopColor="#7B4CFF" />
-                  <stop offset="16%" stopColor="#8B56FF" />
-                  <stop offset="33%" stopColor="#5861F2" />
-                  <stop offset="50%" stopColor="#5BA8F7" />
-                  <stop offset="66%" stopColor="#4ECFFC" />
-                  <stop offset="100%" stopColor="#4EF0FF" />
-                </linearGradient>
-              </defs>
-
-              {/* Single Continuous Wave Line connecting all 6 steps */}
-              <path
-                d="M 80 225 Q 200 130, 330 200 T 630 160 Q 780 110, 930 180 T 1230 140 Q 1380 90, 1530 160 T 1920 225"
-                stroke="url(#waveGradientFull)"
-                strokeWidth="5"
-                fill="none"
-                opacity="0.8"
-              />
-
-              {/* Step 1 - Discovery */}
-              <g transform="translate(220, 200)">
-                <circle
-                  cx="0"
-                  cy="0"
-                  r="65"
-                  fill="#7B4CFF"
-                  opacity="0.15"
-                  filter="url(#processGlow)"
-                />
-                <circle
-                  cx="0"
-                  cy="0"
-                  r="50"
-                  fill="#7B4CFF"
-                  opacity="0.2"
-                  filter="url(#processGlow)"
-                />
-                <text
-                  x="0"
-                  y="22"
-                  textAnchor="middle"
-                  fontSize="70"
-                  fontWeight="900"
-                  fill="#7B4CFF"
-                  filter="url(#processGlow)"
-                >
-                  1
-                </text>
-              </g>
-              <foreignObject x="70" y="300" width="300" height="100">
-                <div
-                  style={{
-                    direction: locale === "ar" ? "rtl" : "ltr",
-                    textAlign: "center",
-                  }}
-                >
-                  <div
-                    style={{
-                      fontSize: "24px",
-                      fontWeight: "700",
-                      color: "white",
-                      marginBottom: "8px",
-                    }}
-                  >
-                    {t("about.steps.discovery.title")}
-                  </div>
-                  <div
-                    style={{
-                      fontSize: "15px",
-                      color: "rgba(255,255,255,0.7)",
-                      lineHeight: "1.6",
-                    }}
-                  >
-                    {t("about.steps.discovery.line1")}
-                  </div>
-                  <div
-                    style={{
-                      fontSize: "15px",
-                      color: "rgba(255,255,255,0.7)",
-                      lineHeight: "1.6",
-                    }}
-                  >
-                    {t("about.steps.discovery.line2")}
-                  </div>
-                </div>
-              </foreignObject>
-
-              {/* Step 2 - Planning */}
-              <g transform="translate(540, 160)">
-                <circle
-                  cx="0"
-                  cy="0"
-                  r="65"
-                  fill="#8B56FF"
-                  opacity="0.15"
-                  filter="url(#processGlow)"
-                />
-                <circle
-                  cx="0"
-                  cy="0"
-                  r="50"
-                  fill="#8B56FF"
-                  opacity="0.2"
-                  filter="url(#processGlow)"
-                />
-                <text
-                  x="0"
-                  y="22"
-                  textAnchor="middle"
-                  fontSize="70"
-                  fontWeight="900"
-                  fill="#8B56FF"
-                  filter="url(#processGlow)"
-                >
-                  2
-                </text>
-              </g>
-              <foreignObject x="390" y="260" width="300" height="100">
-                <div
-                  style={{
-                    direction: locale === "ar" ? "rtl" : "ltr",
-                    textAlign: "center",
-                  }}
-                >
-                  <div
-                    style={{
-                      fontSize: "24px",
-                      fontWeight: "700",
-                      color: "white",
-                      marginBottom: "8px",
-                    }}
-                  >
-                    {t("about.steps.planning.title")}
-                  </div>
-                  <div
-                    style={{
-                      fontSize: "15px",
-                      color: "rgba(255,255,255,0.7)",
-                      lineHeight: "1.6",
-                    }}
-                  >
-                    {t("about.steps.planning.line1")}
-                  </div>
-                  <div
-                    style={{
-                      fontSize: "15px",
-                      color: "rgba(255,255,255,0.7)",
-                      lineHeight: "1.6",
-                    }}
-                  >
-                    {t("about.steps.planning.line2")}
-                  </div>
-                </div>
-              </foreignObject>
-
-              {/* Step 3 - Development */}
-              <g transform="translate(860, 180)">
-                <circle
-                  cx="0"
-                  cy="0"
-                  r="65"
-                  fill="#5861F2"
-                  opacity="0.15"
-                  filter="url(#processGlow)"
-                />
-                <circle
-                  cx="0"
-                  cy="0"
-                  r="50"
-                  fill="#5861F2"
-                  opacity="0.2"
-                  filter="url(#processGlow)"
-                />
-                <text
-                  x="0"
-                  y="22"
-                  textAnchor="middle"
-                  fontSize="70"
-                  fontWeight="900"
-                  fill="#5861F2"
-                  filter="url(#processGlow)"
-                >
-                  3
-                </text>
-              </g>
-              <foreignObject x="710" y="280" width="300" height="100">
-                <div
-                  style={{
-                    direction: locale === "ar" ? "rtl" : "ltr",
-                    textAlign: "center",
-                  }}
-                >
-                  <div
-                    style={{
-                      fontSize: "24px",
-                      fontWeight: "700",
-                      color: "white",
-                      marginBottom: "8px",
-                    }}
-                  >
-                    {t("about.steps.development.title")}
-                  </div>
-                  <div
-                    style={{
-                      fontSize: "15px",
-                      color: "rgba(255,255,255,0.7)",
-                      lineHeight: "1.6",
-                    }}
-                  >
-                    {t("about.steps.development.line1")}
-                  </div>
-                  <div
-                    style={{
-                      fontSize: "15px",
-                      color: "rgba(255,255,255,0.7)",
-                      lineHeight: "1.6",
-                    }}
-                  >
-                    {t("about.steps.development.line2")}
-                  </div>
-                </div>
-              </foreignObject>
-
-              {/* Step 4 - Testing/QA */}
-              <g transform="translate(1180, 140)">
-                <circle
-                  cx="0"
-                  cy="0"
-                  r="65"
-                  fill="#5BA8F7"
-                  opacity="0.15"
-                  filter="url(#processGlow)"
-                />
-                <circle
-                  cx="0"
-                  cy="0"
-                  r="50"
-                  fill="#5BA8F7"
-                  opacity="0.2"
-                  filter="url(#processGlow)"
-                />
-                <text
-                  x="0"
-                  y="22"
-                  textAnchor="middle"
-                  fontSize="70"
-                  fontWeight="900"
-                  fill="#5BA8F7"
-                  filter="url(#processGlow)"
-                >
-                  4
-                </text>
-              </g>
-              <foreignObject x="1030" y="240" width="300" height="100">
-                <div
-                  style={{
-                    direction: locale === "ar" ? "rtl" : "ltr",
-                    textAlign: "center",
-                  }}
-                >
-                  <div
-                    style={{
-                      fontSize: "24px",
-                      fontWeight: "700",
-                      color: "white",
-                      marginBottom: "8px",
-                    }}
-                  >
-                    {t("about.steps.testing.title")}
-                  </div>
-                  <div
-                    style={{
-                      fontSize: "15px",
-                      color: "rgba(255,255,255,0.7)",
-                      lineHeight: "1.6",
-                    }}
-                  >
-                    {t("about.steps.testing.line1")}
-                  </div>
-                  <div
-                    style={{
-                      fontSize: "15px",
-                      color: "rgba(255,255,255,0.7)",
-                      lineHeight: "1.6",
-                    }}
-                  >
-                    {t("about.steps.testing.line2")}
-                  </div>
-                </div>
-              </foreignObject>
-
-              {/* Step 5 - Training */}
-              <g transform="translate(1500, 160)">
-                <circle
-                  cx="0"
-                  cy="0"
-                  r="65"
-                  fill="#4ECFFC"
-                  opacity="0.15"
-                  filter="url(#processGlow)"
-                />
-                <circle
-                  cx="0"
-                  cy="0"
-                  r="50"
-                  fill="#4ECFFC"
-                  opacity="0.2"
-                  filter="url(#processGlow)"
-                />
-                <text
-                  x="0"
-                  y="22"
-                  textAnchor="middle"
-                  fontSize="70"
-                  fontWeight="900"
-                  fill="#4ECFFC"
-                  filter="url(#processGlow)"
-                >
-                  5
-                </text>
-              </g>
-              <foreignObject x="1350" y="260" width="300" height="100">
-                <div
-                  style={{
-                    direction: locale === "ar" ? "rtl" : "ltr",
-                    textAlign: "center",
-                  }}
-                >
-                  <div
-                    style={{
-                      fontSize: "24px",
-                      fontWeight: "700",
-                      color: "white",
-                      marginBottom: "8px",
-                    }}
-                  >
-                    {t("about.steps.training.title")}
-                  </div>
-                  <div
-                    style={{
-                      fontSize: "15px",
-                      color: "rgba(255,255,255,0.7)",
-                      lineHeight: "1.6",
-                    }}
-                  >
-                    {t("about.steps.training.line1")}
-                  </div>
-                  <div
-                    style={{
-                      fontSize: "15px",
-                      color: "rgba(255,255,255,0.7)",
-                      lineHeight: "1.6",
-                    }}
-                  >
-                    {t("about.steps.training.line2")}
-                  </div>
-                </div>
-              </foreignObject>
-
-              {/* Step 6 - Support */}
-              <g transform="translate(1820, 225)">
-                <circle
-                  cx="0"
-                  cy="0"
-                  r="65"
-                  fill="#4EF0FF"
-                  opacity="0.15"
-                  filter="url(#processGlow)"
-                />
-                <circle
-                  cx="0"
-                  cy="0"
-                  r="50"
-                  fill="#4EF0FF"
-                  opacity="0.2"
-                  filter="url(#processGlow)"
-                />
-                <text
-                  x="0"
-                  y="22"
-                  textAnchor="middle"
-                  fontSize="70"
-                  fontWeight="900"
-                  fill="#4EF0FF"
-                  filter="url(#processGlow)"
-                >
-                  6
-                </text>
-              </g>
-              <foreignObject x="1670" y="325" width="300" height="100">
-                <div
-                  style={{
-                    direction: locale === "ar" ? "rtl" : "ltr",
-                    textAlign: "center",
-                  }}
-                >
-                  <div
-                    style={{
-                      fontSize: "24px",
-                      fontWeight: "700",
-                      color: "white",
-                      marginBottom: "8px",
-                    }}
-                  >
-                    {t("about.steps.support.title")}
-                  </div>
-                  <div
-                    style={{
-                      fontSize: "15px",
-                      color: "rgba(255,255,255,0.7)",
-                      lineHeight: "1.6",
-                    }}
-                  >
-                    {t("about.steps.support.line1")}
-                  </div>
-                  <div
-                    style={{
-                      fontSize: "15px",
-                      color: "rgba(255,255,255,0.7)",
-                      lineHeight: "1.6",
-                    }}
-                  >
-                    {t("about.steps.support.line2")}
-                  </div>
-                </div>
-              </foreignObject>
-            </svg>
+          {/* Typewriter Process Steps */}
+          <div className="relative flex items-center justify-center pt-8 pb-12">
+            <TypewriterTestimonial
+              testimonials={[
+                {
+                  icon: (
+                    <svg viewBox="0 0 112 112" width="112" height="112">
+                      <circle cx="56" cy="56" r="56" fill="#7B4CFF" fillOpacity="0.25" />
+                      <circle cx="56" cy="56" r="42" fill="#7B4CFF" fillOpacity="0.35" />
+                      <text x="56" y="73" textAnchor="middle" fontSize="46" fontWeight="900" fill="#9D7DFF" filter="drop-shadow(0 0 10px #7B4CFF)">1</text>
+                    </svg>
+                  ),
+                  audio: '',
+                  text: 'Initial meetings to understand client needs in detail. We learn about your business goals, pain points, and existing infrastructure to craft the perfect AI strategy.',
+                  name: 'Discovery',
+                  jobtitle: 'Step 1 — Understanding Your Needs',
+                },
+                {
+                  icon: (
+                    <svg viewBox="0 0 112 112" width="112" height="112">
+                      <circle cx="56" cy="56" r="56" fill="#8B56FF" fillOpacity="0.25" />
+                      <circle cx="56" cy="56" r="42" fill="#8B56FF" fillOpacity="0.35" />
+                      <text x="56" y="73" textAnchor="middle" fontSize="46" fontWeight="900" fill="#A87BFF" filter="drop-shadow(0 0 10px #8B56FF)">2</text>
+                    </svg>
+                  ),
+                  audio: '',
+                  text: 'Solution architecture, wireframes and technical planning. We design a detailed roadmap covering system design, data pipelines, and integration checkpoints.',
+                  name: 'Planning',
+                  jobtitle: 'Step 2 — Architecture & Roadmap',
+                },
+                {
+                  icon: (
+                    <svg viewBox="0 0 112 112" width="112" height="112">
+                      <circle cx="56" cy="56" r="56" fill="#5861F2" fillOpacity="0.25" />
+                      <circle cx="56" cy="56" r="42" fill="#5861F2" fillOpacity="0.35" />
+                      <text x="56" y="73" textAnchor="middle" fontSize="46" fontWeight="900" fill="#818CF8" filter="drop-shadow(0 0 10px #5861F2)">3</text>
+                    </svg>
+                  ),
+                  audio: '',
+                  text: 'Build custom AI solutions tailored to your needs. Our engineers develop, train, and iterate on models and integrations using the latest AI frameworks.',
+                  name: 'Development',
+                  jobtitle: 'Step 3 — Building Your Solution',
+                },
+                {
+                  icon: (
+                    <svg viewBox="0 0 112 112" width="112" height="112">
+                      <circle cx="56" cy="56" r="56" fill="#5BA8F7" fillOpacity="0.25" />
+                      <circle cx="56" cy="56" r="42" fill="#5BA8F7" fillOpacity="0.35" />
+                      <text x="56" y="73" textAnchor="middle" fontSize="46" fontWeight="900" fill="#7DC0FF" filter="drop-shadow(0 0 10px #5BA8F7)">4</text>
+                    </svg>
+                  ),
+                  audio: '',
+                  text: 'Quality assurance before deployment. We rigorously test every component — from model accuracy and edge-cases to performance, security, and reliability at scale.',
+                  name: 'Testing / QA',
+                  jobtitle: 'Step 4 — Quality Assurance',
+                },
+                {
+                  icon: (
+                    <svg viewBox="0 0 112 112" width="112" height="112">
+                      <circle cx="56" cy="56" r="56" fill="#4ECFFC" fillOpacity="0.25" />
+                      <circle cx="56" cy="56" r="42" fill="#4ECFFC" fillOpacity="0.35" />
+                      <text x="56" y="73" textAnchor="middle" fontSize="46" fontWeight="900" fill="#7DDFFF" filter="drop-shadow(0 0 10px #4ECFFC)">5</text>
+                    </svg>
+                  ),
+                  audio: '',
+                  text: 'User onboarding and training sessions. We empower your team with hands-on training, documentation, and guided walkthroughs so everyone can use AI confidently.',
+                  name: 'Training',
+                  jobtitle: 'Step 5 — Onboarding Your Team',
+                },
+                {
+                  icon: (
+                    <svg viewBox="0 0 112 112" width="112" height="112">
+                      <circle cx="56" cy="56" r="56" fill="#4EF0FF" fillOpacity="0.25" />
+                      <circle cx="56" cy="56" r="42" fill="#4EF0FF" fillOpacity="0.35" />
+                      <text x="56" y="73" textAnchor="middle" fontSize="46" fontWeight="900" fill="#6EF5FF" filter="drop-shadow(0 0 10px #4EF0FF)">6</text>
+                    </svg>
+                  ),
+                  audio: '',
+                  text: 'Ongoing support after deployment. Our team provides continuous monitoring, updates, and improvements — ensuring your AI solution evolves alongside your business.',
+                  name: 'Support',
+                  jobtitle: 'Step 6 — Continuous Improvement',
+                },
+              ]}
+            />
           </div>
+
         </div>
       </section>
 
@@ -851,6 +488,7 @@ export default function Home() {
       </section>
 
       {/* Packages Section */}
+
       {/* <section
         id="packages"
         className="relative z-10 py-20"
@@ -1342,6 +980,6 @@ export default function Home() {
           </div>
         </div>
       </footer>
-    </div>
+    </div >
   );
 }
