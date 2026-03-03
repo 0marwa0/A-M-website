@@ -5,6 +5,7 @@ import { useI18n } from "@/lib/i18n";
 import SplineScene from "@/components/SplineScene";
 import CosmicBackground from "@/components/CosmicBackground";
 import { Component as TypewriterTestimonial } from "@/components/ui/typewriter-testimonial";
+import { StaggerTestimonials } from "@/components/ui/stagger-testimonials";
 
 export default function Home() {
   const { locale, setLocale, t } = useI18n();
@@ -411,79 +412,58 @@ export default function Home() {
             </p>
           </div>
 
-          <div className="grid lg:grid-cols-2 gap-8">
-            {[
+          <StaggerTestimonials
+            services={[
               {
+                tempId: 0,
                 title: t("services.items.automation.title"),
                 description: t("services.items.automation.description"),
                 features: t("services.items.automation.features"),
+                accentColor: "#E44CFF",
+                accentColor2: "#7B4CFF",
               },
               {
+                tempId: 1,
                 title: t("services.items.analytics.title"),
                 description: t("services.items.analytics.description"),
                 features: t("services.items.analytics.features"),
+                accentColor: "#8B56FF",
+                accentColor2: "#5861F2",
               },
               {
+                tempId: 2,
                 title: t("services.items.industry.title"),
                 description: t("services.items.industry.description"),
                 features: t("services.items.industry.features"),
+                accentColor: "#5861F2",
+                accentColor2: "#5BA8F7",
               },
               {
+                tempId: 3,
                 title: t("services.items.llm.title"),
                 description: t("services.items.llm.description"),
                 features: t("services.items.llm.features"),
+                accentColor: "#5BA8F7",
+                accentColor2: "#4ECFFC",
               },
               {
+                tempId: 4,
                 title: t("services.items.endToEnd.title"),
                 description: t("services.items.endToEnd.description"),
                 features: t("services.items.endToEnd.features"),
+                accentColor: "#4ECFFC",
+                accentColor2: "#4EF0FF",
               },
               {
+                tempId: 5,
                 title: t("services.items.webMobile.title"),
                 description: t("services.items.webMobile.description"),
                 features: t("services.items.webMobile.features"),
+                accentColor: "#4EF0FF",
+                accentColor2: "#ACA0FB",
               },
-            ].map((service, index) => (
-              <div
-                key={index}
-                className="p-8 rounded-2xl transition-all duration-300 hover:scale-105"
-                style={{
-                  background: "rgba(24, 27, 53, 0.4)",
-                  backdropFilter: "blur(20px)",
-                  border: "1px solid rgba(88, 97, 242, 0.2)",
-                  boxShadow: "0 0 20px rgba(88, 97, 242, 0.1)",
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.boxShadow =
-                    "0 0 40px rgba(88, 97, 242, 0.3)";
-                  e.currentTarget.style.borderColor = "rgba(88, 97, 242, 0.4)";
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.boxShadow =
-                    "0 0 20px rgba(88, 97, 242, 0.1)";
-                  e.currentTarget.style.borderColor = "rgba(88, 97, 242, 0.2)";
-                }}
-              >
-                <h3 className="text-2xl font-bold mb-4 bg-gradient-to-r from-[#E44CFF] to-[#5861F2] bg-clip-text text-transparent">
-                  {service.title}
-                </h3>
-                <p className="text-gray-300 mb-6">{service.description}</p>
-                <ul className="space-y-3">
-                  {service.features.map(
-                    (feature: string, featureIndex: number) => (
-                      <li
-                        key={featureIndex}
-                        className="flex items-center text-gray-300"
-                      >
-                        <Check className="w-4 h-4 text-[#4EF0FF] mr-3 drop-shadow-[0_0_6px_rgba(78,240,255,0.6)]" />
-                        {feature}
-                      </li>
-                    ),
-                  )}
-                </ul>
-              </div>
-            ))}
-          </div>
+            ]}
+          />
         </div>
       </section>
 
