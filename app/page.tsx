@@ -6,6 +6,8 @@ import SplineScene from "@/components/SplineScene";
 import CosmicBackground from "@/components/CosmicBackground";
 import { Component as TypewriterTestimonial } from "@/components/ui/typewriter-testimonial";
 import { StaggerTestimonials } from "@/components/ui/stagger-testimonials";
+import { AnimatedTestimonials } from "@/components/ui/animated-testimonials";
+import { RoadmapProcess } from "@/components/ui/roadmap-process";
 
 export default function Home() {
   const { locale, setLocale, t } = useI18n();
@@ -285,114 +287,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* AI Integration Process Section */}
-      <section
-        id="about"
-        className="relative z-10 py-20"
-        style={{ paddingLeft: "60px", paddingRight: "60px" }}
-      >
-        <div>
-          <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold mb-6 tracking-tight">
-              {t("about.heading")}{" "}
-              <span className="bg-gradient-to-r from-[#E44CFF] to-[#4EF0FF] bg-clip-text text-transparent">
-                {t("about.headingHighlight")}
-              </span>
-            </h2>
-            <p className="text-xl text-gray-400 max-w-3xl mx-auto">
-              {t("about.subheading")}
-            </p>
-          </div>
-
-          {/* Typewriter Process Steps */}
-          <div className="relative flex items-center justify-center pt-8 pb-12">
-            <TypewriterTestimonial
-              testimonials={[
-                {
-                  icon: (
-                    <svg viewBox="0 0 112 112" width="112" height="112">
-                      <circle cx="56" cy="56" r="56" fill="#7B4CFF" fillOpacity="0.25" />
-                      <circle cx="56" cy="56" r="42" fill="#7B4CFF" fillOpacity="0.35" />
-                      <text x="56" y="73" textAnchor="middle" fontSize="46" fontWeight="900" fill="#9D7DFF" filter="drop-shadow(0 0 10px #7B4CFF)">1</text>
-                    </svg>
-                  ),
-                  audio: '',
-                  text: 'Initial meetings to understand client needs in detail. We learn about your business goals, pain points, and existing infrastructure to craft the perfect AI strategy.',
-                  name: 'Discovery',
-                  jobtitle: 'Step 1 — Understanding Your Needs',
-                },
-                {
-                  icon: (
-                    <svg viewBox="0 0 112 112" width="112" height="112">
-                      <circle cx="56" cy="56" r="56" fill="#8B56FF" fillOpacity="0.25" />
-                      <circle cx="56" cy="56" r="42" fill="#8B56FF" fillOpacity="0.35" />
-                      <text x="56" y="73" textAnchor="middle" fontSize="46" fontWeight="900" fill="#A87BFF" filter="drop-shadow(0 0 10px #8B56FF)">2</text>
-                    </svg>
-                  ),
-                  audio: '',
-                  text: 'Solution architecture, wireframes and technical planning. We design a detailed roadmap covering system design, data pipelines, and integration checkpoints.',
-                  name: 'Planning',
-                  jobtitle: 'Step 2 — Architecture & Roadmap',
-                },
-                {
-                  icon: (
-                    <svg viewBox="0 0 112 112" width="112" height="112">
-                      <circle cx="56" cy="56" r="56" fill="#5861F2" fillOpacity="0.25" />
-                      <circle cx="56" cy="56" r="42" fill="#5861F2" fillOpacity="0.35" />
-                      <text x="56" y="73" textAnchor="middle" fontSize="46" fontWeight="900" fill="#818CF8" filter="drop-shadow(0 0 10px #5861F2)">3</text>
-                    </svg>
-                  ),
-                  audio: '',
-                  text: 'Build custom AI solutions tailored to your needs. Our engineers develop, train, and iterate on models and integrations using the latest AI frameworks.',
-                  name: 'Development',
-                  jobtitle: 'Step 3 — Building Your Solution',
-                },
-                {
-                  icon: (
-                    <svg viewBox="0 0 112 112" width="112" height="112">
-                      <circle cx="56" cy="56" r="56" fill="#5BA8F7" fillOpacity="0.25" />
-                      <circle cx="56" cy="56" r="42" fill="#5BA8F7" fillOpacity="0.35" />
-                      <text x="56" y="73" textAnchor="middle" fontSize="46" fontWeight="900" fill="#7DC0FF" filter="drop-shadow(0 0 10px #5BA8F7)">4</text>
-                    </svg>
-                  ),
-                  audio: '',
-                  text: 'Quality assurance before deployment. We rigorously test every component — from model accuracy and edge-cases to performance, security, and reliability at scale.',
-                  name: 'Testing / QA',
-                  jobtitle: 'Step 4 — Quality Assurance',
-                },
-                {
-                  icon: (
-                    <svg viewBox="0 0 112 112" width="112" height="112">
-                      <circle cx="56" cy="56" r="56" fill="#4ECFFC" fillOpacity="0.25" />
-                      <circle cx="56" cy="56" r="42" fill="#4ECFFC" fillOpacity="0.35" />
-                      <text x="56" y="73" textAnchor="middle" fontSize="46" fontWeight="900" fill="#7DDFFF" filter="drop-shadow(0 0 10px #4ECFFC)">5</text>
-                    </svg>
-                  ),
-                  audio: '',
-                  text: 'User onboarding and training sessions. We empower your team with hands-on training, documentation, and guided walkthroughs so everyone can use AI confidently.',
-                  name: 'Training',
-                  jobtitle: 'Step 5 — Onboarding Your Team',
-                },
-                {
-                  icon: (
-                    <svg viewBox="0 0 112 112" width="112" height="112">
-                      <circle cx="56" cy="56" r="56" fill="#4EF0FF" fillOpacity="0.25" />
-                      <circle cx="56" cy="56" r="42" fill="#4EF0FF" fillOpacity="0.35" />
-                      <text x="56" y="73" textAnchor="middle" fontSize="46" fontWeight="900" fill="#6EF5FF" filter="drop-shadow(0 0 10px #4EF0FF)">6</text>
-                    </svg>
-                  ),
-                  audio: '',
-                  text: 'Ongoing support after deployment. Our team provides continuous monitoring, updates, and improvements — ensuring your AI solution evolves alongside your business.',
-                  name: 'Support',
-                  jobtitle: 'Step 6 — Continuous Improvement',
-                },
-              ]}
-            />
-          </div>
-
-        </div>
-      </section>
-
       {/* Services Section */}
       <section
         id="services"
@@ -467,7 +361,41 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Packages Section */}
+      {/* AI Integration Process — Roadmap (after Services) */}
+      <section
+        id="about"
+        className="relative z-10 py-20"
+        style={{ paddingLeft: "60px", paddingRight: "60px" }}
+      >
+        {/* Background glow */}
+        <div
+          className="pointer-events-none absolute inset-0"
+          style={{
+            background:
+              "radial-gradient(ellipse 60% 45% at 50% 50%, rgba(78,240,255,0.05) 0%, transparent 70%)",
+          }}
+        />
+
+        <div className="relative z-10">
+          {/* Heading */}
+          <div className="text-center mb-14">
+            <h2 className="text-4xl md:text-5xl font-bold mb-6 tracking-tight">
+              {t("about.heading")}{" "}
+              <span className="bg-gradient-to-r from-[#E44CFF] to-[#4EF0FF] bg-clip-text text-transparent">
+                {t("about.headingHighlight")}
+              </span>
+            </h2>
+            <p className="text-xl text-gray-400 max-w-3xl mx-auto">
+              {t("about.subheading")}
+            </p>
+          </div>
+
+          {/* Roadmap */}
+          <RoadmapProcess />
+        </div>
+      </section>
+
+
 
       {/* <section
         id="packages"
@@ -601,53 +529,84 @@ export default function Home() {
         </div>
       </section> */}
 
-      {/* Target Customers Section */}
+      {/* Who We Serve Section */}
       <section
         id="customers"
         className="relative z-10 py-20"
         style={{ paddingLeft: "60px", paddingRight: "60px" }}
       >
-        <div className="text-center">
-          <h2 className="text-4xl md:text-5xl font-bold mb-6 tracking-tight">
-            {t("customers.heading")}{" "}
-            <span className="bg-gradient-to-r from-[#E44CFF] to-[#4EF0FF] bg-clip-text text-transparent">
-              {t("customers.headingHighlight")}
-            </span>
-          </h2>
-          <p className="text-xl text-gray-400 mb-16 max-w-3xl mx-auto">
-            {t("customers.subheading")}
-          </p>
+        {/* Subtle background glow */}
+        <div
+          className="pointer-events-none absolute inset-0"
+          style={{
+            background:
+              "radial-gradient(ellipse 55% 40% at 50% 60%, rgba(228,76,255,0.06) 0%, transparent 75%)",
+          }}
+        />
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
+        <div className="relative z-10">
+          {/* Heading */}
+          <div className="text-center mb-4">
+            <h2 className="text-4xl md:text-5xl font-bold mb-6 tracking-tight">
+              {t("customers.heading")}{" "}
+              <span className="bg-gradient-to-r from-[#E44CFF] to-[#4EF0FF] bg-clip-text text-transparent">
+                {t("customers.headingHighlight")}
+              </span>
+            </h2>
+            <p className="text-xl text-gray-400 max-w-3xl mx-auto">
+              {t("customers.subheading")}
+            </p>
+          </div>
+
+          {/* Animated testimonials — one per customer type */}
+          <AnimatedTestimonials
+            autoplay
+            testimonials={[
+              {
+                name: t("customers.types.small.title"),
+                designation: "SMBs & Startups — Healthcare, Finance, Retail",
+                quote: t("customers.types.small.desc") + " We design our AI systems to slot cleanly into existing workflows so you gain a competitive edge without a painful transition.",
+                src: "https://images.unsplash.com/photo-1556761175-5973dc0f32e7?auto=format&fit=crop&w=800&q=80",
+                accent: "#E44CFF",
+              },
+              {
+                name: t("customers.types.mid.title"),
+                designation: "Growing Companies — Logistics, Education, SaaS",
+                quote: t("customers.types.mid.desc") + " Our modular architecture lets you start small and expand the AI footprint as your team's confidence and data maturity grows.",
+                src: "https://images.unsplash.com/photo-1600880292203-757bb62b4baf?auto=format&fit=crop&w=800&q=80",
+                accent: "#7B4CFF",
+              },
+              {
+                name: t("customers.types.enterprise.title"),
+                designation: "Enterprise & Government — Large-Scale Deployments",
+                quote: t("customers.types.enterprise.desc") + " From multi-tenant LLM orchestration to real-time analytics pipelines, we handle the full engineering lifecycle under one roof.",
+                src: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=800&q=80",
+                accent: "#4EF0FF",
+              },
+            ]}
+          />
+
+          {/* Industry pills */}
+          <div className="flex flex-wrap items-center justify-center gap-3 mt-8">
             {[
-              {
-                title: t("customers.types.small.title"),
-                desc: t("customers.types.small.desc"),
-              },
-              {
-                title: t("customers.types.mid.title"),
-                desc: t("customers.types.mid.desc"),
-              },
-              {
-                title: t("customers.types.enterprise.title"),
-                desc: t("customers.types.enterprise.desc"),
-              },
-            ].map((customer, index) => (
-              <div
-                key={index}
-                className="p-8 rounded-2xl transition-all duration-300"
+              { label: t("customers.industries.education"), color: "#E44CFF" },
+              { label: t("customers.industries.realEstate"), color: "#8B56FF" },
+              { label: t("customers.industries.healthcare"), color: "#7B4CFF" },
+              { label: t("customers.industries.logistics"), color: "#5861F2" },
+              { label: t("customers.industries.finance"), color: "#4EF0FF" },
+            ].map(({ label, color }) => (
+              <span
+                key={label}
+                className="px-5 py-2 rounded-full text-sm font-semibold tracking-wide"
                 style={{
-                  background: "rgba(24, 27, 53, 0.4)",
-                  backdropFilter: "blur(20px)",
-                  border: "1px solid rgba(228, 76, 255, 0.2)",
-                  boxShadow: "0 0 20px rgba(228, 76, 255, 0.1)",
+                  background: `${color}18`,
+                  border: `1px solid ${color}44`,
+                  color,
+                  boxShadow: `0 0 12px ${color}22`,
                 }}
               >
-                <h3 className="text-xl font-bold mb-3 text-[#E44CFF]">
-                  {customer.title}
-                </h3>
-                <p className="text-gray-300">{customer.desc}</p>
-              </div>
+                {label}
+              </span>
             ))}
           </div>
         </div>
