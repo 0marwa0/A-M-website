@@ -8,6 +8,7 @@ import { Component as TypewriterTestimonial } from "@/components/ui/typewriter-t
 import { StaggerTestimonials } from "@/components/ui/stagger-testimonials";
 import { AnimatedTestimonials } from "@/components/ui/animated-testimonials";
 import { RoadmapProcess } from "@/components/ui/roadmap-process";
+import StarField from "@/components/StarField";
 
 export default function Home() {
   const { locale, setLocale, t } = useI18n();
@@ -298,6 +299,22 @@ export default function Home() {
         id="services"
         className="relative z-10 py-20 px-6"
       >
+        {/* Star field background */}
+        <StarField bgColor="#060816" />
+        {/* Top fade — merges with hero bottom fade */}
+        <div
+          aria-hidden="true"
+          style={{
+            position: "absolute",
+            top: 0,
+            left: 0,
+            right: 0,
+            height: "160px",
+            background: "linear-gradient(to bottom, #060816 0%, transparent 100%)",
+            zIndex: 1,
+            pointerEvents: "none",
+          }}
+        />
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
             <h2 className="text-4xl md:text-5xl font-bold mb-6 tracking-tight">

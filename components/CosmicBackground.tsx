@@ -390,13 +390,13 @@ const CosmicBackground: React.FC = () => {
           bottom: 0;
           left: 0;
           right: 0;
-          height: 200px;
+          height: 280px;
           z-index: 4;
           background: linear-gradient(
             to bottom,
             transparent 0%,
-            rgba(10, 15, 42, 0.6) 50%,
-            #0a0f2a 100%
+            rgba(6, 8, 22, 0.5) 40%,
+            #060816 100%
           );
           pointer-events: none;
         }
