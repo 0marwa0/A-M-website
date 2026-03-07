@@ -16,7 +16,7 @@ export default function Home() {
     {
       name: "Syed Muhammad Haris",
       role: "CEO",
-      orbit: 640,
+      orbit: 450,
       initialAngle: 0,
       duration: 60,
       badgeWidth: "14rem",
@@ -26,7 +26,7 @@ export default function Home() {
     {
       name: "Malik Murtaza",
       role: "CTO",
-      orbit: 640,
+      orbit: 450,
       initialAngle: 90,
       duration: 60,
       badgeWidth: "13rem",
@@ -36,7 +36,7 @@ export default function Home() {
     {
       name: "Haseeb Arshad",
       role: "Sales Manager",
-      orbit: 640,
+      orbit: 450,
       initialAngle: 180,
       duration: 60,
       badgeWidth: "14.5rem",
@@ -46,7 +46,7 @@ export default function Home() {
     {
       name: "Saffuan Mushtaq",
       role: "Developer",
-      orbit: 640,
+      orbit: 450,
       initialAngle: 270,
       duration: 60,
       badgeWidth: "13.5rem",
@@ -56,7 +56,7 @@ export default function Home() {
     {
       name: "Sarah Chen",
       role: "Designer",
-      orbit: 480,
+      orbit: 340,
       initialAngle: 45,
       duration: 50,
       badgeWidth: "13rem",
@@ -66,7 +66,7 @@ export default function Home() {
     {
       name: "James Wilson",
       role: "Product Lead",
-      orbit: 480,
+      orbit: 340,
       initialAngle: 135,
       duration: 50,
       badgeWidth: "14rem",
@@ -76,7 +76,7 @@ export default function Home() {
     {
       name: "Emily Parker",
       role: "Marketing",
-      orbit: 480,
+      orbit: 340,
       initialAngle: 225,
       duration: 50,
       badgeWidth: "13.5rem",
@@ -86,7 +86,7 @@ export default function Home() {
     {
       name: "Alex Kumar",
       role: "Engineer",
-      orbit: 480,
+      orbit: 340,
       initialAngle: 315,
       duration: 50,
       badgeWidth: "13rem",
@@ -97,7 +97,7 @@ export default function Home() {
 
   const floatingAvatars = [
     {
-      orbit: 320,
+      orbit: 220,
       initialAngle: 0,
       duration: 40,
       size: "50px",
@@ -105,7 +105,7 @@ export default function Home() {
         "https://images.unsplash.com/photo-1521119989659-a83eee488004?auto=format&fit=crop&w=120&h=120&q=80&crop=faces",
     },
     {
-      orbit: 320,
+      orbit: 220,
       initialAngle: 72,
       duration: 40,
       size: "52px",
@@ -113,7 +113,7 @@ export default function Home() {
         "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=120&h=120&q=80&crop=faces",
     },
     {
-      orbit: 320,
+      orbit: 220,
       initialAngle: 144,
       duration: 40,
       size: "48px",
@@ -121,7 +121,7 @@ export default function Home() {
         "https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?auto=format&fit=crop&w=120&h=120&q=80&crop=faces",
     },
     {
-      orbit: 320,
+      orbit: 220,
       initialAngle: 216,
       duration: 40,
       size: "50px",
@@ -129,7 +129,7 @@ export default function Home() {
         "https://images.unsplash.com/photo-1520813792240-56fc4a3765a7?auto=format&fit=crop&w=120&h=120&q=80&crop=faces",
     },
     {
-      orbit: 320,
+      orbit: 220,
       initialAngle: 288,
       duration: 40,
       size: "52px",
@@ -137,7 +137,7 @@ export default function Home() {
         "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=120&h=120&q=80&crop=faces",
     },
     {
-      orbit: 760,
+      orbit: 530,
       initialAngle: 30,
       duration: 70,
       size: "46px",
@@ -145,7 +145,7 @@ export default function Home() {
         "https://images.unsplash.com/photo-1531427186611-ecfd6d936c79?auto=format&fit=crop&w=120&h=120&q=80&crop=faces",
     },
     {
-      orbit: 760,
+      orbit: 530,
       initialAngle: 150,
       duration: 70,
       size: "48px",
@@ -153,7 +153,7 @@ export default function Home() {
         "https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&w=120&h=120&q=80&crop=faces",
     },
     {
-      orbit: 760,
+      orbit: 530,
       initialAngle: 270,
       duration: 70,
       size: "46px",
@@ -182,7 +182,13 @@ export default function Home() {
       }}
     >
       {/* Navigation */}
-      <nav className="relative z-50 px-6 py-5">
+      <nav
+        className="fixed top-0 left-0 right-0 z-50 px-6 py-5"
+        style={{
+          background: "#050816",
+          borderBottom: "1px solid rgba(228, 76, 255, 0.12)",
+        }}
+      >
         <div className="max-w-7xl mx-auto flex justify-between items-center">
           <div className="flex items-center">
             <div className="text-3xl font-bold tracking-tight flex items-center gap-1">
@@ -290,10 +296,9 @@ export default function Home() {
       {/* Services Section */}
       <section
         id="services"
-        className="relative z-10 py-20"
-        style={{ paddingLeft: "60px", paddingRight: "60px" }}
+        className="relative z-10 py-20 px-6"
       >
-        <div>
+        <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
             <h2 className="text-4xl md:text-5xl font-bold mb-6 tracking-tight">
               {t("services.heading")}{" "}
@@ -364,8 +369,7 @@ export default function Home() {
       {/* AI Integration Process — Roadmap (after Services) */}
       <section
         id="about"
-        className="relative z-10 py-20"
-        style={{ paddingLeft: "60px", paddingRight: "60px" }}
+        className="relative z-10 py-20 px-6"
       >
         {/* Background glow */}
         <div
@@ -376,7 +380,7 @@ export default function Home() {
           }}
         />
 
-        <div className="relative z-10">
+        <div className="relative z-10 max-w-7xl mx-auto">
           {/* Heading */}
           <div className="text-center mb-14">
             <h2 className="text-4xl md:text-5xl font-bold mb-6 tracking-tight">
@@ -532,8 +536,7 @@ export default function Home() {
       {/* Who We Serve Section */}
       <section
         id="customers"
-        className="relative z-10 py-20"
-        style={{ paddingLeft: "60px", paddingRight: "60px" }}
+        className="relative z-10 py-20 px-6"
       >
         {/* Subtle background glow */}
         <div
@@ -544,7 +547,7 @@ export default function Home() {
           }}
         />
 
-        <div className="relative z-10">
+        <div className="relative z-10 max-w-7xl mx-auto">
           {/* Heading */}
           <div className="text-center mb-4">
             <h2 className="text-4xl md:text-5xl font-bold mb-6 tracking-tight">
@@ -613,8 +616,8 @@ export default function Home() {
       </section>
 
       {/* Community Section */}
-      <section id="community" className="relative z-10 py-24">
-        <div className="w-full">
+      <section id="community" className="relative z-10 py-24 px-6">
+        <div className="max-w-7xl mx-auto">
           {/* Section Heading - Outside the visual container */}
           <div className="text-center mb-16">
             <p className="text-sm uppercase tracking-[0.35em] text-gray-300 mb-4">
@@ -630,26 +633,22 @@ export default function Home() {
 
           <div
             className="relative overflow-hidden px-6 py-16 md:px-12"
-            style={{
-              background: "rgba(24, 27, 53, 0.3)",
-              backdropFilter: "blur(24px)",
-            }}
           >
             <div className="absolute inset-0">
               <div
-                className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[1520px] h-[1520px] md:w-[1720px] md:h-[1720px] rounded-full"
+                className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[1060px] h-[1060px] md:w-[1200px] md:h-[1200px] rounded-full"
                 style={{ border: "1px solid rgba(228, 76, 255, 0.15)" }}
               />
               <div
-                className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[1280px] h-[1280px] md:w-[1480px] md:h-[1480px] rounded-full"
+                className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[900px] h-[900px] md:w-[1040px] md:h-[1040px] rounded-full"
                 style={{ border: "1px solid rgba(228, 76, 255, 0.12)" }}
               />
               <div
-                className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[960px] h-[960px] md:w-[1160px] md:h-[1160px] rounded-full"
+                className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[680px] h-[680px] md:w-[810px] md:h-[810px] rounded-full"
                 style={{ border: "1px solid rgba(228, 76, 255, 0.11)" }}
               />
               <div
-                className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[640px] h-[640px] md:w-[840px] md:h-[840px] rounded-full"
+                className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[450px] h-[450px] md:w-[590px] md:h-[590px] rounded-full"
                 style={{ border: "1px solid rgba(228, 76, 255, 0.1)" }}
               />
               <div
@@ -672,7 +671,7 @@ export default function Home() {
               ))}
             </div>
 
-            <div className="relative h-[1600px] md:h-[1840px]">
+            <div className="relative h-[1120px] md:h-[1290px]">
               <div className="absolute left-1/2 top-1/2 flex -translate-x-1/2 -translate-y-1/2 flex-col items-center text-center">
                 <button
                   className="px-7 py-3 rounded-full font-semibold transition-all duration-300 hover:scale-[1.05]"
@@ -781,8 +780,7 @@ export default function Home() {
       {/* Contact Section */}
       <section
         id="contact"
-        className="relative z-10 py-20"
-        style={{ paddingLeft: "60px", paddingRight: "60px" }}
+        className="relative z-10 py-20 px-6"
       >
         <div className="max-w-4xl mx-auto">
           <div className="text-center mb-16">
