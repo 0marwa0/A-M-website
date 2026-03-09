@@ -179,14 +179,27 @@ export default function Home() {
       lang={locale}
       dir={locale === "ar" ? "rtl" : "ltr"}
       style={{
-        background: "#050816",
+        background: "#060816",
       }}
     >
+      {/* Persistent star-field background — visible from services section onward */}
+      <div
+        aria-hidden="true"
+        style={{
+          position: "fixed",
+          inset: 0,
+          zIndex: 0,
+          pointerEvents: "none",
+        }}
+      >
+        <StarField bgColor="#060816" />
+      </div>
       {/* Navigation */}
       <nav
         className="fixed top-0 left-0 right-0 z-50 px-6 py-5"
         style={{
-          background: "#050816",
+          background: "rgba(6, 8, 22, 0.85)",
+          backdropFilter: "blur(12px)",
           borderBottom: "1px solid rgba(228, 76, 255, 0.12)",
         }}
       >
@@ -299,22 +312,6 @@ export default function Home() {
         id="services"
         className="relative z-10 py-20 px-6"
       >
-        {/* Star field background */}
-        <StarField bgColor="#060816" />
-        {/* Top fade — merges with hero bottom fade */}
-        <div
-          aria-hidden="true"
-          style={{
-            position: "absolute",
-            top: 0,
-            left: 0,
-            right: 0,
-            height: "160px",
-            background: "linear-gradient(to bottom, #060816 0%, transparent 100%)",
-            zIndex: 1,
-            pointerEvents: "none",
-          }}
-        />
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
             <h2 className="text-4xl md:text-5xl font-bold mb-6 tracking-tight">
@@ -399,7 +396,14 @@ export default function Home() {
 
         <div className="relative z-10 max-w-7xl mx-auto">
           {/* Heading */}
-          <div className="text-center mb-14">
+          <div className="text-center mb-20">
+            {/* Kicker */}
+            <p
+              className="text-xs font-bold tracking-[0.22em] uppercase mb-4"
+              style={{ color: "#4EF0FF" }}
+            >
+              Our Methodology
+            </p>
             <h2 className="text-4xl md:text-5xl font-bold mb-6 tracking-tight">
               {t("about.heading")}{" "}
               <span className="bg-gradient-to-r from-[#E44CFF] to-[#4EF0FF] bg-clip-text text-transparent">
@@ -411,8 +415,25 @@ export default function Home() {
             </p>
           </div>
 
-          {/* Roadmap */}
+          {/* Nodes */}
           <RoadmapProcess />
+
+          {/* CTA */}
+          <div className="flex justify-center mt-16">
+            <a
+              href="#contact"
+              className="group inline-flex items-center gap-2 px-8 py-3 rounded-full text-sm font-semibold transition-all duration-300 hover:scale-[1.05]"
+              style={{
+                background: "linear-gradient(135deg, #E44CFF, #5861F2)",
+                boxShadow: "0 0 30px rgba(228,76,255,0.35)",
+              }}
+            >
+              Start Your Integration
+              <svg className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+              </svg>
+            </a>
+          </div>
         </div>
       </section>
 
