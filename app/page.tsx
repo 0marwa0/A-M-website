@@ -3,6 +3,7 @@
 import { Check, Star } from "lucide-react";
 import { useI18n } from "@/lib/i18n";
 import CosmicBackground from "@/components/CosmicBackground";
+import Chatbot from "@/components/Chatbot";
 import { Component as TypewriterTestimonial } from "@/components/ui/typewriter-testimonial";
 import { StaggerTestimonials } from "@/components/ui/stagger-testimonials";
 import { AnimatedTestimonials } from "@/components/ui/animated-testimonials";
@@ -949,6 +950,9 @@ export default function Home() {
           </div>
         </div>
       </footer>
+
+      {/* Floating Interactive Chatbot */}
+      <Chatbot />
     </div >
   );
 }

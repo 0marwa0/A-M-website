@@ -27,12 +27,25 @@ interface ShootingStar {
   maxLife: number;
 }
 
+interface WaveParticle {
+  side: "left" | "right";
+  strandIndex: number;
+  t: number;
+  speed: number;
+  size: number;
+  alpha: number;
+  offsetRadius: number;
+  offsetSpeed: number;
+  offsetPhase: number;
+}
+
 const CosmicBackground: React.FC = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const mouseRef = useRef({ x: 0, y: 0 });
   const smoothMouse = useRef({ x: 0, y: 0 });
   const starsRef = useRef<Star[]>([]);
   const shootingStarsRef = useRef<ShootingStar[]>([]);
+  const waveParticlesRef = useRef<WaveParticle[]>([]);
   const animRef = useRef<number>(0);
   const lastShootingRef = useRef(0);
 
@@ -54,7 +67,7 @@ const CosmicBackground: React.FC = () => {
     return starColors[4];
   }, []);
 
-  // ── Initialise stars ──
+  // ── Initialise stars and wave particles ──
   const initStars = useCallback((w: number, h: number) => {
     const stars: Star[] = [];
     for (let i = 0; i < STAR_COUNT; i++) {
@@ -69,6 +82,31 @@ const CosmicBackground: React.FC = () => {
       });
     }
     starsRef.current = stars;
+
+    // Wave Particles
+    const waveParticles: WaveParticle[] = [];
+    const STRANDS_PER_SIDE = 8;
+    const PARTICLES_PER_STRAND = 60;
+    const sides: ("left" | "right")[] = ["left", "right"];
+
+    for (const side of sides) {
+      for (let strand = 0; strand < STRANDS_PER_SIDE; strand++) {
+        for (let i = 0; i < PARTICLES_PER_STRAND; i++) {
+          waveParticles.push({
+            side,
+            strandIndex: strand,
+            t: Math.random(),
+            speed: 0.0008 + Math.random() * 0.0018,
+            size: 0.4 + Math.random() * 1.2,
+            alpha: 0.15 + Math.random() * 0.65,
+            offsetRadius: 1 + Math.random() * 16,
+            offsetSpeed: 0.4 + Math.random() * 1.2,
+            offsetPhase: Math.random() * Math.PI * 2,
+          });
+        }
+      }
+    }
+    waveParticlesRef.current = waveParticles;
   }, [pickStarColor]);
 
   // ── Create a shooting star ──
@@ -118,6 +156,48 @@ const CosmicBackground: React.FC = () => {
     };
     window.addEventListener("mousemove", onMouse);
 
+    // Helper to calculate Bezier points for a given side, strand, and time
+    const getBezierPoints = (side: "left" | "right", strandIndex: number, timeVal: number) => {
+      const h0 = h;
+      const w0 = w;
+      
+      const startOffset = strandIndex * 8;
+      
+      if (side === "left") {
+        return {
+          P0: { x: -30 - startOffset, y: h0 * 1.05 + startOffset },
+          P1: { 
+            x: w0 * 0.12 + Math.cos(timeVal * 0.15 + strandIndex) * 40, 
+            y: h0 * 0.7 + Math.sin(timeVal * 0.2 + strandIndex) * 50 
+          },
+          P2: { 
+            x: w0 * 0.08 + Math.sin(timeVal * 0.1 + strandIndex) * 50, 
+            y: h0 * 0.35 + Math.cos(timeVal * 0.18 + strandIndex) * 45 
+          },
+          P3: { 
+            x: w0 * 0.32 + Math.sin(timeVal * 0.3 + strandIndex) * 30, 
+            y: -h0 * 0.1 - strandIndex * 15 
+          }
+        };
+      } else {
+        return {
+          P0: { x: w0 + 30 + startOffset, y: h0 * 1.05 + startOffset },
+          P1: { 
+            x: w0 * 0.88 - Math.cos(timeVal * 0.15 + strandIndex) * 40, 
+            y: h0 * 0.7 + Math.sin(timeVal * 0.2 + strandIndex) * 50 
+          },
+          P2: { 
+            x: w0 * 0.92 - Math.sin(timeVal * 0.1 + strandIndex) * 50, 
+            y: h0 * 0.35 + Math.cos(timeVal * 0.18 + strandIndex) * 45 
+          },
+          P3: { 
+            x: w0 * 0.68 - Math.sin(timeVal * 0.3 + strandIndex) * 30, 
+            y: -h0 * 0.1 - strandIndex * 15 
+          }
+        };
+      }
+    };
+
     // ── Render loop ──
     let t = 0;
     const draw = (timestamp: number) => {
@@ -129,6 +209,104 @@ const CosmicBackground: React.FC = () => {
       smoothMouse.current.y += (mouseRef.current.y - smoothMouse.current.y) * 0.02;
       const mx = smoothMouse.current.x;
       const my = smoothMouse.current.y;
+
+      const timeVal = t;
+
+      // ── Draw Wave Trails ──
+      const STRANDS_PER_SIDE = 8;
+      for (const side of (["left", "right"] as const)) {
+        for (let strand = 0; strand < STRANDS_PER_SIDE; strand++) {
+          const { P0, P1, P2, P3 } = getBezierPoints(side, strand, timeVal);
+          
+          ctx.beginPath();
+          ctx.moveTo(P0.x, P0.y);
+          ctx.bezierCurveTo(P1.x, P1.y, P2.x, P2.y, P3.x, P3.y);
+          
+          const grad = ctx.createLinearGradient(P0.x, P0.y, P3.x, P3.y);
+          if (side === "left") {
+            grad.addColorStop(0, "rgba(228, 76, 255, 0.04)");   // Purple
+            grad.addColorStop(0.5, "rgba(139, 92, 246, 0.06)"); // Violet
+            grad.addColorStop(1, "rgba(78, 240, 255, 0.04)");    // Cyan
+          } else {
+            grad.addColorStop(0, "rgba(78, 240, 255, 0.04)");    // Cyan
+            grad.addColorStop(0.5, "rgba(88, 97, 242, 0.06)");   // Electric Blue
+            grad.addColorStop(1, "rgba(228, 76, 255, 0.04)");   // Purple
+          }
+          
+          ctx.strokeStyle = grad;
+          ctx.lineWidth = 0.8;
+          ctx.stroke();
+        }
+      }
+
+      // ── Draw Wave Particles ──
+      for (const p of waveParticlesRef.current) {
+        // Update progress
+        p.t += p.speed;
+        if (p.t > 1) {
+          p.t = 0;
+          p.speed = 0.0008 + Math.random() * 0.0018;
+        }
+
+        // Get Bezier points
+        const { P0, P1, P2, P3 } = getBezierPoints(p.side, p.strandIndex, timeVal);
+
+        // Compute base bezier coordinate
+        const u = 1 - p.t;
+        const u2 = u * u;
+        const u3 = u2 * u;
+        const t2 = p.t * p.t;
+        const t3 = t2 * p.t;
+
+        const bx = u3 * P0.x + 3 * u2 * p.t * P1.x + 3 * u * t2 * P2.x + t3 * P3.x;
+        const by = u3 * P0.y + 3 * u2 * p.t * P1.y + 3 * u * t2 * P2.y + t3 * P3.y;
+
+        // Apply swirling spread offset
+        const swirlAngle = p.t * 12 + timeVal * p.offsetSpeed + p.offsetPhase;
+        const ox = Math.cos(swirlAngle) * p.offsetRadius;
+        const oy = Math.sin(swirlAngle) * p.offsetRadius;
+
+        let px = bx + ox;
+        let py = by + oy;
+
+        // Parallax mouse offset (larger particles move more)
+        const depth = p.size;
+        px += mx * depth * 7;
+        py += my * depth * 7;
+
+        // Fade in/out factor
+        const fade = Math.sin(p.t * Math.PI);
+        const alpha = p.alpha * fade;
+
+        // Particle color selector based on progress (t)
+        let colorStr = "";
+        if (p.t < 0.25) {
+          colorStr = `rgba(228, 76, 255, ${alpha.toFixed(2)})`;   // Purple
+        } else if (p.t < 0.5) {
+          colorStr = `rgba(139, 92, 246, ${alpha.toFixed(2)})`;  // Violet
+        } else if (p.t < 0.75) {
+          colorStr = `rgba(88, 97, 242, ${alpha.toFixed(2)})`;   // Electric Blue
+        } else {
+          colorStr = `rgba(78, 240, 255, ${alpha.toFixed(2)})`;   // Cyan
+        }
+
+        // Draw particle
+        ctx.beginPath();
+        ctx.arc(px, py, p.size, 0, Math.PI * 2);
+        ctx.fillStyle = colorStr;
+        ctx.fill();
+
+        // Subtle glow for larger particles
+        if (p.size > 0.8 && alpha > 0.35) {
+          ctx.beginPath();
+          ctx.arc(px, py, p.size * 3, 0, Math.PI * 2);
+          const glowGrad = ctx.createRadialGradient(px, py, 0, px, py, p.size * 3);
+          glowGrad.addColorStop(0, colorStr.replace(`, ${alpha.toFixed(2)})`, `, ${(alpha * 0.25).toFixed(2)})`));
+          glowGrad.addColorStop(1, "rgba(0,0,0,0)");
+          ctx.fillStyle = glowGrad;
+          ctx.fill();
+        }
+      }
 
       // ── Draw twinkling stars ──
       for (const star of starsRef.current) {

@@ -288,5 +288,24 @@
     "company": "Trimindes AI",
     "description": "Transforming businesses with cutting-edge artificial intelligence solutions. Your partner in the AI revolution.",
     "copyright": "© 2025 Trimindes AI. All rights reserved."
+  },
+  "chatbot": {
+    "title": "Trimindes AI Assistant",
+    "status": "Online",
+    "welcome": "Hello! I am your AI assistant from Trimindes AI. How can I help you transform your business today?",
+    "inputPlaceholder": "Type your message...",
+    "quickQuestions": {
+      "q1": "What services do you offer?",
+      "q2": "How long does integration take?",
+      "q3": "How can I contact you?",
+      "q4": "Do you offer custom pricing?"
+    },
+    "responses": {
+      "q1": "We specialize in custom AI Automation, Advanced Data Analytics, Custom AI Dashboards, Machine Learning integrations, and strategic AI consulting.",
+      "q2": "A standard integration takes 4 to 8 weeks depending on complexity. We follow an agile process to ensure smooth transition without downtime.",
+      "q3": "You can fill out the contact form below or reach us directly at contact@trimindes.ai. We'd love to discuss your specific needs!",
+      "q4": "Yes! We offer flexible, tailored pricing plans (Starter, Growth, Enterprise) based on your custom requirements, data scale, and service SLA.",
+      "default": "Thank you for your message! Our team will get back to you shortly, or you can contact us directly at contact@trimindes.ai."
+    }
   }
 }
