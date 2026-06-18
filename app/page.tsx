@@ -2,7 +2,6 @@
 
 import { Check, Star } from "lucide-react";
 import { useI18n } from "@/lib/i18n";
-import SplineScene from "@/components/SplineScene";
 import CosmicBackground from "@/components/CosmicBackground";
 import { Component as TypewriterTestimonial } from "@/components/ui/typewriter-testimonial";
 import { StaggerTestimonials } from "@/components/ui/stagger-testimonials";
@@ -270,7 +269,7 @@ export default function Home() {
           </div>
 
           {/* Headline */}
-          <div className="flex flex-col items-center text-center space-y-5 mb-10 animate-fade-in">
+          <div className="flex flex-col items-center text-center space-y-5 mb-0 animate-fade-in">
             <h1 className="text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-extrabold leading-[1.15] max-w-5xl tracking-tight">
               <span className="text-white">{t("hero.heading")}</span>{" "}
               <span className="bg-gradient-to-r from-[#E44CFF] via-[#5861F2] to-[#4EF0FF] bg-clip-text text-transparent">
@@ -298,11 +297,6 @@ export default function Home() {
                 {t("hero.cta2")}
               </a>
             </div>
-          </div>
-
-          {/* 3D Spline Scene */}
-          <div className="relative flex items-center justify-center animate-fade-in">
-            <SplineScene />
           </div>
         </div>
       </section>

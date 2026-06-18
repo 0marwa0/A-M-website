@@ -3,7 +3,7 @@
 import React, { useEffect, useRef, useCallback } from "react";
 
 // ── Star field on <canvas> — lightweight, GPU-friendly ──
-const STAR_COUNT = 220;
+const STAR_COUNT = 350;
 const SHOOTING_STAR_INTERVAL = 6000; // ms between shooting stars
 
 interface Star {
@@ -61,9 +61,9 @@ const CosmicBackground: React.FC = () => {
       stars.push({
         x: Math.random() * w,
         y: Math.random() * h,
-        r: 0.3 + Math.random() * 1.6,
-        baseAlpha: 0.25 + Math.random() * 0.7,
-        twinkleSpeed: 0.3 + Math.random() * 1.2,
+        r: 0.2 + Math.random() * 1.3,
+        baseAlpha: 0.15 + Math.random() * 0.75,
+        twinkleSpeed: 0.2 + Math.random() * 0.9,
         twinklePhase: Math.random() * Math.PI * 2,
         color: pickStarColor(),
       });
@@ -220,6 +220,9 @@ const CosmicBackground: React.FC = () => {
       <div className="cosmic-dust dust-1" />
       <div className="cosmic-dust dust-2" />
 
+      {/* Central ambient glow behind headline */}
+      <div className="ambient-glow" />
+
       {/* Radial vignette for text readability */}
       <div className="cosmic-vignette" />
 
@@ -368,6 +371,38 @@ const CosmicBackground: React.FC = () => {
         @keyframes dustFloat {
           0%, 100% { transform: translate(0, 0); opacity: 0.8; }
           50%      { transform: translate(15px, -10px); opacity: 1; }
+        }
+
+        /* ═══════════════ Central Ambient Glow ═══════════════ */
+        .ambient-glow {
+          position: absolute;
+          top: 35%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          width: min(1000px, 90vw);
+          height: min(700px, 70vh);
+          background: radial-gradient(
+            circle,
+            rgba(88, 97, 242, 0.12) 0%,
+            rgba(228, 76, 255, 0.04) 30%,
+            rgba(78, 240, 255, 0.02) 60%,
+            transparent 85%
+          );
+          filter: blur(120px);
+          z-index: 2;
+          pointer-events: none;
+          animation: ambientPulse 15s ease-in-out infinite alternate;
+        }
+
+        @keyframes ambientPulse {
+          0% {
+            transform: translate(-50%, -50%) scale(0.9);
+            opacity: 0.6;
+          }
+          100% {
+            transform: translate(-50%, -50%) scale(1.15);
+            opacity: 0.9;
+          }
         }
 
         /* ═══════════════ Readability vignette ═══════════════ */
