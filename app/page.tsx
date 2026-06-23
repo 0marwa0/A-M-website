@@ -308,25 +308,23 @@ export default function Home() {
 
         <div className="max-w-7xl mx-auto relative w-full z-10 flex flex-col items-center">
           {/* Brand Logo Symbol */}
-          <div className="flex justify-center mb-6 animate-fade-in">
-            <div className="relative w-20 h-20 md:w-24 md:h-24 group">
-              {/* Outer pulsing ring that glows in active theme color */}
-              <div 
-                className="absolute inset-0 rounded-full opacity-35 blur-xl animate-pulse transition-all duration-1000" 
-                style={{
-                  background: "var(--theme-gradient)"
-                }}
-              />
-              {/* Inner glassmorphic container */}
-              <div 
-                className="absolute inset-0 rounded-3xl border bg-white/5 backdrop-blur-md flex items-center justify-center p-4 hover:scale-105 hover:rotate-3 transition-all duration-500 shadow-2xl"
-                style={{
-                  borderColor: "var(--theme-nav-border)"
-                }}
-              >
-                <img src="/logo.svg" alt="Trimindes AI Logo" className="w-full h-full object-contain" />
-              </div>
-            </div>
+          <div className="flex justify-center mb-6 animate-fade-in relative">
+            {/* Soft breathing background aura matching active theme color */}
+            <div 
+              className="absolute w-28 h-28 rounded-full opacity-40 blur-[30px] animate-pulse transition-all duration-1000 pointer-events-none" 
+              style={{
+                background: "var(--theme-gradient)",
+                top: "55%",
+                left: "50%",
+                transform: "translate(-50%, -50%)"
+              }}
+            />
+            {/* Pure SVG logo with drop shadow */}
+            <img 
+              src="/logo.svg" 
+              alt="Trimindes AI Logo" 
+              className="w-24 h-24 md:w-28 md:h-28 object-contain relative z-10 filter drop-shadow-[0_0_15px_rgba(255,255,255,0.15)] hover:scale-110 hover:rotate-3 transition-all duration-500 cursor-pointer" 
+            />
           </div>
 
           {/* Glowing badge */}
