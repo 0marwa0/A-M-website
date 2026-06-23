@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useRef, useCallback } from "react";
+import { PersonaMode } from "./Chatbot";
 
 // ── Star field on <canvas> — lightweight, GPU-friendly ──
 const STAR_COUNT = 350;
@@ -13,7 +14,7 @@ interface Star {
   baseAlpha: number;
   twinkleSpeed: number;
   twinklePhase: number;
-  color: string;
+  colorIndex: number;
 }
 
 interface ShootingStar {
@@ -27,47 +28,54 @@ interface ShootingStar {
   maxLife: number;
 }
 
-interface WaveParticle {
-  side: "left" | "right";
-  strandIndex: number;
-  t: number;
-  speed: number;
-  size: number;
-  alpha: number;
-  offsetRadius: number;
-  offsetSpeed: number;
-  offsetPhase: number;
+interface CosmicBackgroundProps {
+  mode: PersonaMode;
 }
 
-const CosmicBackground: React.FC = () => {
+const CosmicBackground: React.FC<CosmicBackgroundProps> = ({ mode }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const mouseRef = useRef({ x: 0, y: 0 });
   const smoothMouse = useRef({ x: 0, y: 0 });
   const starsRef = useRef<Star[]>([]);
   const shootingStarsRef = useRef<ShootingStar[]>([]);
-  const waveParticlesRef = useRef<WaveParticle[]>([]);
   const animRef = useRef<number>(0);
   const lastShootingRef = useRef(0);
 
-  // ── Colour palette ──
-  const starColors = [
-    "rgba(255,255,255,",       // white
-    "rgba(200,210,255,",       // cool blue-white
-    "rgba(180,190,255,",       // soft blue
-    "rgba(228,76,255,",        // brand magenta (rare)
-    "rgba(78,240,255,",        // brand cyan (rare)
-  ];
+  // ── Colour palette based on chatbot mode ──
+  const starColors = mode === "creative"
+    ? [
+        "rgba(255,255,255,",       // white
+        "rgba(240,200,255,",       // pink-white
+        "rgba(220,180,255,",       // purple-white
+        "rgba(228,76,255,",        // brand magenta
+        "rgba(159,86,255,",        // violet
+      ]
+    : mode === "precise"
+    ? [
+        "rgba(255,255,255,",       // white
+        "rgba(200,255,240,",       // mint-white
+        "rgba(180,255,220,",       // cyan-white
+        "rgba(78,240,255,",        // brand cyan
+        "rgba(46,218,162,",        // emerald/green
+      ]
+    : [
+        "rgba(255,255,255,",       // white
+        "rgba(200,210,255,",       // cool blue-white
+        "rgba(180,190,255,",       // soft blue
+        "rgba(228,76,255,",        // brand magenta (rare)
+        "rgba(78,240,255,",        // brand cyan (rare)
+      ];
 
-  const pickStarColor = useCallback(() => {
+  const pickStarColorIndex = useCallback(() => {
     const r = Math.random();
-    if (r < 0.55) return starColors[0];
-    if (r < 0.8) return starColors[1];
-    if (r < 0.92) return starColors[2];
-    if (r < 0.96) return starColors[3];
-    return starColors[4];
+    if (r < 0.55) return 0;
+    if (r < 0.8) return 1;
+    if (r < 0.92) return 2;
+    if (r < 0.96) return 3;
+    return 4;
   }, []);
 
-  // ── Initialise stars and wave particles ──
+  // ── Initialise stars ──
   const initStars = useCallback((w: number, h: number) => {
     const stars: Star[] = [];
     for (let i = 0; i < STAR_COUNT; i++) {
@@ -78,36 +86,11 @@ const CosmicBackground: React.FC = () => {
         baseAlpha: 0.15 + Math.random() * 0.75,
         twinkleSpeed: 0.2 + Math.random() * 0.9,
         twinklePhase: Math.random() * Math.PI * 2,
-        color: pickStarColor(),
+        colorIndex: pickStarColorIndex(),
       });
     }
     starsRef.current = stars;
-
-    // Wave Particles
-    const waveParticles: WaveParticle[] = [];
-    const STRANDS_PER_SIDE = 8;
-    const PARTICLES_PER_STRAND = 60;
-    const sides: ("left" | "right")[] = ["left", "right"];
-
-    for (const side of sides) {
-      for (let strand = 0; strand < STRANDS_PER_SIDE; strand++) {
-        for (let i = 0; i < PARTICLES_PER_STRAND; i++) {
-          waveParticles.push({
-            side,
-            strandIndex: strand,
-            t: Math.random(),
-            speed: 0.0008 + Math.random() * 0.0018,
-            size: 0.4 + Math.random() * 1.2,
-            alpha: 0.15 + Math.random() * 0.65,
-            offsetRadius: 1 + Math.random() * 16,
-            offsetSpeed: 0.4 + Math.random() * 1.2,
-            offsetPhase: Math.random() * Math.PI * 2,
-          });
-        }
-      }
-    }
-    waveParticlesRef.current = waveParticles;
-  }, [pickStarColor]);
+  }, [pickStarColorIndex]);
 
   // ── Create a shooting star ──
   const spawnShootingStar = useCallback((w: number, h: number) => {
@@ -156,48 +139,6 @@ const CosmicBackground: React.FC = () => {
     };
     window.addEventListener("mousemove", onMouse);
 
-    // Helper to calculate Bezier points for a given side, strand, and time
-    const getBezierPoints = (side: "left" | "right", strandIndex: number, timeVal: number) => {
-      const h0 = h;
-      const w0 = w;
-      
-      const startOffset = strandIndex * 8;
-      
-      if (side === "left") {
-        return {
-          P0: { x: -30 - startOffset, y: h0 * 1.05 + startOffset },
-          P1: { 
-            x: w0 * 0.12 + Math.cos(timeVal * 0.15 + strandIndex) * 40, 
-            y: h0 * 0.7 + Math.sin(timeVal * 0.2 + strandIndex) * 50 
-          },
-          P2: { 
-            x: w0 * 0.08 + Math.sin(timeVal * 0.1 + strandIndex) * 50, 
-            y: h0 * 0.35 + Math.cos(timeVal * 0.18 + strandIndex) * 45 
-          },
-          P3: { 
-            x: w0 * 0.32 + Math.sin(timeVal * 0.3 + strandIndex) * 30, 
-            y: -h0 * 0.1 - strandIndex * 15 
-          }
-        };
-      } else {
-        return {
-          P0: { x: w0 + 30 + startOffset, y: h0 * 1.05 + startOffset },
-          P1: { 
-            x: w0 * 0.88 - Math.cos(timeVal * 0.15 + strandIndex) * 40, 
-            y: h0 * 0.7 + Math.sin(timeVal * 0.2 + strandIndex) * 50 
-          },
-          P2: { 
-            x: w0 * 0.92 - Math.sin(timeVal * 0.1 + strandIndex) * 50, 
-            y: h0 * 0.35 + Math.cos(timeVal * 0.18 + strandIndex) * 45 
-          },
-          P3: { 
-            x: w0 * 0.68 - Math.sin(timeVal * 0.3 + strandIndex) * 30, 
-            y: -h0 * 0.1 - strandIndex * 15 
-          }
-        };
-      }
-    };
-
     // ── Render loop ──
     let t = 0;
     const draw = (timestamp: number) => {
@@ -210,104 +151,6 @@ const CosmicBackground: React.FC = () => {
       const mx = smoothMouse.current.x;
       const my = smoothMouse.current.y;
 
-      const timeVal = t;
-
-      // ── Draw Wave Trails ──
-      const STRANDS_PER_SIDE = 8;
-      for (const side of (["left", "right"] as const)) {
-        for (let strand = 0; strand < STRANDS_PER_SIDE; strand++) {
-          const { P0, P1, P2, P3 } = getBezierPoints(side, strand, timeVal);
-          
-          ctx.beginPath();
-          ctx.moveTo(P0.x, P0.y);
-          ctx.bezierCurveTo(P1.x, P1.y, P2.x, P2.y, P3.x, P3.y);
-          
-          const grad = ctx.createLinearGradient(P0.x, P0.y, P3.x, P3.y);
-          if (side === "left") {
-            grad.addColorStop(0, "rgba(228, 76, 255, 0.04)");   // Purple
-            grad.addColorStop(0.5, "rgba(139, 92, 246, 0.06)"); // Violet
-            grad.addColorStop(1, "rgba(78, 240, 255, 0.04)");    // Cyan
-          } else {
-            grad.addColorStop(0, "rgba(78, 240, 255, 0.04)");    // Cyan
-            grad.addColorStop(0.5, "rgba(88, 97, 242, 0.06)");   // Electric Blue
-            grad.addColorStop(1, "rgba(228, 76, 255, 0.04)");   // Purple
-          }
-          
-          ctx.strokeStyle = grad;
-          ctx.lineWidth = 0.8;
-          ctx.stroke();
-        }
-      }
-
-      // ── Draw Wave Particles ──
-      for (const p of waveParticlesRef.current) {
-        // Update progress
-        p.t += p.speed;
-        if (p.t > 1) {
-          p.t = 0;
-          p.speed = 0.0008 + Math.random() * 0.0018;
-        }
-
-        // Get Bezier points
-        const { P0, P1, P2, P3 } = getBezierPoints(p.side, p.strandIndex, timeVal);
-
-        // Compute base bezier coordinate
-        const u = 1 - p.t;
-        const u2 = u * u;
-        const u3 = u2 * u;
-        const t2 = p.t * p.t;
-        const t3 = t2 * p.t;
-
-        const bx = u3 * P0.x + 3 * u2 * p.t * P1.x + 3 * u * t2 * P2.x + t3 * P3.x;
-        const by = u3 * P0.y + 3 * u2 * p.t * P1.y + 3 * u * t2 * P2.y + t3 * P3.y;
-
-        // Apply swirling spread offset
-        const swirlAngle = p.t * 12 + timeVal * p.offsetSpeed + p.offsetPhase;
-        const ox = Math.cos(swirlAngle) * p.offsetRadius;
-        const oy = Math.sin(swirlAngle) * p.offsetRadius;
-
-        let px = bx + ox;
-        let py = by + oy;
-
-        // Parallax mouse offset (larger particles move more)
-        const depth = p.size;
-        px += mx * depth * 7;
-        py += my * depth * 7;
-
-        // Fade in/out factor
-        const fade = Math.sin(p.t * Math.PI);
-        const alpha = p.alpha * fade;
-
-        // Particle color selector based on progress (t)
-        let colorStr = "";
-        if (p.t < 0.25) {
-          colorStr = `rgba(228, 76, 255, ${alpha.toFixed(2)})`;   // Purple
-        } else if (p.t < 0.5) {
-          colorStr = `rgba(139, 92, 246, ${alpha.toFixed(2)})`;  // Violet
-        } else if (p.t < 0.75) {
-          colorStr = `rgba(88, 97, 242, ${alpha.toFixed(2)})`;   // Electric Blue
-        } else {
-          colorStr = `rgba(78, 240, 255, ${alpha.toFixed(2)})`;   // Cyan
-        }
-
-        // Draw particle
-        ctx.beginPath();
-        ctx.arc(px, py, p.size, 0, Math.PI * 2);
-        ctx.fillStyle = colorStr;
-        ctx.fill();
-
-        // Subtle glow for larger particles
-        if (p.size > 0.8 && alpha > 0.35) {
-          ctx.beginPath();
-          ctx.arc(px, py, p.size * 3, 0, Math.PI * 2);
-          const glowGrad = ctx.createRadialGradient(px, py, 0, px, py, p.size * 3);
-          glowGrad.addColorStop(0, colorStr.replace(`, ${alpha.toFixed(2)})`, `, ${(alpha * 0.25).toFixed(2)})`));
-          glowGrad.addColorStop(1, "rgba(0,0,0,0)");
-          ctx.fillStyle = glowGrad;
-          ctx.fill();
-        }
-      }
-
       // ── Draw twinkling stars ──
       for (const star of starsRef.current) {
         const twinkle = Math.sin(t * star.twinkleSpeed + star.twinklePhase);
@@ -319,9 +162,11 @@ const CosmicBackground: React.FC = () => {
         const px = star.x + mx * depth * 6;
         const py = star.y + my * depth * 6;
 
+        const starColor = starColors[star.colorIndex !== undefined ? star.colorIndex : 0];
+
         ctx.beginPath();
         ctx.arc(px, py, star.r, 0, Math.PI * 2);
-        ctx.fillStyle = `${star.color}${alpha.toFixed(2)})`;
+        ctx.fillStyle = `${starColor}${alpha.toFixed(2)})`;
         ctx.fill();
 
         // Subtle glow for larger stars
@@ -329,8 +174,8 @@ const CosmicBackground: React.FC = () => {
           ctx.beginPath();
           ctx.arc(px, py, star.r * 3, 0, Math.PI * 2);
           const grd = ctx.createRadialGradient(px, py, 0, px, py, star.r * 3);
-          grd.addColorStop(0, `${star.color}${(alpha * 0.25).toFixed(2)})`);
-          grd.addColorStop(1, `${star.color}0)`);
+          grd.addColorStop(0, `${starColor}${(alpha * 0.25).toFixed(2)})`);
+          grd.addColorStop(1, `${starColor}0)`);
           ctx.fillStyle = grd;
           ctx.fill();
         }
@@ -358,9 +203,15 @@ const CosmicBackground: React.FC = () => {
         const tailX = ss.x - Math.cos(ss.angle) * ss.len;
         const tailY = ss.y - Math.sin(ss.angle) * ss.len;
 
+        const ssColor = mode === "creative"
+          ? "rgba(228,76,255,"
+          : mode === "precise"
+          ? "rgba(78,240,255,"
+          : "rgba(200,210,255,";
+
         const grd = ctx.createLinearGradient(tailX, tailY, ss.x, ss.y);
         grd.addColorStop(0, `rgba(255,255,255,0)`);
-        grd.addColorStop(1, `rgba(200,210,255,${ss.alpha.toFixed(2)})`);
+        grd.addColorStop(1, `${ssColor}${ss.alpha.toFixed(2)})`);
 
         ctx.beginPath();
         ctx.moveTo(tailX, tailY);
@@ -382,10 +233,62 @@ const CosmicBackground: React.FC = () => {
       window.removeEventListener("resize", resize);
       window.removeEventListener("mousemove", onMouse);
     };
-  }, [initStars, spawnShootingStar]);
+  }, [initStars, spawnShootingStar, starColors, mode]);
+
+  // Generate CSS variables for custom nebulae coloring
+  const getNebulaStyles = () => {
+    switch (mode) {
+      case "creative":
+        return {
+          "--nebula-1-start": "rgba(228, 76, 255, 0.18)",
+          "--nebula-1-end": "rgba(159, 86, 255, 0.08)",
+          "--nebula-2-start": "rgba(123, 76, 255, 0.18)",
+          "--nebula-2-end": "rgba(95, 40, 180, 0.08)",
+          "--nebula-3-start": "rgba(255, 76, 228, 0.12)",
+          "--nebula-3-end": "rgba(180, 40, 140, 0.06)",
+          "--dust-1": "rgba(228, 76, 255, 0.06)",
+          "--dust-2": "rgba(159, 86, 255, 0.05)",
+          "--ambient-start": "rgba(228, 76, 255, 0.12)",
+          "--ambient-mid": "rgba(159, 86, 255, 0.04)",
+          "--ambient-end": "rgba(78, 240, 255, 0.02)",
+          "--bg-gradient": "radial-gradient(ellipse 120% 100% at 30% 20%, #17042a 0%, #0c021c 40%, #060110 80%, #020008 100%)",
+        } as React.CSSProperties;
+      case "precise":
+        return {
+          "--nebula-1-start": "rgba(78, 240, 255, 0.18)",
+          "--nebula-1-end": "rgba(46, 218, 162, 0.08)",
+          "--nebula-2-start": "rgba(16, 185, 129, 0.18)",
+          "--nebula-2-end": "rgba(6, 95, 70, 0.08)",
+          "--nebula-3-start": "rgba(34, 197, 94, 0.12)",
+          "--nebula-3-end": "rgba(20, 83, 45, 0.06)",
+          "--dust-1": "rgba(78, 240, 255, 0.06)",
+          "--dust-2": "rgba(16, 185, 129, 0.05)",
+          "--ambient-start": "rgba(78, 240, 255, 0.12)",
+          "--ambient-mid": "rgba(46, 218, 162, 0.04)",
+          "--ambient-end": "rgba(16, 185, 129, 0.02)",
+          "--bg-gradient": "radial-gradient(ellipse 120% 100% at 30% 20%, #001f24 0%, #001217 40%, #000a0e 80%, #000406 100%)",
+        } as React.CSSProperties;
+      case "balanced":
+      default:
+        return {
+          "--nebula-1-start": "rgba(88, 40, 180, 0.18)",
+          "--nebula-1-end": "rgba(60, 20, 140, 0.10)",
+          "--nebula-2-start": "rgba(30, 40, 120, 0.20)",
+          "--nebula-2-end": "rgba(20, 25, 80, 0.12)",
+          "--nebula-3-start": "rgba(140, 50, 200, 0.12)",
+          "--nebula-3-end": "rgba(80, 30, 150, 0.06)",
+          "--dust-1": "rgba(228, 76, 255, 0.06)",
+          "--dust-2": "rgba(78, 240, 255, 0.05)",
+          "--ambient-start": "rgba(88, 97, 242, 0.12)",
+          "--ambient-mid": "rgba(228, 76, 255, 0.04)",
+          "--ambient-end": "rgba(78, 240, 255, 0.02)",
+          "--bg-gradient": "radial-gradient(ellipse 120% 100% at 30% 20%, #0d1133 0%, #080c24 40%, #050816 80%, #020410 100%)",
+        } as React.CSSProperties;
+    }
+  };
 
   return (
-    <div className="cosmic-bg" aria-hidden="true">
+    <div className="cosmic-bg" aria-hidden="true" style={getNebulaStyles()}>
       {/* Star canvas */}
       <canvas ref={canvasRef} className="cosmic-canvas" />
 
@@ -414,13 +317,8 @@ const CosmicBackground: React.FC = () => {
           z-index: 0;
           overflow: hidden;
           pointer-events: none;
-          background: radial-gradient(
-            ellipse 120% 100% at 30% 20%,
-            #0d1133 0%,
-            #080c24 40%,
-            #050816 80%,
-            #020410 100%
-          );
+          background: var(--bg-gradient);
+          transition: background 1.2s ease-in-out;
         }
 
         .cosmic-canvas {
@@ -446,13 +344,14 @@ const CosmicBackground: React.FC = () => {
           top: 10%;
           background: radial-gradient(
             ellipse at center,
-            rgba(88, 40, 180, 0.18) 0%,
-            rgba(60, 20, 140, 0.10) 40%,
+            var(--nebula-1-start) 0%,
+            var(--nebula-1-end) 40%,
             transparent 70%
           );
           animation: nebulaFadeIn 3s ease-out forwards, nebulaDrift1 60s ease-in-out infinite;
           animation-delay: 0s, 0s;
           z-index: 2;
+          transition: background 1.2s ease-in-out;
         }
 
         .nebula-2 {
@@ -462,13 +361,14 @@ const CosmicBackground: React.FC = () => {
           top: 5%;
           background: radial-gradient(
             ellipse at center,
-            rgba(30, 40, 120, 0.20) 0%,
-            rgba(20, 25, 80, 0.12) 45%,
+            var(--nebula-2-start) 0%,
+            var(--nebula-2-end) 45%,
             transparent 70%
           );
           animation: nebulaFadeIn 3.5s ease-out forwards, nebulaDrift2 55s ease-in-out infinite;
           animation-delay: 0.5s, 0.5s;
           z-index: 2;
+          transition: background 1.2s ease-in-out;
         }
 
         .nebula-3 {
@@ -478,13 +378,14 @@ const CosmicBackground: React.FC = () => {
           bottom: 5%;
           background: radial-gradient(
             ellipse at center,
-            rgba(140, 50, 200, 0.12) 0%,
-            rgba(80, 30, 150, 0.06) 50%,
+            var(--nebula-3-start) 0%,
+            var(--nebula-3-end) 50%,
             transparent 70%
           );
           animation: nebulaFadeIn 4s ease-out forwards, nebulaDrift3 65s ease-in-out infinite;
           animation-delay: 1s, 1s;
           z-index: 2;
+          transition: background 1.2s ease-in-out;
         }
 
         @keyframes nebulaFadeIn {
@@ -527,10 +428,11 @@ const CosmicBackground: React.FC = () => {
           left: 15%;
           background: radial-gradient(
             circle,
-            rgba(228, 76, 255, 0.06) 0%,
+            var(--dust-1) 0%,
             transparent 60%
           );
           animation: dustFloat 40s ease-in-out infinite;
+          transition: background 1.2s ease-in-out;
         }
 
         .dust-2 {
@@ -540,10 +442,11 @@ const CosmicBackground: React.FC = () => {
           right: 20%;
           background: radial-gradient(
             circle,
-            rgba(78, 240, 255, 0.05) 0%,
+            var(--dust-2) 0%,
             transparent 60%
           );
           animation: dustFloat 35s ease-in-out infinite 5s;
+          transition: background 1.2s ease-in-out;
         }
 
         @keyframes dustFloat {
@@ -561,15 +464,16 @@ const CosmicBackground: React.FC = () => {
           height: min(700px, 70vh);
           background: radial-gradient(
             circle,
-            rgba(88, 97, 242, 0.12) 0%,
-            rgba(228, 76, 255, 0.04) 30%,
-            rgba(78, 240, 255, 0.02) 60%,
+            var(--ambient-start) 0%,
+            var(--ambient-mid) 30%,
+            var(--ambient-end) 60%,
             transparent 85%
           );
           filter: blur(120px);
           z-index: 2;
           pointer-events: none;
           animation: ambientPulse 15s ease-in-out infinite alternate;
+          transition: background 1.2s ease-in-out;
         }
 
         @keyframes ambientPulse {

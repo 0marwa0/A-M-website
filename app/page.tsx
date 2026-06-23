@@ -1,9 +1,10 @@
 "use client";
 
+import { useState } from "react";
 import { Check, Star } from "lucide-react";
 import { useI18n } from "@/lib/i18n";
 import CosmicBackground from "@/components/CosmicBackground";
-import Chatbot from "@/components/Chatbot";
+import Chatbot, { PersonaMode } from "@/components/Chatbot";
 import { Component as TypewriterTestimonial } from "@/components/ui/typewriter-testimonial";
 import { StaggerTestimonials } from "@/components/ui/stagger-testimonials";
 import { AnimatedTestimonials } from "@/components/ui/animated-testimonials";
@@ -12,6 +13,7 @@ import StarField from "@/components/StarField";
 
 export default function Home() {
   const { locale, setLocale, t } = useI18n();
+  const [mode, setMode] = useState<PersonaMode>("balanced");
 
   const communityMembers = [
     {
@@ -173,14 +175,49 @@ export default function Home() {
     { left: "58%", top: "46%" },
   ];
 
+  // Get active theme colors for global elements
+  const getGlobalThemeStyles = (activeMode: PersonaMode) => {
+    switch (activeMode) {
+      case "creative":
+        return {
+          "--theme-primary": "#E44CFF",
+          "--theme-secondary": "#7B4CFF",
+          "--theme-glow": "rgba(228, 76, 255, 0.5)",
+          "--theme-gradient": "linear-gradient(to right, #E44CFF, #7B4CFF)",
+          "--theme-glow-border": "rgba(228, 76, 255, 0.3)",
+          "--theme-nav-border": "rgba(228, 76, 255, 0.2)",
+          background: "#060816",
+        } as React.CSSProperties;
+      case "precise":
+        return {
+          "--theme-primary": "#4EF0FF",
+          "--theme-secondary": "#10B981",
+          "--theme-glow": "rgba(78, 240, 255, 0.5)",
+          "--theme-gradient": "linear-gradient(to right, #4EF0FF, #10B981)",
+          "--theme-glow-border": "rgba(78, 240, 255, 0.3)",
+          "--theme-nav-border": "rgba(78, 240, 255, 0.2)",
+          background: "#060816",
+        } as React.CSSProperties;
+      case "balanced":
+      default:
+        return {
+          "--theme-primary": "#E44CFF",
+          "--theme-secondary": "#5861F2",
+          "--theme-glow": "rgba(228, 76, 255, 0.5)",
+          "--theme-gradient": "linear-gradient(to right, #E44CFF, #5861F2)",
+          "--theme-glow-border": "rgba(228, 76, 255, 0.3)",
+          "--theme-nav-border": "rgba(228, 76, 255, 0.12)",
+          background: "#060816",
+        } as React.CSSProperties;
+    }
+  };
+
   return (
     <div
-      className="min-h-screen text-white relative overflow-hidden"
+      className="min-h-screen text-white relative overflow-hidden transition-all duration-1000"
       lang={locale}
       dir={locale === "ar" ? "rtl" : "ltr"}
-      style={{
-        background: "#060816",
-      }}
+      style={getGlobalThemeStyles(mode)}
     >
       {/* Persistent star-field background — visible from services section onward */}
       <div
@@ -196,17 +233,26 @@ export default function Home() {
       </div>
       {/* Navigation */}
       <nav
-        className="fixed top-0 left-0 right-0 z-50 px-6 py-5"
+        className="fixed top-0 left-0 right-0 z-50 px-6 py-5 transition-all duration-1000"
         style={{
           background: "rgba(6, 8, 22, 0.85)",
           backdropFilter: "blur(12px)",
-          borderBottom: "1px solid rgba(228, 76, 255, 0.12)",
+          borderBottom: "1px solid var(--theme-nav-border)",
         }}
       >
         <div className="max-w-7xl mx-auto flex justify-between items-center">
           <div className="flex items-center">
             <div className="text-3xl font-bold tracking-tight flex items-center gap-1">
-              <span className="bg-gradient-to-r from-[#4EF0FF] to-[#5861F2] bg-clip-text text-transparent">
+              <span 
+                className="bg-clip-text text-transparent transition-all duration-1000"
+                style={{
+                  backgroundImage: mode === "creative"
+                    ? "linear-gradient(to right, #E44CFF, #9F56FF)"
+                    : mode === "precise"
+                    ? "linear-gradient(to right, #4EF0FF, #2EDAA2)"
+                    : "linear-gradient(to right, #4EF0FF, #5861F2)"
+                }}
+              >
                 TRI
               </span>
               <span className="text-white">MINDS</span>
@@ -258,7 +304,7 @@ export default function Home() {
         className="relative z-10 flex flex-col items-center justify-center px-6 overflow-hidden min-h-screen pt-16 pb-8"
       >
         {/* Cinematic cosmic background */}
-        <CosmicBackground />
+        <CosmicBackground mode={mode} />
 
         <div className="max-w-7xl mx-auto relative w-full z-10">
           {/* Glowing badge */}
@@ -273,7 +319,16 @@ export default function Home() {
           <div className="flex flex-col items-center text-center space-y-5 mb-0 animate-fade-in">
             <h1 className="text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-extrabold leading-[1.15] max-w-5xl tracking-tight">
               <span className="text-white">{t("hero.heading")}</span>{" "}
-              <span className="bg-gradient-to-r from-[#E44CFF] via-[#5861F2] to-[#4EF0FF] bg-clip-text text-transparent">
+              <span 
+                className="bg-clip-text text-transparent transition-all duration-1000"
+                style={{
+                  backgroundImage: mode === "creative"
+                    ? "linear-gradient(to right, #E44CFF, #9F56FF, #7B4CFF)"
+                    : mode === "precise"
+                    ? "linear-gradient(to right, #4EF0FF, #2EDAA2, #10B981)"
+                    : "linear-gradient(to right, #E44CFF, #5861F2, #4EF0FF)"
+                }}
+              >
                 {t("hero.headingHighlight")}
               </span>
             </h1>
@@ -286,14 +341,29 @@ export default function Home() {
             <div className="flex flex-col sm:flex-row gap-4 items-center pt-2">
               <a
                 href="#contact"
-                className="group relative px-10 py-4 bg-gradient-to-r from-[#E44CFF] to-[#5861F2] rounded-full font-semibold text-base overflow-hidden transition-all duration-300 hover:scale-[1.05] hover:shadow-[0_0_50px_rgba(228,76,255,0.5)]"
+                className="group relative px-10 py-4 rounded-full font-semibold text-base overflow-hidden transition-all duration-500 hover:scale-[1.05] hover:shadow-[0_0_50px_var(--theme-glow)]"
+                style={{
+                  background: "var(--theme-gradient)",
+                  boxShadow: `0 0 25px var(--theme-glow-border)`,
+                }}
               >
                 <span className="relative z-10">{t("hero.cta1")}</span>
-                <div className="absolute inset-0 bg-gradient-to-r from-[#5861F2] to-[#E44CFF] opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                <div className="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
               </a>
               <a
                 href="#services"
-                className="px-10 py-4 border border-white/20 rounded-full font-semibold text-base hover:border-[#4EF0FF]/60 hover:bg-[#4EF0FF]/5 transition-all duration-300 backdrop-blur-sm"
+                className="px-10 py-4 border rounded-full font-semibold text-base transition-all duration-500 backdrop-blur-sm"
+                style={{
+                  borderColor: "var(--theme-nav-border)",
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.borderColor = "var(--theme-primary)";
+                  e.currentTarget.style.background = "rgba(255, 255, 255, 0.03)";
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.borderColor = "var(--theme-nav-border)";
+                  e.currentTarget.style.background = "transparent";
+                }}
               >
                 {t("hero.cta2")}
               </a>
@@ -952,7 +1022,7 @@ export default function Home() {
       </footer>
 
       {/* Floating Interactive Chatbot */}
-      <Chatbot />
+      <Chatbot activeMode={mode} onModeChange={setMode} />
     </div >
   );
 }

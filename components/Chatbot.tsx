@@ -2,8 +2,9 @@
 
 import React, { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { MessageSquare, Send, X, Bot, Sparkles } from "lucide-react";
+import { MessageSquare, Send, X, Bot, Sparkles, Zap, Scale, Target, User } from "lucide-react";
 import { useI18n } from "@/lib/i18n";
+import { Meteors } from "@/components/ui/meteors";
 
 interface Message {
   id: string;
@@ -12,25 +13,102 @@ interface Message {
   timestamp: Date;
 }
 
-export default function Chatbot() {
+export type PersonaMode = "creative" | "balanced" | "precise";
+
+interface ChatbotProps {
+  activeMode?: PersonaMode;
+  onModeChange?: (mode: PersonaMode) => void;
+}
+
+export default function Chatbot({ activeMode, onModeChange }: ChatbotProps = {}) {
   const { t, locale } = useI18n();
   const [isOpen, setIsOpen] = useState(false);
+  const [localMode, setLocalMode] = useState<PersonaMode>("balanced");
+  
+  const mode = activeMode !== undefined ? activeMode : localMode;
+  const setMode = onModeChange !== undefined ? onModeChange : setLocalMode;
+
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputValue, setInputValue] = useState("");
   const [isTyping, setIsTyping] = useState(false);
+  const [showTooltip, setShowTooltip] = useState(true);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  // Initialize welcome message when component mounts or locale changes
+  // Get active theme tokens according to the selected mode
+  const getThemeColors = (activeMode: PersonaMode) => {
+    switch (activeMode) {
+      case "creative":
+        return {
+          gradient: "from-[#E44CFF] via-[#9F56FF] to-[#7B4CFF]",
+          border: "border-[#E44CFF]/30",
+          text: "text-[#E44CFF]",
+          bgGlow: "rgba(228, 76, 255, 0.15)",
+          avatarBg: "from-[#E44CFF] to-[#7B4CFF]",
+          shadow: "shadow-[0_20px_50px_rgba(228,76,255,0.25)]",
+          glowColor: "#E44CFF",
+          buttonHover: "hover:border-[#E44CFF]/40 hover:bg-[#E44CFF]/5",
+          userBubble: "bg-gradient-to-r from-[#E44CFF] to-[#7B4CFF] text-white rounded-2xl rounded-tr-none",
+          activePulse: "bg-[#E44CFF]",
+        };
+      case "precise":
+        return {
+          gradient: "from-[#4EF0FF] via-[#2EDAA2] to-[#10B981]",
+          border: "border-[#4EF0FF]/30",
+          text: "text-[#4EF0FF]",
+          bgGlow: "rgba(78, 240, 255, 0.15)",
+          avatarBg: "from-[#4EF0FF] to-[#10B981]",
+          shadow: "shadow-[0_20px_50px_rgba(78,240,255,0.25)]",
+          glowColor: "#4EF0FF",
+          buttonHover: "hover:border-[#4EF0FF]/40 hover:bg-[#4EF0FF]/5",
+          userBubble: "bg-gradient-to-r from-[#4EF0FF] to-[#10B981] text-white rounded-2xl rounded-tr-none",
+          activePulse: "bg-[#4EF0FF]",
+        };
+      case "balanced":
+      default:
+        return {
+          gradient: "from-[#E44CFF] to-[#5861F2]",
+          border: "border-white/10",
+          text: "text-[#5861F2]",
+          bgGlow: "rgba(88, 97, 242, 0.15)",
+          avatarBg: "from-[#E44CFF] to-[#5861F2]",
+          shadow: "shadow-[0_20px_50px_rgba(79,70,229,0.15)]",
+          glowColor: "#5861F2",
+          buttonHover: "hover:border-[#5861F2]/40 hover:bg-[#5861F2]/5",
+          userBubble: "bg-gradient-to-r from-[#E44CFF] to-[#5861F2] text-white rounded-2xl rounded-tr-none",
+          activePulse: "bg-green-500",
+        };
+    }
+  };
+
+  const theme = getThemeColors(mode);
+  const isRtl = locale === "ar";
+
+  // Hide the floating tooltip after 8 seconds
   useEffect(() => {
+    const timer = setTimeout(() => {
+      setShowTooltip(false);
+    }, 8000);
+    return () => clearTimeout(timer);
+  }, []);
+
+  // Initialize/Reset welcome message when component mounts, locale changes, or mode changes
+  useEffect(() => {
+    const welcomeKey =
+      mode === "creative"
+        ? "chatbot.welcomeCreative"
+        : mode === "precise"
+        ? "chatbot.welcomePrecise"
+        : "chatbot.welcomeBalanced";
+
     setMessages([
       {
-        id: "welcome",
-        text: t("chatbot.welcome"),
+        id: `welcome-${mode}-${locale}`,
+        text: t(welcomeKey) || t("chatbot.welcome"),
         sender: "bot",
         timestamp: new Date(),
       },
     ]);
-  }, [locale]);
+  }, [locale, mode]);
 
   // Auto scroll to bottom
   useEffect(() => {
@@ -57,17 +135,15 @@ export default function Chatbot() {
       const cleanText = text.toLowerCase();
 
       // Check keywords for matching responses (English and Arabic)
-      if (
+      const isQ1 =
         cleanText.includes("service") ||
         cleanText.includes("offer") ||
         cleanText.includes("what do you do") ||
         cleanText.includes("خدمة") ||
         cleanText.includes("خدمات") ||
         cleanText.includes("شغل") ||
-        cleanText.includes("تقدم")
-      ) {
-        botText = t("chatbot.responses.q1");
-      } else if (
+        cleanText.includes("تقدم");
+      const isQ2 =
         cleanText.includes("time") ||
         cleanText.includes("duration") ||
         cleanText.includes("how long") ||
@@ -77,10 +153,8 @@ export default function Chatbot() {
         cleanText.includes("مدة") ||
         cleanText.includes("تستغرق") ||
         cleanText.includes("دمج") ||
-        cleanText.includes("تكامل")
-      ) {
-        botText = t("chatbot.responses.q2");
-      } else if (
+        cleanText.includes("تكامل");
+      const isQ3 =
         cleanText.includes("contact") ||
         cleanText.includes("email") ||
         cleanText.includes("phone") ||
@@ -90,10 +164,8 @@ export default function Chatbot() {
         cleanText.includes("اتصال") ||
         cleanText.includes("بريد") ||
         cleanText.includes("ايميل") ||
-        cleanText.includes("رقم")
-      ) {
-        botText = t("chatbot.responses.q3");
-      } else if (
+        cleanText.includes("رقم");
+      const isQ4 =
         cleanText.includes("price") ||
         cleanText.includes("pricing") ||
         cleanText.includes("cost") ||
@@ -102,9 +174,68 @@ export default function Chatbot() {
         cleanText.includes("أسعار") ||
         cleanText.includes("اسعار") ||
         cleanText.includes("تكلفة") ||
-        cleanText.includes("بكم")
-      ) {
-        botText = t("chatbot.responses.q4");
+        cleanText.includes("بكم");
+
+      if (isQ1) {
+        if (mode === "creative") {
+          botText = isRtl
+            ? "نحن هنا لنصنع المعجزات الرقمية! ✨ نحن متخصصون في أتمتة العمليات بالذكاء الاصطناعي (AI Automation)، وبناء تحليلات بيانات متقدمة ورائعة، وتصميم لوحات تحكم (Dashboards) تفاعلية ومبهرة، مع دمج أحدث نماذج التعلم الآلي لنمنح عملك جناحين يطير بهما! 🚀 هل ترغب في رؤية نموذج لأحد أعمالنا؟"
+            : "We are here to create digital wonders! ✨ We specialize in intelligent AI Automation, building spectacular advanced analytics, designing interactive & beautiful Dashboards, and integrating state-of-the-art Large Language Models (LLMs) to give your business superpowers! 🚀 Would you like to see a demo?";
+        } else if (mode === "precise") {
+          botText = isRtl
+            ? "الخدمات التقنية المتوفرة لدينا:\n• أتمتة سير العمل بالذكاء الاصطناعي (Workflow Automation).\n• تحليلات البيانات المتقدمة ولوحات التحكم (BI Dashboards).\n• دمج وتدريب نماذج اللغة الكبيرة (LLMs).\n• تطوير تطبيقات ويب وجوال ذكية (End-to-End)."
+            : "Available technical services:\n• Custom AI Workflow Automation.\n• Advanced data analytics & BI Dashboards.\n• LLM Integration & Fine-Tuning.\n• Smart Web & Mobile App Development (End-to-End).";
+        } else {
+          botText = t("chatbot.responses.q1");
+        }
+      } else if (isQ2) {
+        if (mode === "creative") {
+          botText = isRtl
+            ? "رحلتنا معاً نحو النجوم سريعة ومدروسة! 🌌 تستغرق عملية الدمج القياسية من 4 إلى 8 أسابيع فقط. نبني لك نظامك خطوة بخطوة بطريقة مرنة ودون انقطاع لثانية واحدة عن العمل! 🚀"
+            : "Our journey to the stars is fast and planned! 🌌 Standard integration takes just 4 to 8 weeks. We build your system step-by-step using agile workflows with zero downtime! 🚀";
+        } else if (mode === "precise") {
+          botText = isRtl
+            ? "مدة التنفيذ:\n• من 4 إلى 8 أسابيع كإطار زمني افتراضي.\n• تختلف المدة حسب تعقيد البنية التحتية وحجم البيانات.\n• يضمن بروتوكول العمل عدم توقف النظام أثناء النشر."
+            : "Execution duration:\n• 4 to 8 weeks standard timeframe.\n• Varies depending on system complexity and data volume.\n• Deployment protocol guarantees zero operational downtime.";
+        } else {
+          botText = t("chatbot.responses.q2");
+        }
+      } else if (isQ3) {
+        if (mode === "creative") {
+          botText = isRtl
+            ? "نحن بانتظارك بحماس! 🤩 يمكنك ملء النموذج أدناه للتحدث معنا فوراً، أو إرسال رسالة مباشرة إلى بريدنا contact@trimindes.ai وسنرد عليك بلمح البصر! دعنا نحول أفكارك لواقع مبهر! ✨"
+            : "We are super excited to hear from you! 🤩 Fill out the contact form below to talk to us instantly, or drop a line to contact@trimindes.ai. We'll get back to you in a flash! Let's build something awesome! ✨";
+        } else if (mode === "precise") {
+          botText = isRtl
+            ? "قنوات الاتصال المباشرة:\n• البريد الإلكتروني: contact@trimindes.ai\n• نموذج الاتصال: متوفر في أسفل الصفحة الحالية.\nزمن الاستجابة المعتاد: خلال 24 ساعة عمل."
+            : "Direct communication channels:\n• Email: contact@trimindes.ai\n• Contact Form: Available at the bottom of this page.\nStandard SLA: Under 24 business hours.";
+        } else {
+          botText = t("chatbot.responses.q3");
+        }
+      } else if (isQ4) {
+        if (mode === "creative") {
+          botText = isRtl
+            ? "بالتأكيد! 💸 نحن نؤمن بالمرونة المطلقة. لدينا باقات قياسية رائعة تبدأ من $2,999، لكن يسعدنا جداً تصميم باقة مخصصة تماماً لتناسب حجم وتطلعات عملك الفريد! لنتحدث الآن ونفصل لك ما تحتاجه بالضبط! 💎"
+            : "Absolutely! 💸 We believe in absolute flexibility. We have amazing standard packages starting from $2,999, but we would love to tailor a custom deal that fits your unique scale and goals! Let's talk and design your perfect package! 💎";
+        } else if (mode === "precise") {
+          botText = isRtl
+            ? "نموذج التسعير:\n• الباقة الأساسية: تبدأ من $2,999/شهرياً.\n• الباقة الاحترافية: تبدأ من $7,999/شهرياً.\n• باقة المؤسسات: تسعير مخصص يعتمد على حجم معالجة البيانات، ومتطلبات واجهة البرمجيات، ومستوى الخدمة المطلوبة."
+            : "Pricing structure:\n• Starter Plan: Starts at $2,999/month.\n• Professional Plan: Starts at $7,999/month.\n• Enterprise Plan: Custom pricing based on data throughput, API requirements, and support SLA.";
+        } else {
+          botText = t("chatbot.responses.q4");
+        }
+      } else {
+        if (mode === "creative") {
+          botText = isRtl
+            ? "شكراً لرسالتك المميزة! ✨ نحن متشوقون للحديث معك بشكل أعمق. أرسل لنا على contact@trimindes.ai أو اترك لنا بريدك وسنقوم بالتواصل معك لتبادل الأفكار الملهمة! 🚀"
+            : "Thanks for the lovely message! ✨ We're excited to chat deeper. Reach out to us at contact@trimindes.ai or leave your contact info, and we'll connect to brainstorm some amazing ideas! 🚀";
+        } else if (mode === "precise") {
+          botText = isRtl
+            ? "تم استلام رسالتك. للتواصل الرسمي والحصول على تفاصيل فنية متكاملة، يرجى مراسلتنا عبر: contact@trimindes.ai أو تعبئة نموذج الاتصال أدناه."
+            : "Message received. For formal inquiries and full technical details, contact: contact@trimindes.ai or complete the form below.";
+        } else {
+          botText = t("chatbot.responses.default");
+        }
       }
 
       const botMessage: Message = {
@@ -118,195 +249,304 @@ export default function Chatbot() {
     }, 1200);
   };
 
-  const isRtl = locale === "ar";
-
   return (
     <div className="fixed bottom-6 right-6 z-[9999] flex flex-col items-end">
       {/* Chat Window */}
       <AnimatePresence>
         {isOpen && (
           <motion.div
-            initial={{ opacity: 0, scale: 0.9, y: 30 }}
+            initial={{ opacity: 0, scale: 0.85, y: 35 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.9, y: 30 }}
-            transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-            className="w-[90vw] sm:w-[400px] h-[75vh] max-h-[580px] min-h-[400px] p-[1px] bg-gradient-to-tr from-[#E44CFF]/30 via-white/10 to-[#4EF0FF]/30 rounded-2xl overflow-hidden shadow-[0_20px_50px_rgba(79,70,229,0.25)] mb-4"
+            exit={{ opacity: 0, scale: 0.85, y: 35 }}
+            transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+            className={`relative w-[90vw] sm:w-[420px] h-[80vh] max-h-[640px] min-h-[450px] rounded-3xl border ${theme.border} bg-[#060816]/90 backdrop-blur-2xl flex flex-col overflow-hidden ${theme.shadow} mb-5`}
+            dir={isRtl ? "rtl" : "ltr"}
           >
+            {/* Cyber Glow Aura behind chat window */}
             <div
-              className="w-full h-full bg-[#060816]/95 backdrop-blur-2xl flex flex-col rounded-2xl overflow-hidden"
-              dir={isRtl ? "rtl" : "ltr"}
-            >
-              {/* Header */}
-              <div className="p-4 border-b border-white/10 bg-gradient-to-b from-white/[0.04] to-transparent flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <div className="relative w-10 h-10 rounded-full bg-gradient-to-tr from-[#E44CFF] via-[#8B5CF6] to-[#5861F2] flex items-center justify-center shadow-[0_0_15px_rgba(228,76,255,0.35)]">
-                    <Bot className="w-5 h-5 text-white" />
-                    <span
-                      className={`absolute bottom-0 ${
-                        isRtl ? "left-0" : "right-0"
-                      } w-2.5 h-2.5 rounded-full bg-green-500 border-2 border-[#060816]`}
-                    >
-                      <span className="absolute inset-0 rounded-full bg-green-500 animate-ping opacity-75" />
-                    </span>
-                  </div>
-                  <div>
-                    <h3 className="text-sm font-semibold text-white tracking-wide flex items-center gap-1">
-                      {t("chatbot.title")}
-                    </h3>
-                    <p className="text-[10px] text-white/50 flex items-center gap-1 font-medium">
-                      <span className="w-1.5 h-1.5 rounded-full bg-green-500" />
-                      {t("chatbot.status")}
-                    </p>
-                  </div>
-                </div>
-                <button
-                  onClick={() => setIsOpen(false)}
-                  className="w-8 h-8 rounded-full border border-white/10 bg-white/5 flex items-center justify-center text-white/70 hover:text-white hover:bg-white/10 hover:rotate-90 transition-all duration-300"
-                >
-                  <X className="w-4 h-4" />
-                </button>
-              </div>
+              className="absolute inset-0 -z-20 opacity-20 filter blur-[40px] transition-all duration-700 pointer-events-none"
+              style={{
+                background: `radial-gradient(circle at center, ${theme.glowColor} 0%, transparent 70%)`,
+              }}
+            />
 
-              {/* Message History */}
-              <div className="flex-1 overflow-y-auto p-4 space-y-4 scrollbar-thin scrollbar-thumb-white/10 scrollbar-track-transparent">
-                {messages.map((msg) => (
-                  <motion.div
-                    key={msg.id}
-                    initial={{ opacity: 0, y: 15, scale: 0.96 }}
-                    animate={{ opacity: 1, y: 0, scale: 1 }}
-                    transition={{ duration: 0.3 }}
-                    className={`flex flex-col ${
-                      msg.sender === "user" ? "items-end" : "items-start"
-                    }`}
-                  >
-                    <div
-                      className={`max-w-[85%] px-4 py-2.5 text-sm shadow-md leading-relaxed whitespace-pre-wrap transition-all duration-300 ${
-                        msg.sender === "user"
-                          ? "bg-gradient-to-r from-[#E44CFF] via-[#8B5CF6] to-[#5861F2] text-white rounded-2xl rounded-tr-none hover:shadow-[0_0_15px_rgba(228,76,255,0.2)]"
-                          : "bg-white/[0.03] border border-white/10 text-white/90 rounded-2xl rounded-tl-none hover:border-white/20"
-                      } ${
-                        isRtl
-                          ? msg.sender === "user"
-                            ? "rounded-tr-none rounded-tl-2xl text-right"
-                            : "rounded-tl-none rounded-tr-2xl text-right"
-                          : ""
+            {/* Cyber Grid Background */}
+            <div className="absolute inset-0 -z-10 bg-[linear-gradient(to_right,rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:20px_20px] pointer-events-none opacity-40" />
+
+            {/* Meteor background inside chat window */}
+            <div className="absolute inset-0 -z-10 overflow-hidden pointer-events-none">
+              <Meteors number={12} className="opacity-20" />
+            </div>
+
+            {/* Header */}
+            <div className="p-4 border-b border-white/10 bg-white/[0.03] flex items-center justify-between relative">
+              <div className="flex items-center gap-3">
+                {/* Glowing Avatar */}
+                <div
+                  className={`relative w-11 h-11 rounded-full bg-gradient-to-tr ${theme.avatarBg} flex items-center justify-center shadow-[0_0_15px_rgba(255,255,255,0.1)] transition-all duration-500`}
+                >
+                  <AnimatePresence mode="wait">
+                    <motion.div
+                      key={mode}
+                      initial={{ scale: 0.6, opacity: 0, rotate: -45 }}
+                      animate={{ scale: 1, opacity: 1, rotate: 0 }}
+                      exit={{ scale: 0.6, opacity: 0, rotate: 45 }}
+                      transition={{ duration: 0.2 }}
+                    >
+                      {mode === "creative" && <Zap className="w-5 h-5 text-white" />}
+                      {mode === "balanced" && <Bot className="w-5 h-5 text-white" />}
+                      {mode === "precise" && <Target className="w-5 h-5 text-white" />}
+                    </motion.div>
+                  </AnimatePresence>
+                  {/* Pulse Dot */}
+                  <span
+                    className={`absolute bottom-0 ${
+                      isRtl ? "left-0" : "right-0"
+                    } w-3 h-3 rounded-full ${theme.activePulse} border-2 border-[#060816] transition-colors duration-500`}
+                  />
+                  <span
+                    className={`absolute bottom-0 ${
+                      isRtl ? "left-0" : "right-0"
+                    } w-3 h-3 rounded-full ${theme.activePulse} border-2 border-[#060816] animate-ping opacity-75`}
+                  />
+                </div>
+                <div>
+                  <h3 className="text-sm font-bold text-white tracking-wide flex items-center gap-1.5">
+                    {t("chatbot.title")}
+                  </h3>
+                  <p className="text-[10px] text-white/50 flex items-center gap-1.5 font-medium mt-0.5">
+                    <span className={`w-1.5 h-1.5 rounded-full ${theme.activePulse} transition-colors duration-500`} />
+                    {t("chatbot.status")}
+                  </p>
+                </div>
+              </div>
+              <button
+                onClick={() => setIsOpen(false)}
+                className="w-8 h-8 rounded-full border border-white/10 bg-white/5 flex items-center justify-center text-white/70 hover:text-white hover:bg-white/10 hover:rotate-90 transition-all duration-300"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            {/* Persona Switcher Tab Row */}
+            <div className="px-4 py-2 bg-white/[0.01] border-b border-white/[0.08] flex items-center justify-between gap-2 shrink-0">
+              <span className="text-[10px] text-white/40 uppercase font-bold tracking-wider">
+                {t("chatbot.modes.title")}
+              </span>
+              <div className="flex bg-white/[0.04] rounded-xl p-1 border border-white/5 relative">
+                {(["creative", "balanced", "precise"] as const).map((m) => {
+                  const isActive = mode === m;
+                  return (
+                    <button
+                      key={m}
+                      onClick={() => setMode(m)}
+                      className={`relative z-10 px-2.5 py-1 text-[10px] font-semibold rounded-lg transition-all duration-300 flex items-center gap-1 capitalize ${
+                        isActive ? "text-white shadow-sm" : "text-white/40 hover:text-white/70"
                       }`}
                     >
-                      {msg.text}
-                    </div>
-                    <span className="text-[9px] text-white/30 mt-1 px-1">
-                      {msg.timestamp.toLocaleTimeString([], {
-                        hour: "2-digit",
-                        minute: "2-digit",
-                      })}
-                    </span>
-                  </motion.div>
-                ))}
+                      {m === "creative" && <Zap className="w-3 h-3 text-[#E44CFF]" />}
+                      {m === "balanced" && <Scale className="w-3 h-3 text-[#5861F2]" />}
+                      {m === "precise" && <Target className="w-3 h-3 text-[#4EF0FF]" />}
+                      <span>{t(`chatbot.modes.${m}`)}</span>
+                      {isActive && (
+                        <motion.div
+                          layoutId="activeModeIndicator"
+                          className={`absolute inset-0 -z-10 rounded-lg bg-gradient-to-r ${getThemeColors(m).gradient}`}
+                          transition={{ type: "spring", stiffness: 350, damping: 28 }}
+                        />
+                      )}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
 
-                {/* Typing Indicator */}
-                {isTyping && (
-                  <motion.div
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    className="flex flex-col items-start"
+            {/* Message History */}
+            <div className="flex-1 overflow-y-auto p-4 space-y-4 scrollbar-thin scrollbar-thumb-white/10 scrollbar-track-transparent">
+              <AnimatePresence initial={false}>
+                {messages.map((msg) => {
+                  const isUser = msg.sender === "user";
+                  return (
+                    <motion.div
+                      key={msg.id}
+                      initial={{ opacity: 0, y: 15, scale: 0.95 }}
+                      animate={{ opacity: 1, y: 0, scale: 1 }}
+                      transition={{ duration: 0.3 }}
+                      className={`flex ${isUser ? "justify-end" : "justify-start"} items-start gap-2.5`}
+                    >
+                      {/* Avatar for Bot */}
+                      {!isUser && (
+                        <div
+                          className={`w-8 h-8 rounded-full bg-gradient-to-tr ${theme.avatarBg} flex items-center justify-center shadow-[0_0_10px_rgba(255,255,255,0.05)] shrink-0 mt-0.5`}
+                        >
+                          {mode === "creative" && <Zap className="w-3.5 h-3.5 text-white" />}
+                          {mode === "balanced" && <Bot className="w-3.5 h-3.5 text-white" />}
+                          {mode === "precise" && <Target className="w-3.5 h-3.5 text-white" />}
+                        </div>
+                      )}
+
+                      {/* Text Bubble */}
+                      <div className="flex flex-col max-w-[78%]">
+                        <div
+                          className={`px-4 py-2.5 text-sm shadow-md leading-relaxed whitespace-pre-wrap ${
+                            isUser
+                              ? theme.userBubble
+                              : "bg-white/[0.04] border border-white/10 backdrop-blur-md text-white/90 rounded-2xl rounded-tl-none"
+                          } ${
+                            isRtl
+                              ? isUser
+                                ? "rounded-tr-none rounded-tl-2xl text-right"
+                                : "rounded-tl-none rounded-tr-2xl text-right"
+                              : isUser
+                              ? "rounded-tr-none rounded-tl-2xl"
+                              : "rounded-tl-none rounded-tr-2xl"
+                          }`}
+                        >
+                          {msg.text}
+                        </div>
+                        <span className={`text-[9px] text-white/30 mt-1 px-1 ${isUser ? "text-right" : "text-left"}`}>
+                          {msg.timestamp.toLocaleTimeString([], {
+                            hour: "2-digit",
+                            minute: "2-digit",
+                          })}
+                        </span>
+                      </div>
+
+                      {/* Avatar for User */}
+                      {isUser && (
+                        <div className="w-8 h-8 rounded-full bg-white/10 border border-white/20 flex items-center justify-center shrink-0 mt-0.5">
+                          <User className="w-3.5 h-3.5 text-white/80" />
+                        </div>
+                      )}
+                    </motion.div>
+                  );
+                })}
+              </AnimatePresence>
+
+              {/* Typing Indicator */}
+              {isTyping && (
+                <div className="flex justify-start items-start gap-2.5">
+                  <div
+                    className={`w-8 h-8 rounded-full bg-gradient-to-tr ${theme.avatarBg} flex items-center justify-center shrink-0 mt-0.5`}
                   >
+                    {mode === "creative" && <Zap className="w-3.5 h-3.5 text-white" />}
+                    {mode === "balanced" && <Bot className="w-3.5 h-3.5 text-white" />}
+                    {mode === "precise" && <Target className="w-3.5 h-3.5 text-white" />}
+                  </div>
+                  <div className="flex flex-col">
                     <div
-                      className={`flex items-center gap-1.5 px-4 py-3 bg-white/5 border border-white/10 rounded-2xl rounded-tl-none shadow-sm ${
+                      className={`flex items-center gap-1.5 px-4 py-3.5 bg-white/[0.04] border border-white/10 rounded-2xl rounded-tl-none shadow-sm ${
                         isRtl ? "rounded-tl-none rounded-tr-2xl" : ""
                       }`}
                     >
-                      <span
-                        className="w-1.5 h-1.5 rounded-full bg-gradient-to-r from-[#E44CFF] to-[#4EF0FF] animate-bounce"
-                        style={{ animationDelay: "0ms" }}
-                      />
-                      <span
-                        className="w-1.5 h-1.5 rounded-full bg-gradient-to-r from-[#E44CFF] to-[#4EF0FF] animate-bounce"
-                        style={{ animationDelay: "150ms" }}
-                      />
-                      <span
-                        className="w-1.5 h-1.5 rounded-full bg-gradient-to-r from-[#E44CFF] to-[#4EF0FF] animate-bounce"
-                        style={{ animationDelay: "300ms" }}
-                      />
+                      <span className="w-1.5 h-1.5 rounded-full bg-white/50 animate-bounce" style={{ animationDelay: "0ms" }} />
+                      <span className="w-1.5 h-1.5 rounded-full bg-white/50 animate-bounce" style={{ animationDelay: "150ms" }} />
+                      <span className="w-1.5 h-1.5 rounded-full bg-white/50 animate-bounce" style={{ animationDelay: "300ms" }} />
                     </div>
-                  </motion.div>
-                )}
+                  </div>
+                </div>
+              )}
 
-                <div ref={messagesEndRef} />
-              </div>
+              <div ref={messagesEndRef} />
+            </div>
 
-              {/* Quick Questions */}
-              <div className="px-4 py-2 bg-white/[0.01] border-t border-white/[0.05] overflow-x-auto whitespace-nowrap flex gap-2 scrollbar-none py-3">
+            {/* Quick Questions Chips */}
+            <div className="px-4 py-2.5 bg-white/[0.01] border-t border-white/[0.06] overflow-x-auto whitespace-nowrap flex gap-2 shrink-0 py-3 scrollbar-none">
+              {(["q1", "q2", "q3", "q4"] as const).map((qKey) => (
                 <button
-                  onClick={() => handleSend(t("chatbot.quickQuestions.q1"))}
-                  className="inline-flex items-center gap-1.5 px-3 py-2 rounded-full border border-white/10 bg-white/5 text-xs text-white/80 hover:text-white hover:border-[#4EF0FF]/50 hover:bg-gradient-to-r hover:from-[#4EF0FF]/10 hover:to-[#5861F2]/10 hover:shadow-[0_0_15px_rgba(78,240,255,0.15)] transition-all duration-300 cursor-pointer"
+                  key={qKey}
+                  onClick={() => handleSend(t(`chatbot.quickQuestions.${qKey}`))}
+                  className={`inline-flex items-center gap-1.5 px-3 py-2 rounded-full border border-white/10 bg-white/5 text-xs text-white/70 hover:text-white transition-all duration-300 ${theme.buttonHover}`}
                 >
-                  <Sparkles className="w-3.5 h-3.5 text-[#4EF0FF]" />
-                  {t("chatbot.quickQuestions.q1")}
+                  <Sparkles className="w-3 h-3 text-[#4EF0FF] shrink-0" />
+                  <span>{t(`chatbot.quickQuestions.${qKey}`)}</span>
                 </button>
-                <button
-                  onClick={() => handleSend(t("chatbot.quickQuestions.q2"))}
-                  className="inline-flex items-center gap-1.5 px-3 py-2 rounded-full border border-white/10 bg-white/5 text-xs text-white/80 hover:text-white hover:border-[#E44CFF]/50 hover:bg-gradient-to-r hover:from-[#E44CFF]/10 hover:to-[#8B5CF6]/10 hover:shadow-[0_0_15px_rgba(228,76,255,0.15)] transition-all duration-300 cursor-pointer"
-                >
-                  <Sparkles className="w-3.5 h-3.5 text-[#E44CFF]" />
-                  {t("chatbot.quickQuestions.q2")}
-                </button>
-                <button
-                  onClick={() => handleSend(t("chatbot.quickQuestions.q3"))}
-                  className="inline-flex items-center gap-1.5 px-3 py-2 rounded-full border border-white/10 bg-white/5 text-xs text-white/80 hover:text-white hover:border-[#4EF0FF]/50 hover:bg-gradient-to-r hover:from-[#4EF0FF]/10 hover:to-[#5861F2]/10 hover:shadow-[0_0_15px_rgba(78,240,255,0.15)] transition-all duration-300 cursor-pointer"
-                >
-                  <Sparkles className="w-3.5 h-3.5 text-[#4EF0FF]" />
-                  {t("chatbot.quickQuestions.q3")}
-                </button>
-                <button
-                  onClick={() => handleSend(t("chatbot.quickQuestions.q4"))}
-                  className="inline-flex items-center gap-1.5 px-3 py-2 rounded-full border border-white/10 bg-white/5 text-xs text-white/80 hover:text-white hover:border-[#E44CFF]/50 hover:bg-gradient-to-r hover:from-[#E44CFF]/10 hover:to-[#8B5CF6]/10 hover:shadow-[0_0_15px_rgba(228,76,255,0.15)] transition-all duration-300 cursor-pointer"
-                >
-                  <Sparkles className="w-3.5 h-3.5 text-[#E44CFF]" />
-                  {t("chatbot.quickQuestions.q4")}
-                </button>
-              </div>
+              ))}
+            </div>
 
-              {/* Input Form */}
-              <form
-                onSubmit={(e) => {
-                  e.preventDefault();
-                  handleSend(inputValue);
-                }}
-                className="p-3 border-t border-white/10 bg-white/[0.02] flex items-center gap-2"
-              >
+            {/* Input Form */}
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                handleSend(inputValue);
+              }}
+              className="p-3 border-t border-white/10 bg-white/[0.03] flex items-center gap-2"
+            >
+              <div className="flex-1 relative flex items-center">
+                <span className="absolute left-3 text-white/30 text-xs font-mono select-none pointer-events-none">
+                  {isRtl ? "" : ">"}
+                </span>
                 <input
                   type="text"
                   value={inputValue}
                   onChange={(e) => setInputValue(e.target.value)}
                   placeholder={t("chatbot.inputPlaceholder")}
-                  className="flex-1 min-w-0 bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white placeholder-white/30 focus:outline-none focus:border-[#5861F2] focus:ring-1 focus:ring-[#5861F2] focus:shadow-[0_0_15px_rgba(88,97,242,0.25)] transition-all duration-300"
+                  className={`w-full bg-white/5 border border-white/10 rounded-xl ${
+                    isRtl ? "px-4" : "pl-7 pr-4"
+                  } py-2.5 text-sm text-white placeholder-white/30 focus:outline-none transition-all duration-300 focus:bg-white/[0.07]`}
+                  style={{
+                    borderColor: inputValue.trim() ? theme.glowColor : undefined,
+                    boxShadow: inputValue.trim() ? `0 0 10px ${theme.glowColor}20` : undefined,
+                  }}
                 />
-                <button
-                  type="submit"
-                  className="group w-10 h-10 rounded-xl bg-gradient-to-r from-[#E44CFF] to-[#5861F2] flex items-center justify-center text-white shrink-0 hover:scale-105 active:scale-95 hover:shadow-[0_0_15px_rgba(228,76,255,0.4)] transition-all duration-300 shadow-[0_0_10px_rgba(228,76,255,0.2)] cursor-pointer"
-                >
-                  <Send
-                    className={`w-4 h-4 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 ${
-                      isRtl ? "rotate-180 group-hover:-translate-x-0.5" : ""
-                    }`}
-                  />
-                </button>
-              </form>
+                {isRtl && (
+                  <span className="absolute right-3 text-white/30 text-xs font-mono select-none pointer-events-none">
+                    {"<"}
+                  </span>
+                )}
+              </div>
+              <button
+                type="submit"
+                className={`w-10 h-10 rounded-xl bg-gradient-to-r ${theme.gradient} flex items-center justify-center text-white shrink-0 hover:scale-105 active:scale-95 transition-all shadow-[0_0_15px_rgba(228,76,255,0.2)]`}
+              >
+                <Send className={`w-4 h-4 ${isRtl ? "rotate-180" : ""}`} />
+              </button>
+            </form>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Floating Tooltip Invite */}
+      <AnimatePresence>
+        {showTooltip && !isOpen && (
+          <motion.div
+            initial={{ opacity: 0, y: 10, scale: 0.9 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.9 }}
+            className={`absolute bottom-16 mb-2 ${
+              isRtl ? "left-0" : "right-0"
+            } whitespace-nowrap bg-gradient-to-r ${theme.gradient} text-white text-xs font-semibold py-2 px-4 rounded-2xl shadow-lg border border-white/20 select-none z-[999] cursor-pointer`}
+            onClick={() => {
+              setIsOpen(true);
+              setShowTooltip(false);
+            }}
+          >
+            <div className="flex items-center gap-1.5">
+              <Sparkles className="w-3.5 h-3.5 animate-pulse" />
+              <span>{isRtl ? "أهلاً بك! كيف يمكنني مساعدتك؟" : "Hi! How can I help you today?"}</span>
             </div>
+            {/* Tiny Arrow */}
+            <div className={`absolute bottom-[-5px] ${isRtl ? "left-6" : "right-6"} w-2.5 h-2.5 bg-[#7B4CFF] rotate-45 border-r border-b border-white/20`} />
           </motion.div>
         )}
       </AnimatePresence>
 
       {/* Floating Toggle Button */}
       <motion.button
-        onClick={() => setIsOpen(!isOpen)}
+        onClick={() => {
+          setIsOpen(!isOpen);
+          setShowTooltip(false);
+        }}
         whileHover={{ scale: 1.08 }}
         whileTap={{ scale: 0.95 }}
-        className="relative w-16 h-16 rounded-full bg-gradient-to-r from-[#E44CFF] to-[#5861F2] flex items-center justify-center text-white shadow-[0_0_25px_rgba(228,76,255,0.45)] hover:shadow-[0_0_35px_rgba(228,76,255,0.65)] transition-all duration-300 cursor-pointer border border-white/20 z-10"
+        className={`w-14 h-14 rounded-full bg-gradient-to-r ${theme.gradient} flex items-center justify-center text-white shadow-lg transition-all duration-500 cursor-pointer border border-white/20 relative overflow-hidden`}
+        style={{
+          boxShadow: `0 0 25px ${theme.glowColor}60`,
+        }}
       >
-        {/* Pulsing ring behind button */}
+        {/* Pulsing ring around the button */}
         {!isOpen && (
-          <span className="absolute inset-0 rounded-full bg-gradient-to-r from-[#E44CFF] to-[#5861F2] opacity-40 animate-ping pointer-events-none scale-105" />
+          <span className="absolute inset-0 rounded-full border border-white animate-ping opacity-25 scale-75" />
         )}
 
         <AnimatePresence mode="wait">
@@ -327,6 +567,7 @@ export default function Chatbot() {
               animate={{ rotate: 0, opacity: 1 }}
               exit={{ rotate: -90, opacity: 0 }}
               transition={{ duration: 0.2 }}
+              className="relative"
             >
               <MessageSquare className="w-6 h-6" />
             </motion.div>
@@ -336,3 +577,4 @@ export default function Chatbot() {
     </div>
   );
 }
+

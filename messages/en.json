@@ -293,6 +293,15 @@
     "title": "Trimindes AI Assistant",
     "status": "Online",
     "welcome": "Hello! I am your AI assistant from Trimindes AI. How can I help you transform your business today?",
+    "welcomeCreative": "Hello there, stellar mind! 🚀 I'm in Creative mode, ready to cook up some groundbreaking ideas and construct jaw-dropping AI solutions. How shall we begin?",
+    "welcomeBalanced": "Hello! I am your AI assistant from Trimindes AI in Balanced mode. How can I help you transform your business today?",
+    "welcomePrecise": "Welcome. Precise mode active. Ready to provide direct, technical answers regarding our AI integration and automation services.",
+    "modes": {
+      "title": "Assistant Persona",
+      "creative": "Creative 🚀",
+      "balanced": "Balanced ⚖️",
+      "precise": "Precise 🎯"
+    },
     "inputPlaceholder": "Type your message...",
     "quickQuestions": {
       "q1": "What services do you offer?",
