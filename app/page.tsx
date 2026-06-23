@@ -301,30 +301,29 @@ export default function Home() {
       {/* Hero Section */}
       <section
         id="home"
-        className="relative z-10 flex flex-col items-center justify-center px-6 overflow-hidden min-h-screen pt-16 pb-8"
+        className="relative z-10 flex flex-col items-center justify-center px-6 overflow-hidden min-h-screen pt-20 pb-8"
       >
         {/* Cinematic cosmic background */}
         <CosmicBackground mode={mode} />
 
-        <div className="max-w-7xl mx-auto relative w-full z-10 flex flex-col items-center">
-          {/* Brand Logo Symbol - Zero-size container so resizing doesn't shift headlines below */}
-          <div className="relative w-0 h-0 flex justify-center items-center mb-20 md:mb-24">
-            <div className="absolute flex justify-center items-center animate-fade-in pointer-events-none">
-              {/* Soft breathing background aura matching active theme color */}
-              <div 
-                className="absolute w-44 h-44 rounded-full opacity-45 blur-[45px] animate-pulse transition-all duration-1000" 
-                style={{
-                  background: "var(--theme-gradient)",
-                }}
-              />
-              {/* Pure SVG logo with drop shadow - larger size */}
-              <img 
-                src="/logo.svg" 
-                alt="Trimindes AI Logo" 
-                className="w-32 h-32 md:w-40 md:h-40 object-contain relative z-10 filter drop-shadow-[0_0_20px_rgba(255,255,255,0.18)] hover:scale-108 transition-all duration-500 pointer-events-auto cursor-pointer" 
-              />
-            </div>
-          </div>
+        {/* Brand Logo Symbol - Absolutely positioned high up below the navigation bar */}
+        <div className="absolute top-28 md:top-32 left-1/2 -translate-x-1/2 flex justify-center items-center z-10 animate-fade-in pointer-events-none">
+          {/* Soft breathing background aura matching active theme color */}
+          <div 
+            className="absolute w-44 h-44 rounded-full opacity-45 blur-[45px] animate-pulse transition-all duration-1000" 
+            style={{
+              background: "var(--theme-gradient)",
+            }}
+          />
+          {/* Pure SVG logo with drop shadow */}
+          <img 
+            src="/logo.svg" 
+            alt="Trimindes AI Logo" 
+            className="w-32 h-32 md:w-40 md:h-40 object-contain relative z-10 filter drop-shadow-[0_0_20px_rgba(255,255,255,0.18)] hover:scale-108 transition-all duration-500 pointer-events-auto cursor-pointer" 
+          />
+        </div>
+
+        <div className="max-w-7xl mx-auto relative w-full z-10 flex flex-col items-center mt-28 md:mt-32">
 
           {/* Glowing badge */}
           <div className="flex justify-center mb-6 animate-fade-in">
