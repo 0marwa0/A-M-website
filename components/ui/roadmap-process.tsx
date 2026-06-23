@@ -76,8 +76,8 @@ const STEPS = [
 export function RoadmapProcess() {
     return (
         <div className="relative w-full">
-            {/* Animated connecting line */}
-            <div className="hidden md:block" style={{ position: "relative", height: "2px", marginBottom: "0" }}>
+            {/* Animated connecting line — only meaningful once all 6 nodes share a single row */}
+            <div className="hidden lg:block" style={{ position: "relative", height: "2px", marginBottom: "0" }}>
                 <div
                     style={{
                         position: "absolute",
@@ -105,13 +105,12 @@ export function RoadmapProcess() {
             </div>
 
             {/* Nodes grid */}
-            <div className="flex flex-col md:flex-row justify-between items-start gap-10 md:gap-0 relative z-10">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-x-4 sm:gap-x-6 gap-y-10 sm:gap-y-12 lg:gap-x-0 relative z-10">
                 {STEPS.map((step, i) => (
                     <div
                         key={step.num}
                         className="node-container-rm group relative flex flex-col items-center cursor-default"
                         style={{
-                            flex: 1,
                             animation: `fadeInUpRM 0.7s ease forwards`,
                             animationDelay: `${i * 0.1 + 0.1}s`,
                             opacity: 0,
@@ -119,7 +118,7 @@ export function RoadmapProcess() {
                     >
                         {/* Glassmorphic circle */}
                         <div
-                            className="glass-node-rm w-20 h-20 rounded-full flex items-center justify-center mb-5"
+                            className="glass-node-rm w-16 h-16 sm:w-20 sm:h-20 rounded-full flex items-center justify-center mb-4 sm:mb-5"
                             style={{
                                 color: step.accentColor,
                                 willChange: "transform, box-shadow, border-color",
@@ -136,8 +135,8 @@ export function RoadmapProcess() {
                             >
                                 {step.num}
                             </span>
-                            <h3 className="text-base font-semibold tracking-tight text-white">{step.name}</h3>
-                            {/* Expand on hover */}
+                            <h3 className="text-sm sm:text-base font-semibold tracking-tight text-white">{step.name}</h3>
+                            {/* Always visible on mobile/tablet (stacked); collapses to hover-expand on lg+ (single row) */}
                             <p className="node-desc-rm text-xs text-slate-400 leading-snug">{step.desc}</p>
                         </div>
 
@@ -182,19 +181,26 @@ export function RoadmapProcess() {
           border-color: rgba(255,255,255,0.38);
         }
 
-        /* Description expand */
+        /* Description: visible by default on mobile/tablet (stacked layout) */
         .node-desc-rm {
-          max-height: 0;
-          opacity: 0;
-          overflow: hidden;
-          margin-top: 0;
+          margin-top: 0.4rem;
           transition: max-height 0.4s ease, opacity 0.4s ease, margin-top 0.3s ease;
         }
 
-        .node-container-rm:hover .node-desc-rm {
-          max-height: 60px;
-          opacity: 1;
-          margin-top: 0.4rem;
+        /* On lg+ (single-row layout) collapse the description and expand only on hover */
+        @media (min-width: 1024px) {
+          .node-desc-rm {
+            max-height: 0;
+            opacity: 0;
+            overflow: hidden;
+            margin-top: 0;
+          }
+
+          .node-container-rm:hover .node-desc-rm {
+            max-height: 60px;
+            opacity: 1;
+            margin-top: 0.4rem;
+          }
         }
 
         /* Background glow blob */
