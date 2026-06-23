@@ -20,6 +20,10 @@ export const metadata: Metadata = {
   title: "Trimindes AI - Advanced AI Solutions & Automation",
   description:
     "Transform your business with cutting-edge AI automation, analytics, and custom solutions. From LLM integrations to end-to-end AI development.",
+  icons: {
+    icon: "/logo.svg",
+    apple: "/logo.svg",
+  },
 };
 
 export default function RootLayout({
