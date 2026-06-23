@@ -309,10 +309,10 @@ export default function Home() {
         <div className="max-w-7xl mx-auto relative w-full z-10 flex flex-col items-center">
 
           {/* Brand Logo Symbol - in normal flow so it always stacks above the text, never overlaps it */}
-          <div className="relative flex justify-center items-center mb-5 sm:mb-6 animate-fade-in pointer-events-none">
+          <div className="relative flex justify-center items-center mt-6 sm:mt-8 md:mt-10 lg:mt-12 mb-6 sm:mb-7 animate-fade-in pointer-events-none">
             {/* Soft breathing background aura matching active theme color */}
             <div
-              className="absolute w-32 h-32 sm:w-36 sm:h-36 md:w-40 md:h-40 lg:w-44 lg:h-44 rounded-full opacity-45 blur-[45px] animate-pulse transition-all duration-1000"
+              className="absolute w-36 h-36 sm:w-40 sm:h-40 md:w-44 md:h-44 lg:w-52 lg:h-52 rounded-full opacity-45 blur-[45px] animate-pulse transition-all duration-1000"
               style={{
                 background: "var(--theme-gradient)",
               }}
@@ -321,7 +321,7 @@ export default function Home() {
             <img
               src="/logo.svg"
               alt="Trimindes AI Logo"
-              className="w-24 h-24 sm:w-28 sm:h-28 md:w-32 md:h-32 lg:w-40 lg:h-40 object-contain relative z-10 filter drop-shadow-[0_0_20px_rgba(255,255,255,0.18)] hover:scale-108 transition-all duration-500 pointer-events-auto cursor-pointer"
+              className="w-28 h-28 sm:w-32 sm:h-32 md:w-36 md:h-36 lg:w-44 lg:h-44 object-contain relative z-10 filter drop-shadow-[0_0_20px_rgba(255,255,255,0.18)] hover:scale-108 transition-all duration-500 pointer-events-auto cursor-pointer"
             />
           </div>
 
@@ -355,35 +355,18 @@ export default function Home() {
               {t("hero.subheading")}
             </p>
 
-            {/* CTA Buttons */}
+            {/* CTA Button */}
             <div className="flex flex-col sm:flex-row gap-4 items-center pt-2">
               <a
-                href="#contact"
+                href="#services"
                 className="group relative px-10 py-4 rounded-full font-semibold text-base overflow-hidden transition-all duration-500 hover:scale-[1.05] hover:shadow-[0_0_50px_var(--theme-glow)]"
                 style={{
                   background: "var(--theme-gradient)",
                   boxShadow: `0 0 25px var(--theme-glow-border)`,
                 }}
               >
-                <span className="relative z-10">{t("hero.cta1")}</span>
+                <span className="relative z-10">{t("hero.cta2")}</span>
                 <div className="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-              </a>
-              <a
-                href="#services"
-                className="px-10 py-4 border rounded-full font-semibold text-base transition-all duration-500 backdrop-blur-sm"
-                style={{
-                  borderColor: "var(--theme-nav-border)",
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.borderColor = "var(--theme-primary)";
-                  e.currentTarget.style.background = "rgba(255, 255, 255, 0.03)";
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.borderColor = "var(--theme-nav-border)";
-                  e.currentTarget.style.background = "transparent";
-                }}
-              >
-                {t("hero.cta2")}
               </a>
             </div>
           </div>
