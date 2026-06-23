@@ -307,24 +307,23 @@ export default function Home() {
         <CosmicBackground mode={mode} />
 
         <div className="max-w-7xl mx-auto relative w-full z-10 flex flex-col items-center">
-          {/* Brand Logo Symbol */}
-          <div className="flex justify-center mb-6 animate-fade-in relative">
-            {/* Soft breathing background aura matching active theme color */}
-            <div 
-              className="absolute w-28 h-28 rounded-full opacity-40 blur-[30px] animate-pulse transition-all duration-1000 pointer-events-none" 
-              style={{
-                background: "var(--theme-gradient)",
-                top: "55%",
-                left: "50%",
-                transform: "translate(-50%, -50%)"
-              }}
-            />
-            {/* Pure SVG logo with drop shadow */}
-            <img 
-              src="/logo.svg" 
-              alt="Trimindes AI Logo" 
-              className="w-24 h-24 md:w-28 md:h-28 object-contain relative z-10 filter drop-shadow-[0_0_15px_rgba(255,255,255,0.15)] hover:scale-110 hover:rotate-3 transition-all duration-500 cursor-pointer" 
-            />
+          {/* Brand Logo Symbol - Zero-size container so resizing doesn't shift headlines below */}
+          <div className="relative w-0 h-0 flex justify-center items-center mb-20 md:mb-24">
+            <div className="absolute flex justify-center items-center animate-fade-in pointer-events-none">
+              {/* Soft breathing background aura matching active theme color */}
+              <div 
+                className="absolute w-44 h-44 rounded-full opacity-45 blur-[45px] animate-pulse transition-all duration-1000" 
+                style={{
+                  background: "var(--theme-gradient)",
+                }}
+              />
+              {/* Pure SVG logo with drop shadow - larger size */}
+              <img 
+                src="/logo.svg" 
+                alt="Trimindes AI Logo" 
+                className="w-32 h-32 md:w-40 md:h-40 object-contain relative z-10 filter drop-shadow-[0_0_20px_rgba(255,255,255,0.18)] hover:scale-108 transition-all duration-500 pointer-events-auto cursor-pointer" 
+              />
+            </div>
           </div>
 
           {/* Glowing badge */}
