@@ -306,7 +306,29 @@ export default function Home() {
         {/* Cinematic cosmic background */}
         <CosmicBackground mode={mode} />
 
-        <div className="max-w-7xl mx-auto relative w-full z-10">
+        <div className="max-w-7xl mx-auto relative w-full z-10 flex flex-col items-center">
+          {/* Brand Logo Symbol */}
+          <div className="flex justify-center mb-6 animate-fade-in">
+            <div className="relative w-20 h-20 md:w-24 md:h-24 group">
+              {/* Outer pulsing ring that glows in active theme color */}
+              <div 
+                className="absolute inset-0 rounded-full opacity-35 blur-xl animate-pulse transition-all duration-1000" 
+                style={{
+                  background: "var(--theme-gradient)"
+                }}
+              />
+              {/* Inner glassmorphic container */}
+              <div 
+                className="absolute inset-0 rounded-3xl border bg-white/5 backdrop-blur-md flex items-center justify-center p-4 hover:scale-105 hover:rotate-3 transition-all duration-500 shadow-2xl"
+                style={{
+                  borderColor: "var(--theme-nav-border)"
+                }}
+              >
+                <img src="/logo.svg" alt="Trimindes AI Logo" className="w-full h-full object-contain" />
+              </div>
+            </div>
+          </div>
+
           {/* Glowing badge */}
           <div className="flex justify-center mb-6 animate-fade-in">
             <div className="inline-flex items-center gap-2 px-5 py-2 rounded-full border border-white/10 bg-white/5 backdrop-blur-md text-xs tracking-widest uppercase text-white/70">
