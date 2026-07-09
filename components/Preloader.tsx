@@ -87,9 +87,11 @@ export default function Preloader() {
           src="/lodo_video/video-1783574031815.mp4"
           playsInline
           onEnded={handleFinish}
-          // Using mix-blend-mode screen so that the black video box disappears 
-          // and only the glowing logo graphics blend seamlessly with our background glow
-          className="w-full h-auto object-contain rounded-lg mix-blend-screen pointer-events-none"
+          className="w-full h-auto object-contain mix-blend-screen pointer-events-none"
+          style={{
+            WebkitMaskImage: "radial-gradient(ellipse at center, rgba(0,0,0,1) 50%, rgba(0,0,0,0) 80%)",
+            maskImage: "radial-gradient(ellipse at center, rgba(0,0,0,1) 50%, rgba(0,0,0,0) 80%)",
+          }}
         />
 
         {/* Dynamic Autoplay Blocked Banner - Sleek Glassmorphic CTA */}
