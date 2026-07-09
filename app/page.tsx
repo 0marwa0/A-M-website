@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import { Check, Star } from "lucide-react";
+import { useState, useEffect } from "react";
+import { Check, Star, ArrowRight, ArrowLeft, Sparkles, Cpu, Activity } from "lucide-react";
 import { useI18n } from "@/lib/i18n";
 import CosmicBackground from "@/components/CosmicBackground";
 import Chatbot, { PersonaMode } from "@/components/Chatbot";
@@ -10,10 +10,23 @@ import { StaggerTestimonials } from "@/components/ui/stagger-testimonials";
 import { AnimatedTestimonials } from "@/components/ui/animated-testimonials";
 import { RoadmapProcess } from "@/components/ui/roadmap-process";
 import StarField from "@/components/StarField";
+import InteractiveHUD from "@/components/InteractiveHUD";
+import { motion, AnimatePresence } from "framer-motion";
 
 export default function Home() {
   const { locale, setLocale, t } = useI18n();
   const [mode, setMode] = useState<PersonaMode>("balanced");
+  const [wordIndex, setWordIndex] = useState(0);
+
+  const rawWords = t("hero.words");
+  const words = Array.isArray(rawWords) ? rawWords : ["Business", "Future", "Growth", "Workflows", "Success"];
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setWordIndex((prev) => (prev + 1) % words.length);
+    }, 3200);
+    return () => clearInterval(interval);
+  }, [words.length]);
 
   const communityMembers = [
     {
@@ -241,8 +254,13 @@ export default function Home() {
         }}
       >
         <div className="max-w-7xl mx-auto flex justify-between items-center">
-          <div className="flex items-center">
-            <div className="text-3xl font-bold tracking-tight flex items-center gap-1">
+          <div className="flex items-center gap-3">
+            <img
+              src="/logo.svg"
+              alt="Triminds AI Logo"
+              className="w-10 h-10 md:w-11 md:h-11 object-contain filter drop-shadow-[0_0_8px_var(--theme-glow)]"
+            />
+            <div className="text-2xl sm:text-3xl font-bold tracking-tight flex items-center gap-1">
               <span 
                 className="bg-clip-text text-transparent transition-all duration-1000"
                 style={{
@@ -301,75 +319,114 @@ export default function Home() {
       {/* Hero Section */}
       <section
         id="home"
-        className="relative z-10 flex flex-col items-center justify-center px-6 overflow-hidden min-h-screen pt-20 pb-8"
+        className="relative z-10 flex items-center justify-center px-6 overflow-hidden min-h-screen pt-24 pb-12"
       >
         {/* Cinematic cosmic background */}
         <CosmicBackground mode={mode} />
 
-        <div className="max-w-7xl mx-auto relative w-full z-10 flex flex-col items-center">
-
-          {/* Brand Logo Symbol - in normal flow so it always stacks above the text, never overlaps it */}
-          <div className="relative flex justify-center items-center mt-6 sm:mt-8 md:mt-10 lg:mt-12 mb-6 sm:mb-7 animate-fade-in pointer-events-none">
-            {/* Soft breathing background aura matching active theme color */}
-            <div
-              className="absolute w-36 h-36 sm:w-40 sm:h-40 md:w-44 md:h-44 lg:w-52 lg:h-52 rounded-full opacity-45 blur-[45px] animate-pulse transition-all duration-1000"
-              style={{
-                background: "var(--theme-gradient)",
-              }}
-            />
-            {/* Pure SVG logo with drop shadow */}
-            <img
-              src="/logo.svg"
-              alt="Trimindes AI Logo"
-              className="w-28 h-28 sm:w-32 sm:h-32 md:w-36 md:h-36 lg:w-44 lg:h-44 object-contain relative z-10 filter drop-shadow-[0_0_20px_rgba(255,255,255,0.18)] hover:scale-108 transition-all duration-500 pointer-events-auto cursor-pointer"
-            />
-          </div>
-
-          {/* Glowing badge */}
-          <div className="flex justify-center mb-6 animate-fade-in">
-            <div className="inline-flex items-center gap-2 px-5 py-2 rounded-full border border-white/10 bg-white/5 backdrop-blur-md text-xs tracking-widest uppercase text-white/70">
+        <div className="max-w-7xl mx-auto relative w-full z-10 grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
+          
+          {/* Left Column: Text content & Action items */}
+          <div className="lg:col-span-7 flex flex-col items-center lg:items-start text-center lg:text-left rtl:lg:text-right space-y-6 animate-fade-in order-2 lg:order-1">
+            {/* Glowing badge */}
+            <div className="inline-flex items-center gap-2 px-5 py-2 rounded-full border border-white/10 bg-white/5 backdrop-blur-md text-[10px] md:text-xs tracking-widest uppercase text-white/70">
               <span className="w-2 h-2 rounded-full bg-gradient-to-r from-[#E44CFF] to-[#4EF0FF] animate-pulse" />
               {t("hero.badge.first")} · {t("hero.badge.second")} · {t("hero.badge.third")}
             </div>
-          </div>
 
-          {/* Headline */}
-          <div className="flex flex-col items-center text-center space-y-5 mb-0 animate-fade-in">
-            <h1 className="text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-extrabold leading-[1.15] max-w-5xl tracking-tight">
-              <span className="text-white">{t("hero.heading")}</span>{" "}
-              <span 
-                className="bg-clip-text text-transparent transition-all duration-1000"
-                style={{
-                  backgroundImage: mode === "creative"
-                    ? "linear-gradient(to right, #E44CFF, #9F56FF, #7B4CFF)"
-                    : mode === "precise"
-                    ? "linear-gradient(to right, #4EF0FF, #2EDAA2, #10B981)"
-                    : "linear-gradient(to right, #E44CFF, #5861F2, #4EF0FF)"
-                }}
-              >
-                {t("hero.headingHighlight")}
+            {/* Headline with rotating words */}
+            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold leading-[1.15] tracking-tight text-white w-full">
+              {t("hero.heading")}{" "}
+              <span className="relative inline-block min-w-[140px] sm:min-w-[180px] md:min-w-[220px]">
+                <AnimatePresence mode="wait">
+                  <motion.span
+                    key={wordIndex}
+                    initial={{ y: 15, opacity: 0 }}
+                    animate={{ y: 0, opacity: 1 }}
+                    exit={{ y: -15, opacity: 0 }}
+                    transition={{ duration: 0.35, ease: "easeInOut" }}
+                    className="absolute left-0 right-0 bg-clip-text text-transparent select-none whitespace-nowrap"
+                    style={{
+                      backgroundImage: mode === "creative"
+                        ? "linear-gradient(to right, #E44CFF, #9F56FF, #7B4CFF)"
+                        : mode === "precise"
+                        ? "linear-gradient(to right, #4EF0FF, #2EDAA2, #10B981)"
+                        : "linear-gradient(to right, #E44CFF, #5861F2, #4EF0FF)"
+                    }}
+                  >
+                    {words[wordIndex]}
+                  </motion.span>
+                </AnimatePresence>
+                {/* Layout Spacer utilizing the longest word to prevent layout shift */}
+                <span className="opacity-0 pointer-events-none select-none">
+                  {words.reduce((a, b) => a.length > b.length ? a : b, "")}
+                </span>
               </span>
             </h1>
 
-            <p className="text-base md:text-lg lg:text-xl text-gray-400 max-w-3xl leading-relaxed">
+            {/* Subheading */}
+            <p className="text-sm sm:text-base md:text-lg text-gray-400 max-w-2xl leading-relaxed">
               {t("hero.subheading")}
             </p>
 
-            {/* CTA Button */}
-            <div className="flex flex-col sm:flex-row gap-4 items-center pt-2">
+            {/* Value Highlights (Predict, Plan, Perform) */}
+            <div className="flex flex-wrap justify-center lg:justify-start gap-3 pt-2">
+              {[
+                { label: t("hero.badge.first"), color: "var(--theme-primary)" },
+                { label: t("hero.badge.second"), color: "var(--theme-secondary)" },
+                { label: t("hero.badge.third"), color: "var(--theme-primary)" },
+              ].map((item, idx) => (
+                <div key={idx} className="flex items-center gap-2 px-3.5 py-1.5 rounded-xl border border-white/5 bg-white/5 backdrop-blur-md">
+                  <span className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: item.color }} />
+                  <span className="text-[11px] md:text-xs font-semibold text-white/90">{item.label}</span>
+                </div>
+              ))}
+            </div>
+
+            {/* Action Buttons */}
+            <div className="flex flex-col sm:flex-row gap-4 items-center w-full sm:w-auto pt-4">
               <a
                 href="#services"
-                className="group relative px-10 py-4 rounded-full font-semibold text-base overflow-hidden transition-all duration-500 hover:scale-[1.05] hover:shadow-[0_0_50px_var(--theme-glow)]"
+                className="group relative w-full sm:w-auto text-center px-8 py-3.5 rounded-full font-semibold text-sm overflow-hidden transition-all duration-500 hover:scale-[1.05] hover:shadow-[0_0_40px_var(--theme-glow)]"
                 style={{
                   background: "var(--theme-gradient)",
-                  boxShadow: `0 0 25px var(--theme-glow-border)`,
+                  boxShadow: `0 0 20px var(--theme-glow-border)`,
                 }}
               >
-                <span className="relative z-10">{t("hero.cta2")}</span>
+                <span className="relative z-10 flex items-center justify-center gap-2">
+                  {t("hero.cta2")}
+                  <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1 rtl:rotate-180 rtl:group-hover:-translate-x-1" />
+                </span>
                 <div className="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
               </a>
+              <a
+                href="#about"
+                className="group w-full sm:w-auto text-center px-8 py-3.5 rounded-full font-semibold text-sm border border-white/10 bg-white/5 backdrop-blur-md text-white hover:border-white/30 hover:bg-white/10 transition-all duration-300 hover:scale-[1.05]"
+              >
+                {locale === "ar" ? "تعرف على طريقتنا" : "How It Works"}
+              </a>
+            </div>
+
+            {/* Performance Stats */}
+            <div className="pt-6 grid grid-cols-3 gap-4 md:gap-6 border-t border-white/10 w-full text-center lg:text-left rtl:lg:text-right">
+              {[
+                { val: t("hero.stats.clients.value"), label: t("hero.stats.clients.label") },
+                { val: t("hero.stats.revenue.value"), label: t("hero.stats.revenue.label") },
+                { val: t("hero.stats.loyalty.value"), label: t("hero.stats.loyalty.label") },
+              ].map((stat, idx) => (
+                <div key={idx} className="flex flex-col items-center lg:items-start">
+                  <span className="text-xl md:text-2.5xl font-extrabold text-white font-mono">{stat.val}</span>
+                  <span className="text-[9px] md:text-[10px] uppercase tracking-wider text-gray-400 mt-1.5">{stat.label}</span>
+                </div>
+              ))}
             </div>
           </div>
+
+          {/* Right Column: Interactive HUD Canvas */}
+          <div className="lg:col-span-5 w-full flex justify-center order-1 lg:order-2">
+            <InteractiveHUD mode={mode} />
+          </div>
+
         </div>
       </section>
 
