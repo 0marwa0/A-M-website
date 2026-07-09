@@ -369,12 +369,12 @@ export default function Home() {
               {t("hero.subheading")}
             </p>
 
-            {/* Value Highlights (Predict, Plan, Perform) */}
+            {/* Value Highlights (AI Automation, Predictive Analytics, LLM Integration) */}
             <div className="flex flex-wrap justify-center lg:justify-start gap-3 pt-2">
               {[
-                { label: t("hero.badge.first"), color: "var(--theme-primary)" },
-                { label: t("hero.badge.second"), color: "var(--theme-secondary)" },
-                { label: t("hero.badge.third"), color: "var(--theme-primary)" },
+                { label: t("hero.features.automation"), color: "var(--theme-primary)" },
+                { label: t("hero.features.analytics"), color: "var(--theme-secondary)" },
+                { label: t("hero.features.integration"), color: "var(--theme-primary)" },
               ].map((item, idx) => (
                 <div key={idx} className="flex items-center gap-2 px-3.5 py-1.5 rounded-xl border border-white/5 bg-white/5 backdrop-blur-md">
                   <span className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: item.color }} />

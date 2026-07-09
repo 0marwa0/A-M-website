@@ -19,6 +19,11 @@
     "heading": "Integrate AI Into Your",
     "headingHighlight": "Business",
     "words": ["Business", "Future", "Growth", "Workflows", "Success"],
+    "features": {
+      "automation": "AI Automation",
+      "analytics": "Predictive Analytics",
+      "integration": "LLM Integration"
+    },
     "heading1": "Reimagine Your Business with AI-Powered Innovation",
     "subheading": "Transform your operations, unlock new possibilities, and accelerate growth with intelligent AI solutions tailored to your business.",
     "cta": "Get Started",
