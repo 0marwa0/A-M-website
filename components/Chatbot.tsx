@@ -203,12 +203,12 @@ export default function Chatbot({ activeMode, onModeChange }: ChatbotProps = {})
       } else if (isQ3) {
         if (mode === "creative") {
           botText = isRtl
-            ? "نحن بانتظارك بحماس! 🤩 يمكنك ملء النموذج أدناه للتحدث معنا فوراً، أو إرسال رسالة مباشرة إلى بريدنا contact@trimindes.ai وسنرد عليك بلمح البصر! دعنا نحول أفكارك لواقع مبهر! ✨"
-            : "We are super excited to hear from you! 🤩 Fill out the contact form below to talk to us instantly, or drop a line to contact@trimindes.ai. We'll get back to you in a flash! Let's build something awesome! ✨";
+            ? "نحن بانتظارك بحماس! 🤩 يمكنك ملء النموذج أدناه للتحدث معنا فوراً، أو إرسال رسالة مباشرة إلى بريدنا info@trimindesai.com وسنرد عليك بلمح البصر! دعنا نحول أفكارك لواقع مبهر! ✨"
+            : "We are super excited to hear from you! 🤩 Fill out the contact form below to talk to us instantly, or drop a line to info@trimindesai.com. We'll get back to you in a flash! Let's build something awesome! ✨";
         } else if (mode === "precise") {
           botText = isRtl
-            ? "قنوات الاتصال المباشرة:\n• البريد الإلكتروني: contact@trimindes.ai\n• نموذج الاتصال: متوفر في أسفل الصفحة الحالية.\nزمن الاستجابة المعتاد: خلال 24 ساعة عمل."
-            : "Direct communication channels:\n• Email: contact@trimindes.ai\n• Contact Form: Available at the bottom of this page.\nStandard SLA: Under 24 business hours.";
+            ? "قنوات الاتصال المباشرة:\n• البريد الإلكتروني: info@trimindesai.com\n• نموذج الاتصال: متوفر في أسفل الصفحة الحالية.\nزمن الاستجابة المعتاد: خلال 24 ساعة عمل."
+            : "Direct communication channels:\n• Email: info@trimindesai.com\n• Contact Form: Available at the bottom of this page.\nStandard SLA: Under 24 business hours.";
         } else {
           botText = t("chatbot.responses.q3");
         }
@@ -227,12 +227,12 @@ export default function Chatbot({ activeMode, onModeChange }: ChatbotProps = {})
       } else {
         if (mode === "creative") {
           botText = isRtl
-            ? "شكراً لرسالتك المميزة! ✨ نحن متشوقون للحديث معك بشكل أعمق. أرسل لنا على contact@trimindes.ai أو اترك لنا بريدك وسنقوم بالتواصل معك لتبادل الأفكار الملهمة! 🚀"
-            : "Thanks for the lovely message! ✨ We're excited to chat deeper. Reach out to us at contact@trimindes.ai or leave your contact info, and we'll connect to brainstorm some amazing ideas! 🚀";
+            ? "شكراً لرسالتك المميزة! ✨ نحن متشوقون للحديث معك بشكل أعمق. أرسل لنا على info@trimindesai.com أو اترك لنا بريدك وسنقوم بالتواصل معك لتبادل الأفكار الملهمة! 🚀"
+            : "Thanks for the lovely message! ✨ We're excited to chat deeper. Reach out to us at info@trimindesai.com or leave your contact info, and we'll connect to brainstorm some amazing ideas! 🚀";
         } else if (mode === "precise") {
           botText = isRtl
-            ? "تم استلام رسالتك. للتواصل الرسمي والحصول على تفاصيل فنية متكاملة، يرجى مراسلتنا عبر: contact@trimindes.ai أو تعبئة نموذج الاتصال أدناه."
-            : "Message received. For formal inquiries and full technical details, contact: contact@trimindes.ai or complete the form below.";
+            ? "تم استلام رسالتك. للتواصل الرسمي والحصول على تفاصيل فنية متكاملة، يرجى مراسلتنا عبر: info@trimindesai.com أو تعبئة نموذج الاتصال أدناه."
+            : "Message received. For formal inquiries and full technical details, contact: info@trimindesai.com or complete the form below.";
         } else {
           botText = t("chatbot.responses.default");
         }
@@ -577,4 +577,3 @@ export default function Chatbot({ activeMode, onModeChange }: ChatbotProps = {})
     </div>
   );
 }
-

@@ -263,6 +263,64 @@
       "healthcare": "Healthcare",
       "logistics": "Logistics",
       "finance": "Finance"
+    },
+    "showcaseLabel": "Showcase Project",
+    "showcases": {
+      "education": {
+        "title": "Intelligent Student Assessment & Curriculum Engine",
+        "body": "An AI-driven assessment platform that evaluates student performance in real time, identifies learning gaps, and generates personalized lesson plans. The system combines multi-tenant LLM orchestration with vector search across curriculum frameworks to map weak points to precise educational resources with low-latency delivery.",
+        "tag": "Education AI — Personalized Learning Infrastructure",
+        "meta": "Curriculum mapping, student analytics, adaptive lesson planning",
+        "stats": [
+          "Real-time scoring",
+          "Vector curriculum search",
+          "Personalized tracks"
+        ]
+      },
+      "realEstate": {
+        "title": "Automated Property Syndication & Broker Training Platform",
+        "body": "A B2B real estate utility that connects with local CRMs, cleans listing data, and syndicates properties to regional portals through optimized XML streaming. A conversational AI simulator trains new brokers on complex off-plan projects through scenario-based mock client calls and certification flows.",
+        "tag": "Real Estate Automation — CRM to Portal Deployment",
+        "meta": "XML feeds, listing normalization, AI broker enablement",
+        "stats": [
+          "CRM integrations",
+          "Portal syndication",
+          "AI sales training"
+        ]
+      },
+      "healthcare": {
+        "title": "Patient Health Scoring & Propensity Modeling Engine",
+        "body": "A predictive scoring engine built into existing large-scale databases to analyze health signals, retention trends, and behavioral data. Custom machine learning models run across distributed pipelines to surface renewal propensity scores so teams can proactively support at-risk clients.",
+        "tag": "Healthcare Intelligence — Predictive Operations",
+        "meta": "XGBoost models, health scoring, retention analytics",
+        "stats": [
+          "Risk detection",
+          "Propensity scores",
+          "Distributed pipelines"
+        ]
+      },
+      "logistics": {
+        "title": "Omni-Channel WhatsApp Business Automation Dashboard",
+        "body": "A unified customer operations dashboard that connects WhatsApp Business Cloud API conversations with core service workflows. Agents can use a live Status & Actions panel to renew subscriptions, trigger course updates, and execute business tasks through background workers without leaving the chat.",
+        "tag": "Operations Automation — WhatsApp Workflow Hub",
+        "meta": "Cloud API messaging, background jobs, agent actions",
+        "stats": [
+          "Live chat context",
+          "Workflow actions",
+          "Task automation"
+        ]
+      },
+      "finance": {
+        "title": "Real-Time AI Credit Metering & Guardrails",
+        "body": "A high-throughput consumption infrastructure for enterprise platforms using AI at scale. The system tracks token usage, manages credit balances, applies budget limits, and routes complex LLM requests through caching and semantic optimization layers in real time.",
+        "tag": "Infrastructure & Automation — Production Deployment",
+        "meta": "Credit ledgers, semantic routing, streaming cost analytics",
+        "stats": [
+          "Token metering",
+          "Budget guardrails",
+          "Usage analytics"
+        ]
+      }
     }
   },
   "contact": {
@@ -288,7 +346,24 @@
   "footer": {
     "company": "Trimindes AI",
     "description": "Transforming businesses with cutting-edge artificial intelligence solutions. Your partner in the AI revolution.",
-    "copyright": "© 2025 Trimindes AI. All rights reserved."
+    "kicker": "Contact Us",
+    "headline": "Let's Discuss Your Vision. With Us",
+    "cta": "Schedule a call now",
+    "emailLabel": "Or email us at",
+    "email": "info@trimindesai.com",
+    "quickLinks": "Quick Links",
+    "information": "Information",
+    "links": {
+      "home": "Home",
+      "caseStudies": "Case Studies",
+      "gallery": "Gallery",
+      "blogs": "Blogs",
+      "about": "About Us",
+      "terms": "Terms of Service",
+      "privacy": "Privacy Policy",
+      "cookies": "Cookies Settings"
+    },
+    "copyright": "© 2026 Trimindes AI. All rights reserved."
   },
   "chatbot": {
     "title": "Trimindes AI Assistant",
@@ -313,9 +388,9 @@
     "responses": {
       "q1": "We specialize in custom AI Automation, Advanced Data Analytics, Custom AI Dashboards, Machine Learning integrations, and strategic AI consulting.",
       "q2": "A standard integration takes 4 to 8 weeks depending on complexity. We follow an agile process to ensure smooth transition without downtime.",
-      "q3": "You can fill out the contact form below or reach us directly at contact@trimindes.ai. We'd love to discuss your specific needs!",
+      "q3": "You can fill out the contact form below or reach us directly at info@trimindesai.com. We'd love to discuss your specific needs!",
       "q4": "Yes! We offer flexible, tailored pricing plans (Starter, Growth, Enterprise) based on your custom requirements, data scale, and service SLA.",
-      "default": "Thank you for your message! Our team will get back to you shortly, or you can contact us directly at contact@trimindes.ai."
+      "default": "Thank you for your message! Our team will get back to you shortly, or you can contact us directly at info@trimindesai.com."
     }
   },
   "aboutPage": {

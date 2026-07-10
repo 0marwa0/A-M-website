@@ -2,26 +2,69 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { Check, Star, ArrowRight, ArrowLeft, Sparkles, Cpu, Activity } from "lucide-react";
+import { ArrowRight, Copy, Facebook, Instagram, Linkedin } from "lucide-react";
 import { useI18n } from "@/lib/i18n";
 import CosmicBackground from "@/components/CosmicBackground";
 import Chatbot, { PersonaMode } from "@/components/Chatbot";
 import { Component as TypewriterTestimonial } from "@/components/ui/typewriter-testimonial";
 import { StaggerTestimonials } from "@/components/ui/stagger-testimonials";
-import { AnimatedTestimonials } from "@/components/ui/animated-testimonials";
 import { RoadmapProcess } from "@/components/ui/roadmap-process";
 import StarField from "@/components/StarField";
 import InteractiveHUD from "@/components/InteractiveHUD";
 import Preloader from "@/components/Preloader";
 import { motion, AnimatePresence } from "framer-motion";
 
+const showcaseKeys = ["education", "realEstate", "healthcare", "logistics", "finance"] as const;
+type ShowcaseKey = (typeof showcaseKeys)[number];
+
+const showcaseVisuals: Record<ShowcaseKey, { color: string; src: string }> = {
+  education: {
+    color: "#E44CFF",
+    src: "https://images.unsplash.com/photo-1509062522246-3755977927d7?auto=format&fit=crop&w=1000&q=80",
+  },
+  realEstate: {
+    color: "#8B56FF",
+    src: "https://www.colliers.com/-/media/files/emea/mena/uae/research-reports/2026/whatsapp-image-20260520-at-110001.ashx?bid=690ed16a02a44c18890bdf09f35ba7f7",
+  },
+  healthcare: {
+    color: "#2EDAA2",
+    src: "https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?auto=format&fit=crop&w=1000&q=80",
+  },
+  logistics: {
+    color: "#5861F2",
+    src: "https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&w=1000&q=80",
+  },
+  finance: {
+    color: "#4EF0FF",
+    src: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=1000&q=80",
+  },
+};
+
 export default function Home() {
   const { locale, setLocale, t } = useI18n();
   const [mode, setMode] = useState<PersonaMode>("balanced");
   const [wordIndex, setWordIndex] = useState(0);
+  const [activeShowcaseKey, setActiveShowcaseKey] = useState<ShowcaseKey>("finance");
 
   const rawWords = t("hero.words");
   const words = Array.isArray(rawWords) ? rawWords : ["Business", "Future", "Growth", "Workflows", "Success"];
+
+  const customerShowcases = showcaseKeys.map((key) => {
+    const stats = t(`customers.showcases.${key}.stats`);
+
+    return {
+      key,
+      label: t(`customers.industries.${key}`),
+      title: t(`customers.showcases.${key}.title`),
+      body: t(`customers.showcases.${key}.body`),
+      tag: t(`customers.showcases.${key}.tag`),
+      meta: t(`customers.showcases.${key}.meta`),
+      stats: Array.isArray(stats) ? stats : [],
+      ...showcaseVisuals[key],
+    };
+  });
+  const activeShowcase =
+    customerShowcases.find((showcase) => showcase.key === activeShowcaseKey) ?? customerShowcases[0];
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -226,6 +269,25 @@ export default function Home() {
         } as React.CSSProperties;
     }
   };
+
+  const footerEmail = t("footer.email");
+  const footerQuickLinks = [
+    { label: t("footer.links.home"), href: "#home" },
+    { label: t("footer.links.caseStudies"), href: "#customers" },
+    { label: t("footer.links.gallery"), href: "#community" },
+    { label: t("footer.links.blogs"), href: "#services" },
+    { label: t("footer.links.about"), href: "#about" },
+  ];
+  const footerInfoLinks = [
+    { label: t("footer.links.terms"), href: "#" },
+    { label: t("footer.links.privacy"), href: "#" },
+    { label: t("footer.links.cookies"), href: "#" },
+  ];
+  const footerSocialLinks = [
+    { label: "Facebook", href: "https://www.facebook.com/profile.php?id=61591438306752", Icon: Facebook },
+    { label: "Instagram", href: "https://www.instagram.com/trimindesai/", Icon: Instagram },
+    { label: "LinkedIn", href: "https://www.linkedin.com/company/triminds-ai/", Icon: Linkedin },
+  ];
 
   return (
     <div
@@ -709,55 +771,118 @@ export default function Home() {
             </p>
           </div>
 
-          {/* Animated testimonials — one per customer type */}
-          <AnimatedTestimonials
-            autoplay
-            testimonials={[
-              {
-                name: t("customers.types.small.title"),
-                designation: "SMBs & Startups — Healthcare, Finance, Retail",
-                quote: t("customers.types.small.desc") + " We design our AI systems to slot cleanly into existing workflows so you gain a competitive edge without a painful transition.",
-                src: "https://images.unsplash.com/photo-1556761175-5973dc0f32e7?auto=format&fit=crop&w=800&q=80",
-                accent: "#E44CFF",
-              },
-              {
-                name: t("customers.types.mid.title"),
-                designation: "Growing Companies — Logistics, Education, SaaS",
-                quote: t("customers.types.mid.desc") + " Our modular architecture lets you start small and expand the AI footprint as your team's confidence and data maturity grows.",
-                src: "https://images.unsplash.com/photo-1600880292203-757bb62b4baf?auto=format&fit=crop&w=800&q=80",
-                accent: "#7B4CFF",
-              },
-              {
-                name: t("customers.types.enterprise.title"),
-                designation: "Enterprise & Government — Large-Scale Deployments",
-                quote: t("customers.types.enterprise.desc") + " From multi-tenant LLM orchestration to real-time analytics pipelines, we handle the full engineering lifecycle under one roof.",
-                src: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=800&q=80",
-                accent: "#4EF0FF",
-              },
-            ]}
-          />
+          {/* Industry showcase */}
+          <div className="mt-12 grid grid-cols-1 gap-8 lg:grid-cols-[1fr_0.92fr] lg:items-stretch">
+            <div
+              className="relative min-h-[360px] overflow-hidden rounded-3xl border bg-[#080B18]/80 shadow-[0_0_50px_rgba(78,240,255,0.08)]"
+              style={{
+                borderColor: `${activeShowcase.color}55`,
+              }}
+            >
+              <AnimatePresence mode="wait">
+                <motion.img
+                  key={activeShowcase.src}
+                  src={activeShowcase.src}
+                  alt={activeShowcase.title}
+                  initial={{ opacity: 0, scale: 1.04 }}
+                  animate={{ opacity: 0.54, scale: 1 }}
+                  exit={{ opacity: 0, scale: 1.02 }}
+                  transition={{ duration: 0.55, ease: "easeOut" }}
+                  className="absolute inset-0 h-full w-full object-cover"
+                />
+              </AnimatePresence>
+              <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(8,11,24,0.92),rgba(8,11,24,0.58)_48%,rgba(8,11,24,0.82))]" />
+              <div
+                className="absolute inset-x-0 bottom-0 h-40"
+                style={{
+                  background: `linear-gradient(0deg, ${activeShowcase.color}24, transparent)`,
+                }}
+              />
+
+              <div className="relative z-10 flex h-full min-h-[360px] flex-col justify-between p-6 md:p-8">
+                <div className="flex items-center justify-between gap-4">
+                  <span
+                    className="rounded-full px-4 py-2 text-xs font-semibold uppercase tracking-[0.2em]"
+                    style={{
+                      background: `${activeShowcase.color}18`,
+                      border: `1px solid ${activeShowcase.color}44`,
+                      color: activeShowcase.color,
+                    }}
+                  >
+                    {activeShowcase.label}
+                  </span>
+                  <span className="text-xs font-medium uppercase tracking-[0.18em] text-white/60">
+                    {t("customers.showcaseLabel")}
+                  </span>
+                </div>
+
+                <div className="max-w-md">
+                  <div
+                    className="mb-5 h-1 w-20 rounded-full"
+                    style={{
+                      background: `linear-gradient(90deg, ${activeShowcase.color}, #4EF0FF)`,
+                    }}
+                  />
+                  <p className="text-sm font-semibold uppercase tracking-[0.24em] text-white/55">
+                    {activeShowcase.meta}
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={activeShowcase.key}
+                initial={{ opacity: 0, y: 18 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -18 }}
+                transition={{ duration: 0.35, ease: "easeOut" }}
+                className="flex min-h-[360px] flex-col justify-center rounded-3xl border border-white/10 bg-white/[0.04] p-6 shadow-[0_0_45px_rgba(0,0,0,0.22)] backdrop-blur-md md:p-8"
+              >
+                <p
+                  className="mb-4 text-sm font-semibold uppercase tracking-[0.22em]"
+                  style={{ color: activeShowcase.color }}
+                >
+                  {activeShowcase.tag}
+                </p>
+                <h3 className="text-3xl font-bold leading-tight text-white md:text-4xl">
+                  {activeShowcase.title}
+                </h3>
+                <p className="mt-5 text-base leading-relaxed text-gray-300 md:text-lg">
+                  {activeShowcase.body}
+                </p>
+                <div className="mt-8 grid grid-cols-1 gap-3 sm:grid-cols-3">
+                  {activeShowcase.stats.map((stat) => (
+                    <div
+                      key={stat}
+                      className="rounded-2xl border border-white/10 bg-black/20 px-4 py-3 text-sm font-semibold text-white/85"
+                    >
+                      {stat}
+                    </div>
+                  ))}
+                </div>
+              </motion.div>
+            </AnimatePresence>
+          </div>
 
           {/* Industry pills */}
           <div className="flex flex-wrap items-center justify-center gap-3 mt-8">
-            {[
-              { label: t("customers.industries.education"), color: "#E44CFF" },
-              { label: t("customers.industries.realEstate"), color: "#8B56FF" },
-              { label: t("customers.industries.healthcare"), color: "#7B4CFF" },
-              { label: t("customers.industries.logistics"), color: "#5861F2" },
-              { label: t("customers.industries.finance"), color: "#4EF0FF" },
-            ].map(({ label, color }) => (
-              <span
-                key={label}
-                className="px-5 py-2 rounded-full text-sm font-semibold tracking-wide"
+            {customerShowcases.map(({ key, label, color }) => (
+              <button
+                key={key}
+                type="button"
+                aria-pressed={activeShowcaseKey === key}
+                onClick={() => setActiveShowcaseKey(key)}
+                className="px-5 py-2 rounded-full text-sm font-semibold tracking-wide transition-all duration-300 hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-white/40"
                 style={{
-                  background: `${color}18`,
-                  border: `1px solid ${color}44`,
-                  color,
-                  boxShadow: `0 0 12px ${color}22`,
+                  background: activeShowcaseKey === key ? `${color}28` : `${color}12`,
+                  border: `1px solid ${activeShowcaseKey === key ? color : `${color}44`}`,
+                  color: activeShowcaseKey === key ? "#FFFFFF" : color,
+                  boxShadow: activeShowcaseKey === key ? `0 0 18px ${color}44` : `0 0 12px ${color}18`,
                 }}
               >
                 {label}
-              </span>
+              </button>
             ))}
           </div>
         </div>
@@ -1042,26 +1167,118 @@ export default function Home() {
       </section>
 
       {/* Footer */}
-      <footer
-        className="relative z-10 py-12 px-6"
-        style={{
-          borderTop: "1px solid rgba(228, 76, 255, 0.2)",
-        }}
-      >
-        <div className="text-center">
-          <div className="text-2xl font-bold mb-6 bg-gradient-to-r from-[#E44CFF] to-[#4EF0FF] bg-clip-text text-transparent">
-            {t("footer.company")}
+      <footer className="relative z-10 px-6 pb-12 pt-20 md:pt-24">
+        <div
+          className="pointer-events-none absolute inset-x-0 top-0 h-px"
+          style={{
+            background: "linear-gradient(90deg, transparent, rgba(228,76,255,0.28), rgba(78,240,255,0.2), transparent)",
+          }}
+        />
+
+        <div className="mx-auto max-w-7xl">
+          <div className="grid gap-14 lg:grid-cols-[1.3fr_0.9fr_0.8fr]">
+            <div>
+              <p className="mb-6 text-sm font-bold uppercase tracking-[0.18em] text-[#ACA0FB]">
+                {t("footer.kicker")}
+              </p>
+              <h2 className="max-w-xl text-4xl font-semibold leading-tight tracking-tight text-white md:text-6xl">
+                {t("footer.headline")}
+              </h2>
+
+              <a
+                href="#contact"
+                className="group relative mt-10 inline-flex min-h-14 items-center justify-center gap-3 overflow-hidden rounded-full px-8 text-base font-semibold text-white transition-all duration-500 hover:scale-[1.05] hover:shadow-[0_0_40px_var(--theme-glow)]"
+                style={{
+                  background: "var(--theme-gradient)",
+                  boxShadow: "0 0 20px var(--theme-glow-border)",
+                }}
+              >
+                <span className="relative z-10 flex items-center justify-center gap-3">
+                  {t("footer.cta")}
+                  <ArrowRight className="h-5 w-5 transition-transform duration-300 group-hover:translate-x-1 rtl:rotate-180 rtl:group-hover:-translate-x-1" />
+                </span>
+                <div className="absolute inset-0 bg-white/10 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+              </a>
+
+              <div className="mt-12">
+                <p className="mb-4 text-sm font-bold uppercase tracking-[0.18em] text-[#ACA0FB]">
+                  {t("footer.emailLabel")}
+                </p>
+                <div className="inline-flex min-h-14 max-w-full items-center gap-3 rounded-full border border-white/10 bg-white/[0.06] px-5 text-white shadow-[inset_0_0_18px_rgba(255,255,255,0.03)] backdrop-blur-md">
+                  <a
+                    href={`mailto:${footerEmail}`}
+                    className="truncate text-sm font-semibold md:text-base"
+                  >
+                    {footerEmail}
+                  </a>
+                  <button
+                    type="button"
+                    aria-label="Copy email address"
+                    onClick={() => navigator.clipboard?.writeText(footerEmail)}
+                    className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-white/10 bg-white/[0.04] text-white/85 transition-colors duration-200 hover:bg-white/10 hover:text-white"
+                  >
+                    <Copy className="h-4 w-4" />
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <nav aria-label="Footer quick links" className="lg:pt-2">
+              <h3 className="mb-6 text-sm font-bold uppercase tracking-[0.18em] text-[#ACA0FB]">
+                {t("footer.quickLinks")}
+              </h3>
+              <ul className="space-y-5">
+                {footerQuickLinks.map((link) => (
+                  <li key={link.label}>
+                    <a
+                      href={link.href}
+                      className="text-lg font-medium text-white/82 transition-colors duration-200 hover:text-[#4EF0FF]"
+                    >
+                      {link.label}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </nav>
+
+            <nav aria-label="Footer information links" className="lg:pt-2">
+              <h3 className="mb-6 text-sm font-bold uppercase tracking-[0.18em] text-[#ACA0FB]">
+                {t("footer.information")}
+              </h3>
+              <ul className="space-y-5">
+                {footerInfoLinks.map((link) => (
+                  <li key={link.label}>
+                    <a
+                      href={link.href}
+                      className="text-lg font-medium text-white/82 transition-colors duration-200 hover:text-[#4EF0FF]"
+                    >
+                      {link.label}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </nav>
           </div>
-          <p className="text-gray-300 mb-8 max-w-2xl mx-auto">
-            {t("footer.description")}
-          </p>
-          <div
-            className="pt-6"
-            style={{
-              borderTop: "1px solid rgba(228, 76, 255, 0.2)",
-            }}
-          >
-            <p className="text-gray-400">{t("footer.copyright")}</p>
+
+          <div className="mt-24 border-t border-white/10 pt-12">
+            <div className="flex flex-col gap-8 md:flex-row md:items-center md:justify-between">
+              <p className="text-sm font-semibold uppercase tracking-[0.12em] text-[#ACA0FB]">
+                {t("footer.copyright")}
+              </p>
+
+              <div className="flex items-center gap-5">
+                {footerSocialLinks.map(({ label, href, Icon }) => (
+                  <a
+                    key={label}
+                    href={href}
+                    aria-label={label}
+                    className="text-white/88 transition-colors duration-200 hover:text-[#4EF0FF]"
+                  >
+                    <Icon className="h-5 w-5" />
+                  </a>
+                ))}
+              </div>
+            </div>
           </div>
         </div>
       </footer>
