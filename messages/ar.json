@@ -335,6 +335,60 @@
       "message": "الرسالة",
       "messagePlaceholder": "أخبرنا عن احتياجاتك وأهدافك في الذكاء الاصطناعي...",
       "submit": "إرسال الرسالة"
+    },
+    "configurator": {
+      "kicker": "تواصل معنا",
+      "title": "مكوّن مشروع تفاعلي",
+      "industryLabel": "تركيز القطاع",
+      "goalLabel": "الهدف الأساسي",
+      "scaleLabel": "النطاق",
+      "nameLabel": "اسمك الكامل",
+      "namePlaceholder": "اسمك الكامل",
+      "emailLabel": "بريد العمل الإلكتروني",
+      "emailPlaceholder": "you@company.com",
+      "blueprintTitle": "مخطط وتقدير مباشر",
+      "projectedLabel": "الوحدات المتوقعة:",
+      "complexityLabel": "تعقيد التنفيذ:",
+      "submit": "ابدأ نقاش المشروع",
+      "industries": {
+        "education": "التعليم",
+        "realEstate": "العقارات",
+        "finance": "المالية",
+        "logistics": "اللوجستيات"
+      },
+      "goals": {
+        "llmAutomation": "أتمتة نماذج اللغة",
+        "predictiveAnalytics": "تحليلات تنبؤية",
+        "b2bIntegration": "تكامل B2B",
+        "aiChatbots": "محادثات ذكية"
+      },
+      "scales": {
+        "initialPilot": "تجربة أولية",
+        "enterpriseDeployment": "نشر مؤسسي"
+      },
+      "modules": {
+        "industries": {
+          "education": "نموذج لغوي متعدد العملاء",
+          "realEstate": "نشر عقاري مؤتمت",
+          "finance": "قياس أرصدة الاستخدام",
+          "logistics": "أتمتة سير العمل"
+        },
+        "goals": {
+          "llmAutomation": "تنسيق نماذج اللغة",
+          "predictiveAnalytics": "تحليلات فورية",
+          "b2bIntegration": "طبقة تكامل",
+          "aiChatbots": "واجهة محادثة"
+        }
+      },
+      "complexities": {
+        "high": "عال",
+        "mediumHigh": "متوسط إلى عال",
+        "medium": "متوسط"
+      },
+      "scaleDetails": {
+        "initialPilot": "تجربة أولية",
+        "enterpriseDeployment": "نشر مؤسسي"
+      }
     }
   },
   "community": {

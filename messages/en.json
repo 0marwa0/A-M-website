@@ -335,6 +335,60 @@
       "message": "Message",
       "messagePlaceholder": "Tell us about your AI needs and goals...",
       "submit": "Send Message"
+    },
+    "configurator": {
+      "kicker": "Contact Us",
+      "title": "Interactive Project Configurator",
+      "industryLabel": "Industry Focus",
+      "goalLabel": "Primary Goal",
+      "scaleLabel": "Scale",
+      "nameLabel": "Your Full Name",
+      "namePlaceholder": "Your full name",
+      "emailLabel": "Your Work Email",
+      "emailPlaceholder": "you@company.com",
+      "blueprintTitle": "Live Blueprint & Estimate",
+      "projectedLabel": "Projected Modules:",
+      "complexityLabel": "Engineering Complexity:",
+      "submit": "Initiate Project Discussion",
+      "industries": {
+        "education": "Education",
+        "realEstate": "Real Estate",
+        "finance": "Finance",
+        "logistics": "Logistics"
+      },
+      "goals": {
+        "llmAutomation": "LLM Automation",
+        "predictiveAnalytics": "Predictive Analytics",
+        "b2bIntegration": "B2B Integration",
+        "aiChatbots": "AI Chatbots"
+      },
+      "scales": {
+        "initialPilot": "Initial Pilot",
+        "enterpriseDeployment": "Enterprise Deployment"
+      },
+      "modules": {
+        "industries": {
+          "education": "Multi-tenant LLM",
+          "realEstate": "Automated Syndication",
+          "finance": "Credit Metering",
+          "logistics": "Workflow Automation"
+        },
+        "goals": {
+          "llmAutomation": "LLM Orchestration",
+          "predictiveAnalytics": "Real-time Analytics",
+          "b2bIntegration": "Integration Layer",
+          "aiChatbots": "Conversational Interface"
+        }
+      },
+      "complexities": {
+        "high": "High",
+        "mediumHigh": "Medium-High",
+        "medium": "Medium"
+      },
+      "scaleDetails": {
+        "initialPilot": "Initial Pilot",
+        "enterpriseDeployment": "Enterprise Deployment"
+      }
     }
   },
   "community": {

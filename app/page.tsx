@@ -16,6 +16,12 @@ import { motion, AnimatePresence } from "framer-motion";
 
 const showcaseKeys = ["education", "realEstate", "healthcare", "logistics", "finance"] as const;
 type ShowcaseKey = (typeof showcaseKeys)[number];
+const contactIndustryKeys = ["education", "realEstate", "finance", "logistics"] as const;
+type ContactIndustryKey = (typeof contactIndustryKeys)[number];
+const contactGoalKeys = ["llmAutomation", "predictiveAnalytics", "b2bIntegration", "aiChatbots"] as const;
+type ContactGoalKey = (typeof contactGoalKeys)[number];
+const contactScaleKeys = ["initialPilot", "enterpriseDeployment"] as const;
+type ContactScaleKey = (typeof contactScaleKeys)[number];
 
 const showcaseVisuals: Record<ShowcaseKey, { color: string; src: string }> = {
   education: {
@@ -45,6 +51,9 @@ export default function Home() {
   const [mode, setMode] = useState<PersonaMode>("balanced");
   const [wordIndex, setWordIndex] = useState(0);
   const [activeShowcaseKey, setActiveShowcaseKey] = useState<ShowcaseKey>("finance");
+  const [contactIndustry, setContactIndustry] = useState<ContactIndustryKey>("education");
+  const [contactGoal, setContactGoal] = useState<ContactGoalKey>("llmAutomation");
+  const [contactScale, setContactScale] = useState<ContactScaleKey>("initialPilot");
 
   const rawWords = t("hero.words");
   const words = Array.isArray(rawWords) ? rawWords : ["Business", "Future", "Growth", "Workflows", "Success"];
@@ -65,6 +74,28 @@ export default function Home() {
   });
   const activeShowcase =
     customerShowcases.find((showcase) => showcase.key === activeShowcaseKey) ?? customerShowcases[0];
+  const contactIndustries = contactIndustryKeys.map((key) => ({
+    key,
+    label: t(`contact.configurator.industries.${key}`),
+  }));
+  const contactGoals = contactGoalKeys.map((key) => ({
+    key,
+    label: t(`contact.configurator.goals.${key}`),
+  }));
+  const contactScales = contactScaleKeys.map((key) => ({
+    key,
+    label: t(`contact.configurator.scales.${key}`),
+  }));
+  const projectedModules = [
+    t(`contact.configurator.modules.industries.${contactIndustry}`),
+    t(`contact.configurator.modules.goals.${contactGoal}`),
+  ];
+  const engineeringComplexity =
+    contactScale === "enterpriseDeployment" || contactGoal === "b2bIntegration"
+      ? t("contact.configurator.complexities.high")
+      : contactGoal === "predictiveAnalytics"
+        ? t("contact.configurator.complexities.mediumHigh")
+        : t("contact.configurator.complexities.medium");
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -1053,116 +1084,263 @@ export default function Home() {
       {/* Contact Section */}
       <section
         id="contact"
-        className="relative z-10 py-20 px-6"
+        className="relative z-10 px-6 py-24"
       >
-        <div className="max-w-4xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold mb-6 tracking-tight">
-              {t("contact.heading")}{" "}
-              <span className="bg-gradient-to-r from-[#E44CFF] to-[#4EF0FF] bg-clip-text text-transparent">
-                {t("contact.headingHighlight")}
-              </span>
-            </h2>
-            <p className="text-xl text-gray-400 max-w-2xl mx-auto">
-              {t("contact.subheading")}
-            </p>
-          </div>
+        <div
+          className="pointer-events-none absolute inset-x-0 top-1/2 h-[70%] -translate-y-1/2"
+          style={{
+            background:
+              "radial-gradient(ellipse 65% 45% at 50% 50%, rgba(228,76,255,0.08) 0%, transparent 72%)",
+          }}
+        />
 
-          <div
-            className="rounded-2xl p-8 md:p-12"
-            style={{
-              background: "rgba(24, 27, 53, 0.4)",
-              backdropFilter: "blur(20px)",
-              border: "1px solid rgba(228, 76, 255, 0.2)",
-              boxShadow: "0 0 40px rgba(228, 76, 255, 0.15)",
-            }}
+        <div className="relative mx-auto max-w-7xl">
+          <form
+            className="space-y-10"
+            onSubmit={(event) => event.preventDefault()}
           >
-            <form className="space-y-6">
-              <div className="grid md:grid-cols-2 gap-6">
+            <div className="grid items-center gap-10 lg:grid-cols-[0.95fr_1.05fr]">
+              <div className="space-y-8">
                 <div>
-                  <label className="block text-sm font-semibold mb-2 text-[#E44CFF]">
-                    {t("contact.form.name")}
-                  </label>
-                  <input
-                    type="text"
-                    className="w-full p-4 rounded-xl focus:outline-none transition-all text-white"
-                    style={{
-                      background: "rgba(10, 15, 42, 0.6)",
-                      border: "1px solid rgba(228, 76, 255, 0.2)",
-                    }}
-                    onFocus={(e) => {
-                      e.target.style.borderColor = "rgba(228, 76, 255, 0.5)";
-                      e.target.style.boxShadow =
-                        "0 0 20px rgba(228, 76, 255, 0.2)";
-                    }}
-                    onBlur={(e) => {
-                      e.target.style.borderColor = "rgba(228, 76, 255, 0.2)";
-                      e.target.style.boxShadow = "none";
-                    }}
-                    placeholder={t("contact.form.namePlaceholder")}
-                  />
+                  <p className="mb-4 text-sm font-bold uppercase tracking-[0.22em] text-[#ACA0FB]">
+                    {t("contact.configurator.kicker")}
+                  </p>
+                  <h2 className="text-4xl font-semibold leading-tight tracking-tight text-white md:text-5xl">
+                    {t("contact.configurator.title")}
+                  </h2>
                 </div>
-                <div>
-                  <label className="block text-sm font-semibold mb-2 text-[#E44CFF]">
-                    {t("contact.form.email")}
-                  </label>
-                  <input
-                    type="email"
-                    className="w-full p-4 rounded-xl focus:outline-none transition-all text-white"
-                    style={{
-                      background: "rgba(10, 15, 42, 0.6)",
-                      border: "1px solid rgba(228, 76, 255, 0.2)",
-                    }}
-                    onFocus={(e) => {
-                      e.target.style.borderColor = "rgba(228, 76, 255, 0.5)";
-                      e.target.style.boxShadow =
-                        "0 0 20px rgba(228, 76, 255, 0.2)";
-                    }}
-                    onBlur={(e) => {
-                      e.target.style.borderColor = "rgba(228, 76, 255, 0.2)";
-                      e.target.style.boxShadow = "none";
-                    }}
-                    placeholder={t("contact.form.emailPlaceholder")}
-                  />
+
+                <div className="space-y-7">
+                  <div>
+                    <div className="mb-3 flex items-center justify-between gap-4">
+                      <h3 className="text-xl font-semibold text-white">
+                        {t("contact.configurator.industryLabel")}
+                      </h3>
+                      <span className="flex h-7 w-14 items-center justify-end rounded-full border border-[#ACA0FB]/30 bg-[#5861F2]/45 p-1">
+                        <span className="h-5 w-5 rounded-full bg-white shadow-[0_0_14px_rgba(255,255,255,0.45)]" />
+                      </span>
+                    </div>
+                    <div className="flex flex-wrap gap-3">
+                      {contactIndustries.map((option) => (
+                        <button
+                          key={option.key}
+                          type="button"
+                          aria-pressed={contactIndustry === option.key}
+                          onClick={() => setContactIndustry(option.key)}
+                          className="min-h-11 rounded-full border px-5 text-base font-semibold transition-all duration-300 hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-[#E44CFF]/40"
+                          style={{
+                            background:
+                              contactIndustry === option.key
+                                ? "rgba(228, 76, 255, 0.24)"
+                                : "rgba(255, 255, 255, 0.03)",
+                            borderColor:
+                              contactIndustry === option.key
+                                ? "rgba(228, 76, 255, 0.7)"
+                                : "rgba(255, 255, 255, 0.1)",
+                            boxShadow:
+                              contactIndustry === option.key
+                                ? "0 0 18px rgba(228, 76, 255, 0.28)"
+                                : "none",
+                            color: contactIndustry === option.key ? "#FFFFFF" : "rgba(255, 255, 255, 0.78)",
+                          }}
+                        >
+                          {option.label}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div>
+                    <div className="mb-3 flex items-center justify-between gap-4">
+                      <h3 className="text-xl font-semibold text-white">
+                        {t("contact.configurator.goalLabel")}
+                      </h3>
+                      <span className="flex h-7 w-14 items-center justify-end rounded-full border border-[#ACA0FB]/30 bg-[#5861F2]/45 p-1">
+                        <span className="h-5 w-5 rounded-full bg-white shadow-[0_0_14px_rgba(255,255,255,0.45)]" />
+                      </span>
+                    </div>
+                    <div className="flex flex-wrap gap-3">
+                      {contactGoals.map((option) => (
+                        <button
+                          key={option.key}
+                          type="button"
+                          aria-pressed={contactGoal === option.key}
+                          onClick={() => setContactGoal(option.key)}
+                          className="min-h-11 rounded-full border px-5 text-base font-semibold transition-all duration-300 hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-[#E44CFF]/40"
+                          style={{
+                            background:
+                              contactGoal === option.key
+                                ? "rgba(228, 76, 255, 0.24)"
+                                : "rgba(255, 255, 255, 0.03)",
+                            borderColor:
+                              contactGoal === option.key
+                                ? "rgba(228, 76, 255, 0.7)"
+                                : "rgba(255, 255, 255, 0.1)",
+                            boxShadow:
+                              contactGoal === option.key
+                                ? "0 0 18px rgba(228, 76, 255, 0.28)"
+                                : "none",
+                            color: contactGoal === option.key ? "#FFFFFF" : "rgba(255, 255, 255, 0.78)",
+                          }}
+                        >
+                          {option.label}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div>
+                    <div className="mb-3 flex items-center justify-between gap-4">
+                      <h3 className="text-xl font-semibold text-white">
+                        {t("contact.configurator.scaleLabel")}
+                      </h3>
+                      <span className="flex h-7 w-14 items-center justify-end rounded-full border border-[#ACA0FB]/30 bg-[#5861F2]/45 p-1">
+                        <span className="h-5 w-5 rounded-full bg-white shadow-[0_0_14px_rgba(255,255,255,0.45)]" />
+                      </span>
+                    </div>
+                    <div className="flex flex-wrap gap-3">
+                      {contactScales.map((option) => (
+                        <button
+                          key={option.key}
+                          type="button"
+                          aria-pressed={contactScale === option.key}
+                          onClick={() => setContactScale(option.key)}
+                          className="min-h-11 rounded-full border px-5 text-base font-semibold transition-all duration-300 hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-[#E44CFF]/40"
+                          style={{
+                            background:
+                              contactScale === option.key
+                                ? "rgba(228, 76, 255, 0.24)"
+                                : "rgba(255, 255, 255, 0.03)",
+                            borderColor:
+                              contactScale === option.key
+                                ? "rgba(228, 76, 255, 0.7)"
+                                : "rgba(255, 255, 255, 0.1)",
+                            boxShadow:
+                              contactScale === option.key
+                                ? "0 0 18px rgba(228, 76, 255, 0.28)"
+                                : "none",
+                            color: contactScale === option.key ? "#FFFFFF" : "rgba(255, 255, 255, 0.78)",
+                          }}
+                        >
+                          {option.label}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+
+                <div className="grid gap-5">
+                  <div>
+                    <label className="mb-2 block text-base font-bold text-[#E44CFF]">
+                      {t("contact.configurator.nameLabel")}
+                    </label>
+                    <input
+                      type="text"
+                      className="h-[58px] w-full rounded-[14px] border border-[#8B56FF]/30 bg-[#080B22]/75 px-5 py-4 text-lg leading-none text-white outline-none transition-all duration-300 placeholder:text-white/25 focus:border-[#E44CFF]/75 focus:ring-2 focus:ring-[#E44CFF]/25"
+                      placeholder={t("contact.configurator.namePlaceholder")}
+                    />
+                  </div>
+
+                  <div>
+                    <label className="mb-2 block text-base font-bold text-[#E44CFF]">
+                      {t("contact.configurator.emailLabel")}
+                    </label>
+                    <input
+                      type="email"
+                      className="h-[58px] w-full rounded-[14px] border border-[#8B56FF]/30 bg-[#080B22]/75 px-5 py-4 text-lg leading-none text-white outline-none transition-all duration-300 placeholder:text-white/25 focus:border-[#E44CFF]/75 focus:ring-2 focus:ring-[#E44CFF]/25"
+                      placeholder={t("contact.configurator.emailPlaceholder")}
+                    />
+                  </div>
                 </div>
               </div>
-              <div>
-                <label className="block text-sm font-semibold mb-2 text-[#E44CFF]">
-                  {t("contact.form.message")}
-                </label>
-                <textarea
-                  rows={6}
-                  className="w-full p-4 rounded-xl focus:outline-none transition-all text-white resize-none"
-                  style={{
-                    background: "rgba(10, 15, 42, 0.6)",
-                    border: "1px solid rgba(228, 76, 255, 0.2)",
-                  }}
-                  onFocus={(e) => {
-                    e.target.style.borderColor = "rgba(228, 76, 255, 0.5)";
-                    e.target.style.boxShadow =
-                      "0 0 20px rgba(228, 76, 255, 0.2)";
-                  }}
-                  onBlur={(e) => {
-                    e.target.style.borderColor = "rgba(228, 76, 255, 0.2)";
-                    e.target.style.boxShadow = "none";
-                  }}
-                  placeholder={t("contact.form.messagePlaceholder")}
-                />
+
+              <div className="relative min-h-[560px] overflow-visible py-8 pr-8 sm:pr-12">
+                <div className="absolute right-3 top-0 z-0 h-[86%] w-[78%] rotate-[7deg] rounded-[2rem] border border-[#4EF0FF]/30 bg-white/[0.08] shadow-[0_0_35px_rgba(78,240,255,0.12)] backdrop-blur-md lg:-right-2" />
+                <div className="absolute right-0 top-14 z-0 h-[80%] w-[84%] -rotate-[5deg] rounded-[2rem] border border-white/[0.16] bg-[#4EF0FF]/[0.08] shadow-[0_0_35px_rgba(228,76,255,0.10)] backdrop-blur-md lg:-right-8" />
+
+                <div className="relative z-10 ml-auto mr-5 mt-7 min-h-[500px] max-w-xl rounded-[2rem] border border-white/[0.18] bg-white/[0.08] p-6 shadow-[0_0_55px_rgba(78,240,255,0.12)] backdrop-blur-2xl md:mr-8 md:p-8">
+                  <h3 className="text-3xl font-semibold tracking-tight text-white">
+                    {t("contact.configurator.blueprintTitle")}
+                  </h3>
+
+                  <div className="relative mt-12 h-64 overflow-hidden rounded-2xl">
+                    <svg
+                      viewBox="0 0 520 250"
+                      className="absolute inset-0 h-full w-full"
+                      aria-hidden="true"
+                    >
+                      <path d="M100 55 H210 Q230 55 230 78 V112" stroke="rgba(172,160,251,0.5)" strokeWidth="3" fill="none" />
+                      <path d="M100 120 H230" stroke="rgba(172,160,251,0.5)" strokeWidth="3" fill="none" />
+                      <path d="M100 185 H210 Q230 185 230 162 V138" stroke="rgba(172,160,251,0.5)" strokeWidth="3" fill="none" />
+                      <path d="M300 125 H395 Q420 125 420 90 V58 H475" stroke="rgba(78,240,255,0.55)" strokeWidth="3" fill="none" />
+                      <path d="M300 125 H475" stroke="rgba(78,240,255,0.55)" strokeWidth="3" fill="none" />
+                      <path d="M300 125 H395 Q420 125 420 160 V198 H475" stroke="rgba(78,240,255,0.55)" strokeWidth="3" fill="none" />
+                    </svg>
+
+                    <div className="absolute left-8 top-5 flex h-14 w-14 items-center justify-center rounded-xl border border-[#E44CFF]/30 bg-[#E44CFF]/15 shadow-[0_0_20px_rgba(228,76,255,0.22)]">
+                      <span className="h-6 w-6 rounded-full border-4 border-[#E44CFF]/70" />
+                    </div>
+                    <div className="absolute left-4 top-[98px] h-16 w-20 rounded-xl border border-[#ACA0FB]/25 bg-[#5861F2]/15 p-4">
+                      <span className="mb-2 block h-1.5 w-10 rounded-full bg-[#ACA0FB]/60" />
+                      <span className="mb-2 block h-1.5 w-12 rounded-full bg-[#ACA0FB]/45" />
+                      <span className="block h-1.5 w-8 rounded-full bg-[#ACA0FB]/35" />
+                    </div>
+                    <div className="absolute left-8 bottom-5 flex h-14 w-14 items-center justify-center rounded-xl border border-[#ACA0FB]/25 bg-[#5861F2]/15">
+                      <span className="h-7 w-7 rounded-full border-2 border-[#ACA0FB]/55" />
+                    </div>
+
+                    <div className="absolute left-1/2 top-1/2 flex h-20 w-20 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-2xl border border-[#4EF0FF]/50 bg-[linear-gradient(135deg,rgba(78,240,255,0.22),rgba(228,76,255,0.22))] shadow-[0_0_35px_rgba(78,240,255,0.22)]">
+                      <div className="relative h-10 w-10">
+                        <span className="absolute left-1 top-3 h-3 w-3 rounded-full border-2 border-white/80" />
+                        <span className="absolute right-1 top-1 h-3 w-3 rounded-full border-2 border-white/80" />
+                        <span className="absolute right-1 bottom-1 h-3 w-3 rounded-full border-2 border-white/80" />
+                        <span className="absolute left-4 top-5 h-px w-5 rotate-[-35deg] bg-white/70" />
+                        <span className="absolute left-4 top-5 h-px w-5 rotate-[35deg] bg-white/70" />
+                      </div>
+                    </div>
+
+                    <div className="absolute right-4 top-3 h-16 w-16 rounded-xl border border-white/15 bg-white/[0.08]" />
+                    <div className="absolute right-4 top-[100px] flex h-16 w-16 items-center justify-center rounded-xl border border-[#4EF0FF]/25 bg-[#4EF0FF]/10">
+                      <span className="h-7 w-7 rounded-full border-2 border-[#4EF0FF]/60" />
+                    </div>
+                    <div className="absolute bottom-3 right-4 h-16 w-16 rounded-xl border border-white/15 bg-white/[0.08]" />
+                  </div>
+
+                  <div className="mt-10 space-y-7 text-lg leading-relaxed text-white/68">
+                    <p>
+                      {t("contact.configurator.projectedLabel")}{" "}
+                      <span className="font-bold text-white">
+                        {projectedModules.join(", ")}
+                      </span>
+                    </p>
+                    <p>
+                      {t("contact.configurator.complexityLabel")}{" "}
+                      <span className="font-bold text-white">
+                        {engineeringComplexity} ({t(`contact.configurator.scaleDetails.${contactScale}`)})
+                      </span>
+                    </p>
+                  </div>
+                </div>
               </div>
-              <div className="text-center">
-                <button
-                  type="submit"
-                  className="px-8 py-4 text-lg font-semibold rounded-xl transition-all duration-300 hover:scale-105"
-                  style={{
-                    background: "linear-gradient(135deg, #E44CFF, #5861F2)",
-                    boxShadow: "0 0 30px rgba(228, 76, 255, 0.4)",
-                  }}
-                >
-                  {t("contact.form.submit")}
-                </button>
-              </div>
-            </form>
-          </div>
+            </div>
+
+            <div className="flex justify-center">
+              <button
+                type="submit"
+                className="group relative inline-flex min-h-16 items-center justify-center gap-3 overflow-hidden rounded-2xl px-10 text-lg font-semibold text-white transition-all duration-500 hover:scale-[1.05] hover:shadow-[0_0_45px_var(--theme-glow)]"
+                style={{
+                  background: "var(--theme-gradient)",
+                  boxShadow: "0 0 34px var(--theme-glow-border)",
+                }}
+              >
+                <span className="relative z-10 flex items-center gap-3">
+                  {t("contact.configurator.submit")}
+                  <ArrowRight className="h-6 w-6 -rotate-45 transition-transform duration-300 group-hover:translate-x-1 group-hover:-translate-y-1 rtl:rotate-[225deg]" />
+                </span>
+                <div className="absolute inset-0 bg-white/10 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+              </button>
+            </div>
+          </form>
         </div>
       </section>
 
@@ -1232,7 +1410,7 @@ export default function Home() {
                   <li key={link.label}>
                     <a
                       href={link.href}
-                      className="text-lg font-medium text-white/82 transition-colors duration-200 hover:text-[#4EF0FF]"
+                      className="text-lg font-medium text-white/[0.82] transition-colors duration-200 hover:text-[#4EF0FF]"
                     >
                       {link.label}
                     </a>
@@ -1250,7 +1428,7 @@ export default function Home() {
                   <li key={link.label}>
                     <a
                       href={link.href}
-                      className="text-lg font-medium text-white/82 transition-colors duration-200 hover:text-[#4EF0FF]"
+                      className="text-lg font-medium text-white/[0.82] transition-colors duration-200 hover:text-[#4EF0FF]"
                     >
                       {link.label}
                     </a>
