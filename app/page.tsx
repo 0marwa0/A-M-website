@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { ArrowRight, Copy, Facebook, Instagram, Linkedin } from "lucide-react";
+import { Check, Star, ArrowRight, ArrowLeft, Sparkles, Cpu, Activity, Menu, X, Globe, ArrowUp, Copy, Facebook, Instagram, Linkedin } from "lucide-react";
 import { useI18n } from "@/lib/i18n";
 import CosmicBackground from "@/components/CosmicBackground";
 import Chatbot, { PersonaMode } from "@/components/Chatbot";
@@ -54,6 +54,9 @@ export default function Home() {
   const [contactIndustry, setContactIndustry] = useState<ContactIndustryKey>("education");
   const [contactGoal, setContactGoal] = useState<ContactGoalKey>("llmAutomation");
   const [contactScale, setContactScale] = useState<ContactScaleKey>("initialPilot");
+  const [scrolled, setScrolled] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [scrollProgress, setScrollProgress] = useState(0);
 
   const rawWords = t("hero.words");
   const words = Array.isArray(rawWords) ? rawWords : ["Business", "Future", "Growth", "Workflows", "Success"];
@@ -103,6 +106,18 @@ export default function Home() {
     }, 3200);
     return () => clearInterval(interval);
   }, [words.length]);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 20);
+      const totalHeight = document.documentElement.scrollHeight - window.innerHeight;
+      if (totalHeight > 0) {
+        setScrollProgress((window.scrollY / totalHeight) * 100);
+      }
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   const communityMembers = [
     {
@@ -343,18 +358,26 @@ export default function Home() {
       </div>
       {/* Navigation */}
       <nav
-        className="fixed top-0 left-0 right-0 z-50 px-6 py-5 transition-all duration-1000"
-        style={{
-          background: "rgba(6, 8, 22, 0.85)",
-          backdropFilter: "blur(12px)",
-          borderBottom: "1px solid var(--theme-nav-border)",
-        }}
+        className={`fixed left-0 right-0 z-50 transition-all duration-500 ${
+          scrolled
+            ? "top-4 px-4 sm:px-6 md:px-8"
+            : "top-0 px-6 py-5"
+        }`}
       >
-        <div className="max-w-7xl mx-auto flex justify-between items-center">
+        <div
+          className={`mx-auto w-full max-w-7xl flex justify-between items-center transition-all duration-500 ${
+            scrolled
+              ? "rounded-2xl border bg-slate-900/40 backdrop-blur-xl px-6 py-3.5 shadow-[0_20px_40px_-15px_rgba(0,0,0,0.7),_0_0_20px_rgba(228,76,255,0.15)]"
+              : "border-b border-transparent py-2"
+          }`}
+          style={{
+            borderColor: scrolled ? "var(--theme-nav-border)" : "transparent",
+          }}
+        >
           <Link href="/" className="flex items-center hover:opacity-90 transition-opacity">
-            <div className="text-2xl sm:text-3xl font-bold tracking-tight flex items-center gap-1">
+            <div className="text-2xl sm:text-3xl font-bold tracking-tight flex items-center gap-1 group">
               <span 
-                className="bg-clip-text text-transparent transition-all duration-1000"
+                className="bg-clip-text text-transparent transition-all duration-1000 group-hover:drop-shadow-[0_0_8px_var(--theme-glow)]"
                 style={{
                   backgroundImage: mode === "creative"
                     ? "linear-gradient(to right, #E44CFF, #9F56FF)"
@@ -365,47 +388,124 @@ export default function Home() {
               >
                 TRI
               </span>
-              <span className="text-white">MINDS</span>
+              <span className="text-white group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-white group-hover:to-gray-300 transition-all duration-300">MINDS</span>
             </div>
           </Link>
           <div
-            style={{ fontSize: "23px" }}
-            className="hidden lg:flex items-center gap-8"
+            className="hidden lg:flex items-center gap-8 text-[16px] font-medium"
           >
             <a
               href="#services"
-              className="text-white/90 hover:text-transparent hover:bg-clip-text hover:bg-gradient-to-r hover:from-[#E44CFF] hover:to-[#5861F2] transition-all duration-300"
+              className="text-white/80 hover:text-transparent hover:bg-clip-text hover:bg-gradient-to-r hover:from-[#E44CFF] hover:to-[#5861F2] transition-all duration-300"
             >
               {t("nav.solutions")}
             </a>
-            <a
-              href="#contact"
-              className="text-white/90 hover:text-transparent hover:bg-clip-text hover:bg-gradient-to-r hover:from-[#E44CFF] hover:to-[#5861F2] transition-all duration-300"
-            >
-              {t("nav.contact")}
-            </a>
             <Link
               href="/about-us"
-              className="text-white/90 hover:text-transparent hover:bg-clip-text hover:bg-gradient-to-r hover:from-[#E44CFF] hover:to-[#5861F2] transition-all duration-300"
+              className="text-white/80 hover:text-transparent hover:bg-clip-text hover:bg-gradient-to-r hover:from-[#E44CFF] hover:to-[#5861F2] transition-all duration-300"
             >
               {t("nav.about")}
             </Link>
             <a
               href="#packages"
-              className="text-white/90 hover:text-transparent hover:bg-clip-text hover:bg-gradient-to-r hover:from-[#E44CFF] hover:to-[#5861F2] transition-all duration-300"
+              className="text-white/80 hover:text-transparent hover:bg-clip-text hover:bg-gradient-to-r hover:from-[#E44CFF] hover:to-[#5861F2] transition-all duration-300"
             >
               {t("nav.pricing")}
             </a>
+            <a
+              href="#contact"
+              className="text-white/80 hover:text-transparent hover:bg-clip-text hover:bg-gradient-to-r hover:from-[#E44CFF] hover:to-[#5861F2] transition-all duration-300"
+            >
+              {t("nav.contact")}
+            </a>
           </div>
-          <div className="flex items-center">
+          <div className="hidden lg:flex items-center gap-4">
             <button
-              className="px-4 py-2 rounded-xl border border-white/30 text-sm text-white/90 hover:border-[#E44CFF] hover:bg-[#E44CFF]/10 transition-all duration-300"
+              className="flex items-center gap-1.5 px-4 py-2 rounded-xl border border-white/20 text-sm text-white/90 hover:border-[#E44CFF] hover:bg-[#E44CFF]/10 transition-all duration-300"
               onClick={() => setLocale(locale === "en" ? "ar" : "en")}
             >
+              <Globe className="w-4 h-4" />
               {locale === "en" ? "العربية" : "English"}
+            </button>
+            <a
+              href="#contact"
+              className="px-5 py-2.5 rounded-xl text-sm font-semibold text-white transition-all duration-300 hover:scale-[1.05]"
+              style={{
+                background: "var(--theme-gradient)",
+                boxShadow: "0 0 15px var(--theme-glow-border)",
+              }}
+            >
+              {t("nav.cta")}
+            </a>
+          </div>
+          <div className="flex lg:hidden items-center gap-3">
+            <button
+              className="p-2 rounded-xl border border-white/20 text-sm text-white/90 hover:border-[#E44CFF] hover:bg-[#E44CFF]/10 transition-all duration-300"
+              onClick={() => setLocale(locale === "en" ? "ar" : "en")}
+              aria-label="Toggle language"
+            >
+              <Globe className="w-4 h-4" />
+            </button>
+            <button
+              className="p-2 rounded-xl border border-white/20 text-white/90 hover:border-[#E44CFF] hover:bg-[#E44CFF]/10 transition-all duration-300"
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              aria-label="Toggle menu"
+            >
+              {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
             </button>
           </div>
         </div>
+        <AnimatePresence>
+          {mobileMenuOpen && (
+            <motion.div
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              transition={{ duration: 0.3 }}
+              className="absolute left-4 right-4 top-full mt-2 rounded-2xl border border-[#E44CFF]/20 bg-slate-900/80 backdrop-blur-xl p-6 shadow-2xl flex flex-col gap-4 lg:hidden z-40"
+            >
+              <a
+                href="#services"
+                onClick={() => setMobileMenuOpen(false)}
+                className="text-lg py-2 border-b border-white/5 text-white/90 hover:text-[#E44CFF] transition-colors"
+              >
+                {t("nav.solutions")}
+              </a>
+              <Link
+                href="/about-us"
+                onClick={() => setMobileMenuOpen(false)}
+                className="text-lg py-2 border-b border-white/5 text-white/90 hover:text-[#E44CFF] transition-colors"
+              >
+                {t("nav.about")}
+              </Link>
+              <a
+                href="#packages"
+                onClick={() => setMobileMenuOpen(false)}
+                className="text-lg py-2 border-b border-white/5 text-white/90 hover:text-[#E44CFF] transition-colors"
+              >
+                {t("nav.pricing")}
+              </a>
+              <a
+                href="#contact"
+                onClick={() => setMobileMenuOpen(false)}
+                className="text-lg py-2 border-b border-white/5 text-white/90 hover:text-[#E44CFF] transition-colors"
+              >
+                {t("nav.contact")}
+              </a>
+              <a
+                href="#contact"
+                onClick={() => setMobileMenuOpen(false)}
+                className="w-full text-center py-3.5 rounded-xl font-semibold text-sm transition-all duration-300 mt-2"
+                style={{
+                  background: "var(--theme-gradient)",
+                  boxShadow: "0 0 15px var(--theme-glow-border)",
+                }}
+              >
+                {t("nav.cta")}
+              </a>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </nav>
 
       {/* Hero Section */}
@@ -583,197 +683,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* AI Integration Process — Roadmap (after Services) */}
-      <section
-        id="about"
-        className="relative z-10 py-20 px-6"
-      >
-        {/* Background glow */}
-        <div
-          className="pointer-events-none absolute inset-0"
-          style={{
-            background:
-              "radial-gradient(ellipse 60% 45% at 50% 50%, rgba(78,240,255,0.05) 0%, transparent 70%)",
-          }}
-        />
-
-        <div className="relative z-10 max-w-7xl mx-auto">
-          {/* Heading */}
-          <div className="text-center mb-20">
-            {/* Kicker */}
-            <p
-              className="text-xs font-bold tracking-[0.22em] uppercase mb-4"
-              style={{ color: "#4EF0FF" }}
-            >
-              Our Methodology
-            </p>
-            <h2 className="text-4xl md:text-5xl font-bold mb-6 tracking-tight">
-              {t("about.heading")}{" "}
-              <span className="bg-gradient-to-r from-[#E44CFF] to-[#4EF0FF] bg-clip-text text-transparent">
-                {t("about.headingHighlight")}
-              </span>
-            </h2>
-            <p className="text-xl text-gray-400 max-w-3xl mx-auto">
-              {t("about.subheading")}
-            </p>
-          </div>
-
-          {/* Nodes */}
-          <RoadmapProcess />
-
-          {/* CTA */}
-          <div className="flex justify-center mt-16">
-            <a
-              href="#contact"
-              className="group inline-flex items-center gap-2 px-8 py-3 rounded-full text-sm font-semibold transition-all duration-300 hover:scale-[1.05]"
-              style={{
-                background: "linear-gradient(135deg, #E44CFF, #5861F2)",
-                boxShadow: "0 0 30px rgba(228,76,255,0.35)",
-              }}
-            >
-              Start Your Integration
-              <svg className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3" />
-              </svg>
-            </a>
-          </div>
-        </div>
-      </section>
-
-
-
-      {/* <section
-        id="packages"
-        className="relative z-10 py-20"
-        style={{ paddingLeft: "60px", paddingRight: "60px" }}
-      >
-        <div className="text-center">
-          <h2 className="text-4xl md:text-5xl font-bold mb-6 tracking-tight">
-            {t("packages.heading")}{" "}
-            <span className="bg-gradient-to-r from-[#E44CFF] via-[#5861F2] to-[#4EF0FF] bg-clip-text text-transparent">
-              {t("packages.headingHighlight")}
-            </span>
-          </h2>
-          <p className="text-xl text-gray-400 mb-16 max-w-3xl mx-auto">
-            {t("packages.subheading")}
-          </p>
-
-          <div className="grid md:grid-cols-3 gap-8">
-            {[
-              {
-                name: t("packages.starter.name"),
-                price: t("packages.starter.price"),
-                period: t("packages.starter.period"),
-                description: t("packages.starter.description"),
-                features: t("packages.starter.features"),
-                popular: false,
-                cta: t("packages.starter.cta"),
-              },
-              {
-                name: t("packages.professional.name"),
-                price: t("packages.professional.price"),
-                period: t("packages.professional.period"),
-                description: t("packages.professional.description"),
-                features: t("packages.professional.features"),
-                popular: true,
-                popularText: t("packages.professional.popular"),
-                cta: t("packages.professional.cta"),
-              },
-              {
-                name: t("packages.enterprise.name"),
-                price: t("packages.enterprise.price"),
-                period: t("packages.enterprise.period"),
-                description: t("packages.enterprise.description"),
-                features: t("packages.enterprise.features"),
-                popular: false,
-                cta: t("packages.enterprise.cta"),
-              },
-            ].map((pkg, index) => (
-              <div
-                key={index}
-                className="relative p-8 rounded-2xl transition-all duration-300 hover:scale-105"
-                style={{
-                  background: pkg.popular
-                    ? "rgba(228, 76, 255, 0.1)"
-                    : "rgba(24, 27, 53, 0.4)",
-                  backdropFilter: "blur(20px)",
-                  border: pkg.popular
-                    ? "2px solid rgba(228, 76, 255, 0.4)"
-                    : "1px solid rgba(88, 97, 242, 0.2)",
-                  boxShadow: pkg.popular
-                    ? "0 0 50px rgba(228, 76, 255, 0.3)"
-                    : "0 0 20px rgba(88, 97, 242, 0.1)",
-                }}
-              >
-                {pkg.popular && (
-                  <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
-                    <span
-                      className="px-4 py-2 rounded-full text-sm font-bold"
-                      style={{
-                        background: "linear-gradient(135deg, #E44CFF, #5861F2)",
-                        boxShadow: "0 0 20px rgba(228, 76, 255, 0.5)",
-                      }}
-                    >
-                      {pkg.popularText}
-                    </span>
-                  </div>
-                )}
-                <h3 className="text-2xl font-bold mb-4">{pkg.name}</h3>
-                <div className="mb-6">
-                  <span className="text-4xl font-bold bg-gradient-to-r from-[#E44CFF] to-[#4EF0FF] bg-clip-text text-transparent">
-                    {pkg.price}
-                  </span>
-                  <span className="text-gray-500">{pkg.period}</span>
-                </div>
-                <p className="text-gray-300 mb-8">{pkg.description}</p>
-                <ul className="space-y-3 mb-8">
-                  {pkg.features.map((feature: string, featureIndex: number) => (
-                    <li
-                      key={featureIndex}
-                      className="flex items-center text-gray-300"
-                    >
-                      <Check className="w-4 h-4 text-[#4EF0FF] mr-3 drop-shadow-[0_0_6px_rgba(78,240,255,0.6)]" />
-                      {feature}
-                    </li>
-                  ))}
-                </ul>
-                <button
-                  className="w-full py-3 px-6 rounded-xl font-semibold transition-all duration-300 hover:scale-105"
-                  style={
-                    pkg.popular
-                      ? {
-                          background:
-                            "linear-gradient(135deg, #E44CFF, #5861F2)",
-                          boxShadow: "0 0 30px rgba(228, 76, 255, 0.4)",
-                        }
-                      : {
-                          border: "1px solid rgba(228, 76, 255, 0.3)",
-                          background: "transparent",
-                        }
-                  }
-                  onMouseEnter={(e) => {
-                    if (!pkg.popular) {
-                      e.currentTarget.style.background =
-                        "linear-gradient(135deg, #E44CFF, #5861F2)";
-                      e.currentTarget.style.boxShadow =
-                        "0 0 30px rgba(228, 76, 255, 0.4)";
-                    }
-                  }}
-                  onMouseLeave={(e) => {
-                    if (!pkg.popular) {
-                      e.currentTarget.style.background = "transparent";
-                      e.currentTarget.style.boxShadow = "none";
-                    }
-                  }}
-                >
-                  {pkg.cta}
-                </button>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section> */}
-
       {/* Who We Serve Section */}
       <section
         id="customers"
@@ -914,6 +823,209 @@ export default function Home() {
               >
                 {label}
               </button>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* AI Integration Process — Roadmap */}
+      <section
+        id="about"
+        className="relative z-10 py-20 px-6"
+      >
+        {/* Background glow */}
+        <div
+          className="pointer-events-none absolute inset-0"
+          style={{
+            background:
+              "radial-gradient(ellipse 60% 45% at 50% 50%, rgba(78,240,255,0.05) 0%, transparent 70%)",
+          }}
+        />
+
+        <div className="relative z-10 max-w-7xl mx-auto">
+          {/* Heading */}
+          <div className="text-center mb-20">
+            {/* Kicker */}
+            <p
+              className="text-xs font-bold tracking-[0.22em] uppercase mb-4"
+              style={{ color: "#4EF0FF" }}
+            >
+              Our Methodology
+            </p>
+            <h2 className="text-4xl md:text-5xl font-bold mb-6 tracking-tight">
+              {t("about.heading")}{" "}
+              <span className="bg-gradient-to-r from-[#E44CFF] to-[#4EF0FF] bg-clip-text text-transparent">
+                {t("about.headingHighlight")}
+              </span>
+            </h2>
+            <p className="text-xl text-gray-400 max-w-3xl mx-auto">
+              {t("about.subheading")}
+            </p>
+          </div>
+
+          {/* Nodes */}
+          <RoadmapProcess />
+
+          {/* CTA */}
+          <div className="flex justify-center mt-16">
+            <a
+              href="#contact"
+              className="group inline-flex items-center gap-2 px-8 py-3 rounded-full text-sm font-semibold transition-all duration-300 hover:scale-[1.05]"
+              style={{
+                background: "linear-gradient(135deg, #E44CFF, #5861F2)",
+                boxShadow: "0 0 30px rgba(228,76,255,0.35)",
+              }}
+            >
+              Start Your Integration
+              <svg className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+              </svg>
+            </a>
+          </div>
+        </div>
+      </section>
+
+      {/* Packages Section */}
+      <section
+        id="packages"
+        className="relative z-10 py-24 px-6"
+      >
+        <div
+          className="pointer-events-none absolute inset-0"
+          style={{
+            background:
+              "radial-gradient(ellipse 60% 40% at 50% 50%, rgba(88,97,242,0.06) 0%, transparent 70%)",
+          }}
+        />
+
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl md:text-5xl font-bold mb-6 tracking-tight">
+              {t("packages.heading")}{" "}
+              <span className="bg-gradient-to-r from-[#E44CFF] via-[#5861F2] to-[#4EF0FF] bg-clip-text text-transparent">
+                {t("packages.headingHighlight")}
+              </span>
+            </h2>
+            <p className="text-xl text-gray-400 max-w-3xl mx-auto">
+              {t("packages.subheading")}
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {[
+              {
+                name: t("packages.starter.name"),
+                price: t("packages.starter.price"),
+                period: t("packages.starter.period"),
+                description: t("packages.starter.description"),
+                features: t("packages.starter.features"),
+                popular: false,
+                cta: t("packages.starter.cta"),
+              },
+              {
+                name: t("packages.professional.name"),
+                price: t("packages.professional.price"),
+                period: t("packages.professional.period"),
+                description: t("packages.professional.description"),
+                features: t("packages.professional.features"),
+                popular: true,
+                popularText: t("packages.professional.popular"),
+                cta: t("packages.professional.cta"),
+              },
+              {
+                name: t("packages.enterprise.name"),
+                price: t("packages.enterprise.price"),
+                period: t("packages.enterprise.period"),
+                description: t("packages.enterprise.description"),
+                features: t("packages.enterprise.features"),
+                popular: false,
+                cta: t("packages.enterprise.cta"),
+              },
+            ].map((pkg, index) => (
+              <div
+                key={index}
+                className="relative p-8 rounded-2xl transition-all duration-500 hover:scale-[1.03] flex flex-col justify-between"
+                style={{
+                  background: pkg.popular
+                    ? "rgba(228, 76, 255, 0.08)"
+                    : "rgba(24, 27, 53, 0.35)",
+                  backdropFilter: "blur(20px)",
+                  border: pkg.popular
+                    ? "2px solid rgba(228, 76, 255, 0.45)"
+                    : "1px solid rgba(88, 97, 242, 0.2)",
+                  boxShadow: pkg.popular
+                    ? "0 10px 40px rgba(228, 76, 255, 0.15), 0 0 30px rgba(228, 76, 255, 0.1)"
+                    : "0 10px 30px rgba(0, 0, 0, 0.3)",
+                }}
+              >
+                <div>
+                  {pkg.popular && (
+                    <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
+                      <span
+                        className="px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider text-white"
+                        style={{
+                          background: "linear-gradient(135deg, #E44CFF, #5861F2)",
+                          boxShadow: "0 0 15px rgba(228, 76, 255, 0.5)",
+                        }}
+                      >
+                        {pkg.popularText}
+                      </span>
+                    </div>
+                  )}
+                  <h3 className="text-2xl font-bold mb-3 text-white">{pkg.name}</h3>
+                  <div className="mb-5 flex items-baseline">
+                    <span className="text-4xl font-extrabold bg-gradient-to-r from-[#E44CFF] to-[#4EF0FF] bg-clip-text text-transparent">
+                      {pkg.price}
+                    </span>
+                    <span className="text-gray-400 ml-2 text-sm">{pkg.period}</span>
+                  </div>
+                  <p className="text-gray-400 mb-6 text-sm leading-relaxed">{pkg.description}</p>
+                  <ul className="space-y-3.5 mb-8">
+                    {Array.isArray(pkg.features) && pkg.features.map((feature: string, featureIndex: number) => (
+                      <li
+                        key={featureIndex}
+                        className="flex items-start text-sm text-gray-300"
+                      >
+                        <Check className="w-4 h-4 text-[#4EF0FF] mr-2.5 mt-0.5 flex-shrink-0 drop-shadow-[0_0_6px_rgba(78,240,255,0.6)]" />
+                        <span>{feature}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+                <a
+                  href="#contact"
+                  className="w-full text-center py-3.5 px-6 rounded-xl font-semibold transition-all duration-300 hover:scale-[1.02]"
+                  style={
+                    pkg.popular
+                      ? {
+                          background: "linear-gradient(135deg, #E44CFF, #5861F2)",
+                          boxShadow: "0 0 25px rgba(228, 76, 255, 0.35)",
+                          color: "#fff"
+                        }
+                      : {
+                          border: "1px solid rgba(228, 76, 255, 0.3)",
+                          background: "rgba(228, 76, 255, 0.05)",
+                          color: "#fff"
+                        }
+                  }
+                  onMouseEnter={(e) => {
+                    if (!pkg.popular) {
+                      e.currentTarget.style.background =
+                        "linear-gradient(135deg, #E44CFF, #5861F2)";
+                      e.currentTarget.style.boxShadow =
+                        "0 0 25px rgba(228, 76, 255, 0.35)";
+                    }
+                  }}
+                  onMouseLeave={(e) => {
+                    if (!pkg.popular) {
+                      e.currentTarget.style.background = "rgba(228, 76, 255, 0.05)";
+                      e.currentTarget.style.boxShadow = "none";
+                    }
+                  }}
+                >
+                  {pkg.cta}
+                </a>
+              </div>
             ))}
           </div>
         </div>
@@ -1463,6 +1575,54 @@ export default function Home() {
 
       {/* Floating Interactive Chatbot */}
       <Chatbot activeMode={mode} onModeChange={setMode} />
+
+      {/* Scroll to Top Button */}
+      <AnimatePresence>
+        {scrolled && (
+          <motion.button
+            initial={{ opacity: 0, scale: 0.5, y: 20 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.5, y: 20 }}
+            onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+            className="fixed bottom-8 left-8 md:left-10 z-40 w-[52px] h-[52px] rounded-full flex items-center justify-center border border-white/10 bg-slate-950/65 backdrop-blur-md text-white hover:text-[#4EF0FF] transition-all shadow-xl hover:scale-105"
+            style={{
+              boxShadow: "0 10px 30px rgba(0, 0, 0, 0.4), 0 0 15px var(--theme-glow-border)",
+            }}
+            aria-label="Scroll to top"
+          >
+            <svg className="absolute inset-0 w-full h-full pointer-events-none" viewBox="0 0 52 52">
+              <defs>
+                <linearGradient id="progress-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stopColor="var(--theme-primary)" />
+                  <stop offset="100%" stopColor="var(--theme-secondary, #4EF0FF)" />
+                </linearGradient>
+              </defs>
+              <circle
+                cx="26"
+                cy="26"
+                r="22"
+                stroke="rgba(255, 255, 255, 0.08)"
+                strokeWidth="3.5"
+                fill="transparent"
+              />
+              <circle
+                cx="26"
+                cy="26"
+                r="22"
+                stroke="url(#progress-gradient)"
+                strokeWidth="3.5"
+                fill="transparent"
+                strokeDasharray="138.2"
+                strokeDashoffset={138.2 - (scrollProgress / 100) * 138.2}
+                strokeLinecap="round"
+                transform="rotate(-90 26 26)"
+                className="transition-all duration-100"
+              />
+            </svg>
+            <ArrowUp className="w-5 h-5 relative z-10" />
+          </motion.button>
+        )}
+      </AnimatePresence>
     </div >
   );
 }
