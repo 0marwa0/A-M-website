@@ -197,12 +197,7 @@ export default function AboutUs() {
         }}
       >
         <div className="max-w-7xl mx-auto flex justify-between items-center">
-          <Link href="/" className="flex items-center gap-3 hover:opacity-90 transition-opacity">
-            <img
-              src="/logo.svg"
-              alt="Triminds AI Logo"
-              className="w-10 h-10 md:w-11 md:h-11 object-contain filter drop-shadow-[0_0_8px_var(--theme-glow)]"
-            />
+          <Link href="/" className="flex items-center hover:opacity-90 transition-opacity">
             <div className="text-2xl sm:text-3xl font-bold tracking-tight flex items-center gap-1">
               <span 
                 className="bg-clip-text text-transparent transition-all duration-1000"

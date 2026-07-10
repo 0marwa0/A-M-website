@@ -258,12 +258,7 @@ export default function Home() {
         }}
       >
         <div className="max-w-7xl mx-auto flex justify-between items-center">
-          <Link href="/" className="flex items-center gap-3 hover:opacity-90 transition-opacity">
-            <img
-              src="/logo.svg"
-              alt="Triminds AI Logo"
-              className="w-10 h-10 md:w-11 md:h-11 object-contain filter drop-shadow-[0_0_8px_var(--theme-glow)]"
-            />
+          <Link href="/" className="flex items-center hover:opacity-90 transition-opacity">
             <div className="text-2xl sm:text-3xl font-bold tracking-tight flex items-center gap-1">
               <span 
                 className="bg-clip-text text-transparent transition-all duration-1000"
@@ -373,19 +368,7 @@ export default function Home() {
               {t("hero.subheading")}
             </p>
 
-            {/* Value Highlights (Predict, Plan, Perform) */}
-            <div className="flex flex-wrap justify-center lg:justify-start gap-3 pt-2">
-              {[
-                { label: t("hero.badge.first"), color: "var(--theme-primary)" },
-                { label: t("hero.badge.second"), color: "var(--theme-secondary)" },
-                { label: t("hero.badge.third"), color: "var(--theme-primary)" },
-              ].map((item, idx) => (
-                <div key={idx} className="flex items-center gap-2 px-3.5 py-1.5 rounded-xl border border-white/5 bg-white/5 backdrop-blur-md">
-                  <span className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: item.color }} />
-                  <span className="text-[11px] md:text-xs font-semibold text-white/90">{item.label}</span>
-                </div>
-              ))}
-            </div>
+
 
             {/* Action Buttons */}
             <div className="flex flex-col sm:flex-row gap-4 items-center w-full sm:w-auto pt-4">
