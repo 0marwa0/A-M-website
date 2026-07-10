@@ -317,5 +317,42 @@
       "q4": "Yes! We offer flexible, tailored pricing plans (Starter, Growth, Enterprise) based on your custom requirements, data scale, and service SLA.",
       "default": "Thank you for your message! Our team will get back to you shortly, or you can contact us directly at contact@trimindes.ai."
     }
+  },
+  "aboutPage": {
+    "title": "About Triminds AI",
+    "subtitle": "Pioneering the next frontier of intelligent automation and business orchestration.",
+    "intro": "At Triminds AI, we build cutting-edge artificial intelligence systems that don't just solve problems—they transform how organizations operate, scale, and innovate. Our expert team of developers, researchers, and designers work together to build custom solutions that seamlessly bridge the gap between human capability and machine intelligence.",
+    "missionTitle": "Our Mission",
+    "missionDesc": "To empower businesses worldwide by designing intelligent, secure, and highly scalable AI solutions that unlock new levels of efficiency and drive sustainable growth.",
+    "visionTitle": "Our Vision",
+    "visionDesc": "To shape a future where artificial intelligence and human ingenuity work in perfect harmony to solve the world's most complex business challenges.",
+    "valuesTitle": "Our Core Values",
+    "values": {
+      "innovation": {
+        "title": "Continuous Innovation",
+        "desc": "We push boundaries and explore new AI frontiers to keep your business ahead of the curve."
+      },
+      "precision": {
+        "title": "Absolute Precision",
+        "desc": "We architect robust, mathematically sound models that deliver reliable results with high accuracy."
+      },
+      "collaboration": {
+        "title": "Strategic Collaboration",
+        "desc": "We view ourselves as an extension of your team, aligned with your targets and long-term vision."
+      }
+    },
+    "teamTitle": "Meet the Minds Behind the Tech",
+    "teamSubtitle": "Our multidisciplinary team of builders, creators, and innovators committed to delivering AI excellence.",
+    "roles": {
+      "ceo": "Chief Executive Officer",
+      "cto": "Chief Technology Officer",
+      "sales": "Sales Manager",
+      "dev": "Lead Developer",
+      "designer": "UI/UX Designer",
+      "product": "Product Lead",
+      "marketing": "Marketing Specialist",
+      "engineer": "AI Research Engineer"
+    },
+    "backHome": "Back to Home"
   }
 }

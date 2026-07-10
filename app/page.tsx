@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import Link from "next/link";
 import { Check, Star, ArrowRight, ArrowLeft, Sparkles, Cpu, Activity } from "lucide-react";
 import { useI18n } from "@/lib/i18n";
 import CosmicBackground from "@/components/CosmicBackground";
@@ -257,7 +258,7 @@ export default function Home() {
         }}
       >
         <div className="max-w-7xl mx-auto flex justify-between items-center">
-          <div className="flex items-center gap-3">
+          <Link href="/" className="flex items-center gap-3 hover:opacity-90 transition-opacity">
             <img
               src="/logo.svg"
               alt="Triminds AI Logo"
@@ -278,7 +279,7 @@ export default function Home() {
               </span>
               <span className="text-white">MINDS</span>
             </div>
-          </div>
+          </Link>
           <div
             style={{ fontSize: "23px" }}
             className="hidden lg:flex items-center gap-8"
@@ -295,12 +296,12 @@ export default function Home() {
             >
               {t("nav.contact")}
             </a>
-            <a
-              href="#about"
+            <Link
+              href="/about-us"
               className="text-white/90 hover:text-transparent hover:bg-clip-text hover:bg-gradient-to-r hover:from-[#E44CFF] hover:to-[#5861F2] transition-all duration-300"
             >
               {t("nav.about")}
-            </a>
+            </Link>
             <a
               href="#packages"
               className="text-white/90 hover:text-transparent hover:bg-clip-text hover:bg-gradient-to-r hover:from-[#E44CFF] hover:to-[#5861F2] transition-all duration-300"

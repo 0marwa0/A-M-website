@@ -4,8 +4,8 @@ import React, { useEffect, useRef, useState } from "react";
 import { Volume2 } from "lucide-react";
 
 export default function Preloader() {
-  const [isVisible, setIsVisible] = useState(true);
-  const [isMounted, setIsMounted] = useState(true);
+  const [isVisible, setIsVisible] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
   const [autoplayBlocked, setAutoplayBlocked] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -23,26 +23,36 @@ export default function Preloader() {
   };
 
   useEffect(() => {
+    const hasRun = sessionStorage.getItem("preloaderHasRun");
+    if (hasRun) {
+      return;
+    }
+
+    setIsMounted(true);
+    setIsVisible(true);
+    sessionStorage.setItem("preloaderHasRun", "true");
+
     // Lock scroll on mount
     document.documentElement.style.overflow = "hidden";
     document.body.style.overflow = "hidden";
 
-    const video = videoRef.current;
-    if (video) {
-      // Attempt playing unmuted first (since user requested sound)
-      video.play()
-        .then(() => {
-          setAutoplayBlocked(false);
-        })
-        .catch(() => {
-          // Autoplay unmuted failed (browser policy). 
-          // Fallback: play muted automatically so the visual starts, and show an unmute toggle
-          setAutoplayBlocked(true);
-          setIsMuted(true);
-          video.muted = true;
-          video.play().catch(e => console.log("Muted autoplay blocked too:", e));
-        });
-    }
+    // Play video after mounting
+    // We wrap video play inside a timeout to allow component to render first
+    const playTimeout = setTimeout(() => {
+      const video = videoRef.current;
+      if (video) {
+        video.play()
+          .then(() => {
+            setAutoplayBlocked(false);
+          })
+          .catch(() => {
+            setAutoplayBlocked(true);
+            setIsMuted(true);
+            video.muted = true;
+            video.play().catch(e => console.log("Muted autoplay blocked too:", e));
+          });
+      }
+    }, 50);
 
     // Safety fallback timeout: automatically disappear after 7 seconds
     const safetyTimer = setTimeout(() => {
@@ -50,6 +60,7 @@ export default function Preloader() {
     }, 7000);
 
     return () => {
+      clearTimeout(playTimeout);
       clearTimeout(safetyTimer);
       // Ensure scroll is restored on unmount
       document.documentElement.style.overflow = "";
