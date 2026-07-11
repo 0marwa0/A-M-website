@@ -239,9 +239,9 @@
     }
   },
   "customers": {
-    "heading": "Who We",
-    "headingHighlight": "Serve",
-    "subheading": "Trimindes AI partners with organizations across industries to deliver transformative AI solutions.",
+    "heading": "Projects We",
+    "headingHighlight": "Delivered",
+    "subheading": "A look at practical AI systems we have designed across industries.",
     "types": {
       "small": {
         "title": "Small Businesses",

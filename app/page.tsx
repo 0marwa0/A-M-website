@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef, type CSSProperties } from "react";
 import Link from "next/link";
 import { ArrowRight, Copy, Facebook, Instagram, Linkedin } from "lucide-react";
 import { useI18n } from "@/lib/i18n";
@@ -22,27 +22,367 @@ const contactGoalKeys = ["llmAutomation", "predictiveAnalytics", "b2bIntegration
 type ContactGoalKey = (typeof contactGoalKeys)[number];
 const contactScaleKeys = ["initialPilot", "enterpriseDeployment"] as const;
 type ContactScaleKey = (typeof contactScaleKeys)[number];
+type WrittenTextProps = {
+  text: string;
+  as?: "p" | "h3";
+  className?: string;
+  style?: CSSProperties;
+  delay?: number;
+  speed?: number;
+};
 
-const showcaseVisuals: Record<ShowcaseKey, { color: string; src: string }> = {
+function WrittenText({ text, as = "p", className = "", style, delay = 0, speed = 16 }: WrittenTextProps) {
+  const ref = useRef<HTMLElement | null>(null);
+  const [isInView, setIsInView] = useState(false);
+  const [visibleCount, setVisibleCount] = useState(0);
+
+  useEffect(() => {
+    setIsInView(false);
+    setVisibleCount(0);
+  }, [text]);
+
+  useEffect(() => {
+    const node = ref.current;
+    if (!node) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsInView(true);
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.35 }
+    );
+
+    observer.observe(node);
+    return () => observer.disconnect();
+  }, [text]);
+
+  useEffect(() => {
+    if (!isInView) return;
+
+    const characters = Array.from(text);
+    let index = 0;
+    let timeout: ReturnType<typeof setTimeout>;
+
+    const writeNext = () => {
+      index += 1;
+      setVisibleCount(index);
+
+      if (index < characters.length) {
+        timeout = setTimeout(writeNext, speed);
+      }
+    };
+
+    timeout = setTimeout(writeNext, delay);
+    return () => clearTimeout(timeout);
+  }, [delay, isInView, speed, text]);
+
+  const characters = Array.from(text);
+  const visibleText = characters.slice(0, visibleCount).join("");
+  const isWriting = isInView && visibleCount < characters.length;
+  const sharedClassName = `relative block ${className}`;
+  const content = (
+    <>
+      <span aria-hidden="true" className="invisible whitespace-pre-wrap">
+        {text}
+      </span>
+      <span aria-hidden="true" className="absolute inset-0 whitespace-pre-wrap">
+        {visibleText}
+        {isWriting && (
+          <span
+            className="ml-0.5 inline-block h-[0.9em] w-px translate-y-[0.1em] animate-blink"
+            style={{ backgroundColor: "currentColor" }}
+          />
+        )}
+      </span>
+    </>
+  );
+
+  if (as === "h3") {
+    return (
+      <h3 ref={(node) => { ref.current = node; }} className={sharedClassName} style={style} aria-label={text}>
+        {content}
+      </h3>
+    );
+  }
+
+  return (
+    <p ref={(node) => { ref.current = node; }} className={sharedClassName} style={style} aria-label={text}>
+      {content}
+    </p>
+  );
+}
+
+type ShowcaseInterfaceProps = {
+  showcaseKey: ShowcaseKey;
+  label: string;
+  color: string;
+  stats: string[];
+  showcaseLabel: string;
+};
+
+function ShowcaseInterface({ showcaseKey, label, color, stats, showcaseLabel }: ShowcaseInterfaceProps) {
+  const fallbackStats = stats.length > 0 ? stats : ["Telemetry", "Automation", "Guardrails"];
+  const waveform = [36, 58, 44, 72, 63, 86, 48, 78, 54, 91, 68, 74, 47, 82, 61, 88];
+  const workflowNodes = [
+    { left: "14%", top: "24%", label: "Input" },
+    { left: "48%", top: "18%", label: "Cache" },
+    { left: "76%", top: "34%", label: "LLM" },
+    { left: "34%", top: "62%", label: "Rules" },
+    { left: "68%", top: "70%", label: "API" },
+  ];
+  const screenshotLabels = ["Ops", "Risk", "Spend"];
+
+  return (
+    <motion.div
+      key={showcaseKey}
+      initial={{ opacity: 0, scale: 0.98 }}
+      animate={{ opacity: 1, scale: 1 }}
+      exit={{ opacity: 0, scale: 1.01 }}
+      transition={{ duration: 0.55, ease: "easeOut" }}
+      className="absolute inset-0"
+    >
+      <div
+        className="absolute inset-0"
+        style={{
+          background: `radial-gradient(circle at 18% 22%, ${color}24, transparent 34%), radial-gradient(circle at 70% 76%, ${color}14, transparent 36%)`,
+        }}
+      />
+
+      <motion.div
+        className="absolute left-[3%] top-[4%] h-[58%] w-[76%] rounded-2xl border border-white/10 bg-[#050816]/88 p-3 shadow-[0_24px_70px_rgba(0,0,0,0.38)] backdrop-blur-md sm:left-[5%] sm:h-[62%]"
+        animate={{ y: [0, -8, 0] }}
+        transition={{ duration: 7, repeat: Infinity, ease: "easeInOut" }}
+      >
+        <div className="flex h-full gap-3">
+          <div className="hidden w-8 shrink-0 flex-col items-center gap-2 rounded-xl bg-white/[0.04] py-2 sm:flex">
+            {[0, 1, 2, 3, 4].map((item) => (
+              <span
+                key={`${showcaseKey}-rail-${item}`}
+                className="h-2.5 w-2.5 rounded-full"
+                style={{ background: item === 1 ? color : "rgba(255,255,255,0.16)" }}
+              />
+            ))}
+          </div>
+
+          <div className="flex min-w-0 flex-1 flex-col">
+            <div className="mb-3 flex items-center justify-between gap-3">
+              <span
+                className="rounded-full px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.18em]"
+                style={{
+                  background: `${color}1f`,
+                  border: `1px solid ${color}55`,
+                  color,
+                }}
+              >
+                {label}
+              </span>
+              <span className="hidden text-[10px] font-semibold uppercase tracking-[0.22em] text-white/45 sm:inline">
+                {showcaseLabel}
+              </span>
+            </div>
+
+            <div className="grid min-h-0 flex-1 grid-cols-1 gap-3 sm:grid-cols-[1.35fr_0.85fr]">
+              <div className="flex min-h-0 flex-col rounded-xl border border-white/10 bg-black/24 p-3">
+                <div className="mb-3 flex items-center justify-between text-[10px] font-semibold uppercase text-white/50">
+                  <span>Live operations surface</span>
+                  <motion.span
+                    style={{ color }}
+                    animate={{ opacity: [0.45, 1, 0.45] }}
+                    transition={{ duration: 1.4, repeat: Infinity }}
+                  >
+                    Streaming
+                  </motion.span>
+                </div>
+                <div className="relative flex min-h-0 flex-1 items-end gap-1.5 overflow-hidden rounded-lg bg-white/[0.03] px-2 pb-2">
+                  {waveform.map((height, index) => (
+                    <motion.span
+                      key={`${showcaseKey}-wave-${index}`}
+                      className="flex-1 rounded-t-sm"
+                      style={{
+                        background: `linear-gradient(180deg, ${color}, rgba(255,255,255,0.08))`,
+                      }}
+                      animate={{ height: [`${Math.max(22, height - 22)}%`, `${height}%`, `${Math.max(18, height - 14)}%`] }}
+                      transition={{
+                        duration: 2.2 + index * 0.08,
+                        repeat: Infinity,
+                        ease: "easeInOut",
+                        delay: index * 0.04,
+                      }}
+                    />
+                  ))}
+                  <motion.div
+                    className="absolute inset-y-2 w-12 rounded-full"
+                    style={{ background: `linear-gradient(90deg, transparent, ${color}20, transparent)` }}
+                    animate={{ left: ["-18%", "108%"] }}
+                    transition={{ duration: 3.4, repeat: Infinity, ease: "linear" }}
+                  />
+                </div>
+                <div className="mt-3 grid grid-cols-3 gap-2">
+                  {fallbackStats.slice(0, 3).map((stat, index) => (
+                    <div key={`${showcaseKey}-metric-${stat}`} className="rounded-lg bg-white/[0.04] px-2 py-2">
+                      <p className="truncate text-[9px] uppercase text-white/40">{stat}</p>
+                      <motion.p
+                        className="mt-1 text-sm font-bold text-white"
+                        animate={{ opacity: [0.66, 1, 0.66] }}
+                        transition={{ duration: 2.5, repeat: Infinity, delay: index * 0.35 }}
+                      >
+                        {index === 0 ? "3.75k" : index === 1 ? "92%" : "4.05"}
+                      </motion.p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div className="hidden min-h-0 flex-col gap-3 sm:flex">
+                <div className="relative flex-1 overflow-hidden rounded-xl border border-white/10 bg-white/[0.045] p-3">
+                  <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-white/45">
+                    Workflow map
+                  </p>
+                  <svg className="absolute inset-0 h-full w-full" viewBox="0 0 220 160" aria-hidden="true">
+                    <motion.path
+                      d="M32 48 C78 22 112 36 154 54 S184 92 150 116 S78 122 58 94"
+                      fill="none"
+                      stroke={color}
+                      strokeWidth="1.4"
+                      strokeDasharray="5 6"
+                      animate={{ strokeDashoffset: [0, -44] }}
+                      transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
+                      opacity="0.68"
+                    />
+                  </svg>
+                  {workflowNodes.map((node, index) => (
+                    <motion.div
+                      key={`${showcaseKey}-node-${node.label}`}
+                      className="absolute grid h-9 w-9 place-items-center rounded-lg border border-white/10 bg-[#07101D]/95 text-[8px] font-semibold text-white/65"
+                      style={{ left: node.left, top: node.top }}
+                      animate={{ scale: [1, 1.08, 1], boxShadow: [`0 0 0 ${color}00`, `0 0 18px ${color}44`, `0 0 0 ${color}00`] }}
+                      transition={{ duration: 2.8, repeat: Infinity, delay: index * 0.35 }}
+                    >
+                      {node.label}
+                    </motion.div>
+                  ))}
+                </div>
+
+                <div className="grid h-20 grid-cols-3 gap-2">
+                  {[82, 64, 91].map((height, index) => (
+                    <div key={`${showcaseKey}-module-${index}`} className="flex items-end rounded-lg border border-white/10 bg-black/20 p-1.5">
+                      <motion.span
+                        className="block w-full rounded-md"
+                        style={{ background: `${color}${index % 2 === 0 ? "88" : "55"}` }}
+                        animate={{ height: [`${Math.max(32, height - 24)}%`, `${height}%`, `${Math.max(28, height - 10)}%`] }}
+                        transition={{ duration: 2.5, repeat: Infinity, delay: index * 0.25 }}
+                      />
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </motion.div>
+
+      <motion.div
+        className="absolute left-[2%] top-[64%] hidden w-[48%] rounded-xl border border-white/[0.12] bg-[#050711]/95 p-3 shadow-2xl sm:block"
+        animate={{ x: [0, 8, 0] }}
+        transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
+      >
+        <div className="mb-2 flex items-center justify-between text-[10px] font-semibold uppercase text-white/45">
+          <span>Decision log</span>
+          <span style={{ color }}>13ms</span>
+        </div>
+        {["Semantic cache hit", "Budget policy passed", "Worker action queued"].map((item, index) => (
+          <motion.div
+            key={`${showcaseKey}-log-${item}`}
+            className="mb-1.5 flex items-center gap-2 text-[10px] text-white/62 last:mb-0"
+            animate={{ opacity: [0.45, 1, 0.62] }}
+            transition={{ duration: 2.4, repeat: Infinity, delay: index * 0.42 }}
+          >
+            <span className="h-1.5 w-1.5 rounded-full" style={{ background: color }} />
+            <span className="truncate">{item}</span>
+          </motion.div>
+        ))}
+      </motion.div>
+
+      <div className="absolute right-[2%] top-[10%] hidden h-[60%] w-[27%] sm:block">
+        {screenshotLabels.map((item, index) => (
+          <motion.div
+            key={`${showcaseKey}-shot-${item}`}
+            className="absolute left-0 right-0 rounded-xl border border-white/[0.12] bg-[#080B18]/92 p-3 shadow-2xl backdrop-blur-md"
+            style={{ top: `${index * 27}%` }}
+            animate={{ y: [0, index % 2 === 0 ? -7 : 7, 0], rotate: [0, index % 2 === 0 ? -1 : 1, 0] }}
+            transition={{ duration: 6 + index, repeat: Infinity, ease: "easeInOut" }}
+          >
+            <div className="mb-3 flex items-center justify-between">
+              <p className="text-[10px] font-semibold uppercase tracking-[0.13em] text-white/50">
+                {item} screen
+              </p>
+              <span className="h-2 w-2 rounded-full" style={{ background: color }} />
+            </div>
+            <div className="space-y-2">
+              {[68, 48, 82].map((width, barIndex) => (
+                <div key={`${showcaseKey}-shot-${item}-${barIndex}`} className="h-1.5 overflow-hidden rounded-full bg-white/10">
+                  <motion.span
+                    className="block h-full rounded-full"
+                    style={{ background: barIndex === 1 ? "rgba(255,255,255,0.62)" : color }}
+                    animate={{ width: [`${Math.max(20, width - 24)}%`, `${width}%`, `${Math.max(18, width - 9)}%`] }}
+                    transition={{ duration: 2.2, repeat: Infinity, delay: barIndex * 0.22 + index * 0.18 }}
+                  />
+                </div>
+              ))}
+            </div>
+          </motion.div>
+        ))}
+      </div>
+
+      <motion.div
+        className="absolute bottom-[2%] right-[9%] hidden w-[37%] rounded-xl border border-white/[0.12] bg-[#07101D]/95 p-3 shadow-2xl sm:block"
+        animate={{ y: [0, -6, 0] }}
+        transition={{ duration: 6.5, repeat: Infinity, ease: "easeInOut" }}
+      >
+        <div className="mb-3 flex items-center justify-between text-[10px] font-semibold uppercase tracking-[0.13em] text-white/50">
+          <span>Guardrail cockpit</span>
+          <motion.span
+            className="h-2 w-2 rounded-full"
+            style={{ background: color }}
+            animate={{ scale: [1, 1.8, 1], opacity: [0.5, 1, 0.5] }}
+            transition={{ duration: 1.6, repeat: Infinity }}
+          />
+        </div>
+        {[78, 55, 88].map((width, index) => (
+          <div key={`${showcaseKey}-guardrail-${index}`} className="mb-2 last:mb-0">
+            <div className="h-1.5 rounded-full bg-white/10">
+              <motion.span
+                className="block h-full rounded-full"
+                style={{ background: color }}
+                animate={{ width: [`${Math.max(20, width - 18)}%`, `${width}%`, `${Math.max(18, width - 5)}%`] }}
+                transition={{ duration: 2.6, repeat: Infinity, delay: index * 0.25 }}
+              />
+            </div>
+          </div>
+        ))}
+      </motion.div>
+    </motion.div>
+  );
+}
+
+const showcaseVisuals: Record<ShowcaseKey, { color: string }> = {
   education: {
     color: "#E44CFF",
-    src: "https://images.unsplash.com/photo-1509062522246-3755977927d7?auto=format&fit=crop&w=1000&q=80",
   },
   realEstate: {
     color: "#8B56FF",
-    src: "https://www.colliers.com/-/media/files/emea/mena/uae/research-reports/2026/whatsapp-image-20260520-at-110001.ashx?bid=690ed16a02a44c18890bdf09f35ba7f7",
   },
   healthcare: {
     color: "#2EDAA2",
-    src: "https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?auto=format&fit=crop&w=1000&q=80",
   },
   logistics: {
     color: "#5861F2",
-    src: "https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&w=1000&q=80",
   },
   finance: {
     color: "#4EF0FF",
-    src: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=1000&q=80",
   },
 };
 
@@ -96,6 +436,7 @@ export default function Home() {
       : contactGoal === "predictiveAnalytics"
         ? t("contact.configurator.complexities.mediumHigh")
         : t("contact.configurator.complexities.medium");
+  const engineeringScaleDetail = t(`contact.configurator.scaleDetails.${contactScale}`);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -805,60 +1146,19 @@ export default function Home() {
           {/* Industry showcase */}
           <div className="mt-12 grid grid-cols-1 gap-8 lg:grid-cols-[1fr_0.92fr] lg:items-stretch">
             <div
-              className="relative min-h-[360px] overflow-hidden rounded-3xl border bg-[#080B18]/80 shadow-[0_0_50px_rgba(78,240,255,0.08)]"
-              style={{
-                borderColor: `${activeShowcase.color}55`,
-              }}
+              className="relative min-h-[430px] overflow-visible md:min-h-[460px]"
             >
               <AnimatePresence mode="wait">
-                <motion.img
-                  key={activeShowcase.src}
-                  src={activeShowcase.src}
-                  alt={activeShowcase.title}
-                  initial={{ opacity: 0, scale: 1.04 }}
-                  animate={{ opacity: 0.54, scale: 1 }}
-                  exit={{ opacity: 0, scale: 1.02 }}
-                  transition={{ duration: 0.55, ease: "easeOut" }}
-                  className="absolute inset-0 h-full w-full object-cover"
+                <ShowcaseInterface
+                  showcaseKey={activeShowcase.key}
+                  label={activeShowcase.label}
+                  color={activeShowcase.color}
+                  stats={activeShowcase.stats}
+                  showcaseLabel={t("customers.showcaseLabel")}
                 />
               </AnimatePresence>
-              <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(8,11,24,0.92),rgba(8,11,24,0.58)_48%,rgba(8,11,24,0.82))]" />
-              <div
-                className="absolute inset-x-0 bottom-0 h-40"
-                style={{
-                  background: `linear-gradient(0deg, ${activeShowcase.color}24, transparent)`,
-                }}
-              />
+              <div className="absolute inset-0 bg-[radial-gradient(circle_at_82%_18%,rgba(255,255,255,0.08),transparent_24%)]" />
 
-              <div className="relative z-10 flex h-full min-h-[360px] flex-col justify-between p-6 md:p-8">
-                <div className="flex items-center justify-between gap-4">
-                  <span
-                    className="rounded-full px-4 py-2 text-xs font-semibold uppercase tracking-[0.2em]"
-                    style={{
-                      background: `${activeShowcase.color}18`,
-                      border: `1px solid ${activeShowcase.color}44`,
-                      color: activeShowcase.color,
-                    }}
-                  >
-                    {activeShowcase.label}
-                  </span>
-                  <span className="text-xs font-medium uppercase tracking-[0.18em] text-white/60">
-                    {t("customers.showcaseLabel")}
-                  </span>
-                </div>
-
-                <div className="max-w-md">
-                  <div
-                    className="mb-5 h-1 w-20 rounded-full"
-                    style={{
-                      background: `linear-gradient(90deg, ${activeShowcase.color}, #4EF0FF)`,
-                    }}
-                  />
-                  <p className="text-sm font-semibold uppercase tracking-[0.24em] text-white/55">
-                    {activeShowcase.meta}
-                  </p>
-                </div>
-              </div>
             </div>
 
             <AnimatePresence mode="wait">
@@ -868,26 +1168,39 @@ export default function Home() {
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -18 }}
                 transition={{ duration: 0.35, ease: "easeOut" }}
-                className="flex min-h-[360px] flex-col justify-center rounded-3xl border border-white/10 bg-white/[0.04] p-6 shadow-[0_0_45px_rgba(0,0,0,0.22)] backdrop-blur-md md:p-8"
+                className="flex min-h-[360px] flex-col justify-center py-4 md:pl-6"
               >
-                <p
+                <WrittenText
+                  as="p"
+                  text={activeShowcase.tag}
+                  delay={80}
                   className="mb-4 text-sm font-semibold uppercase tracking-[0.22em]"
                   style={{ color: activeShowcase.color }}
-                >
-                  {activeShowcase.tag}
-                </p>
-                <h3 className="text-3xl font-bold leading-tight text-white md:text-4xl">
-                  {activeShowcase.title}
-                </h3>
-                <p className="mt-5 text-base leading-relaxed text-gray-300 md:text-lg">
-                  {activeShowcase.body}
-                </p>
-                <div className="mt-8 grid grid-cols-1 gap-3 sm:grid-cols-3">
+                />
+                <WrittenText
+                  as="h3"
+                  text={activeShowcase.title}
+                  delay={220}
+                  speed={13}
+                  className="text-3xl font-bold leading-tight text-white md:text-4xl"
+                />
+                <WrittenText
+                  as="p"
+                  text={activeShowcase.body}
+                  delay={620}
+                  speed={7}
+                  className="mt-5 text-base leading-relaxed text-gray-300 md:text-lg"
+                />
+                <div className="mt-8 flex flex-wrap gap-x-6 gap-y-3">
                   {activeShowcase.stats.map((stat) => (
                     <div
                       key={stat}
-                      className="rounded-2xl border border-white/10 bg-black/20 px-4 py-3 text-sm font-semibold text-white/85"
+                      className="flex items-center gap-2 text-sm font-semibold text-white/85"
                     >
+                      <span
+                        className="h-1.5 w-1.5 rounded-full"
+                        style={{ background: activeShowcase.color }}
+                      />
                       {stat}
                     </div>
                   ))}
@@ -1112,14 +1425,9 @@ export default function Home() {
 
                 <div className="space-y-7">
                   <div>
-                    <div className="mb-3 flex items-center justify-between gap-4">
-                      <h3 className="text-xl font-semibold text-white">
-                        {t("contact.configurator.industryLabel")}
-                      </h3>
-                      <span className="flex h-7 w-14 items-center justify-end rounded-full border border-[#ACA0FB]/30 bg-[#5861F2]/45 p-1">
-                        <span className="h-5 w-5 rounded-full bg-white shadow-[0_0_14px_rgba(255,255,255,0.45)]" />
-                      </span>
-                    </div>
+                    <h3 className="mb-3 text-xl font-semibold text-white">
+                      {t("contact.configurator.industryLabel")}
+                    </h3>
                     <div className="flex flex-wrap gap-3">
                       {contactIndustries.map((option) => (
                         <button
@@ -1151,14 +1459,9 @@ export default function Home() {
                   </div>
 
                   <div>
-                    <div className="mb-3 flex items-center justify-between gap-4">
-                      <h3 className="text-xl font-semibold text-white">
-                        {t("contact.configurator.goalLabel")}
-                      </h3>
-                      <span className="flex h-7 w-14 items-center justify-end rounded-full border border-[#ACA0FB]/30 bg-[#5861F2]/45 p-1">
-                        <span className="h-5 w-5 rounded-full bg-white shadow-[0_0_14px_rgba(255,255,255,0.45)]" />
-                      </span>
-                    </div>
+                    <h3 className="mb-3 text-xl font-semibold text-white">
+                      {t("contact.configurator.goalLabel")}
+                    </h3>
                     <div className="flex flex-wrap gap-3">
                       {contactGoals.map((option) => (
                         <button
@@ -1190,14 +1493,9 @@ export default function Home() {
                   </div>
 
                   <div>
-                    <div className="mb-3 flex items-center justify-between gap-4">
-                      <h3 className="text-xl font-semibold text-white">
-                        {t("contact.configurator.scaleLabel")}
-                      </h3>
-                      <span className="flex h-7 w-14 items-center justify-end rounded-full border border-[#ACA0FB]/30 bg-[#5861F2]/45 p-1">
-                        <span className="h-5 w-5 rounded-full bg-white shadow-[0_0_14px_rgba(255,255,255,0.45)]" />
-                      </span>
-                    </div>
+                    <h3 className="mb-3 text-xl font-semibold text-white">
+                      {t("contact.configurator.scaleLabel")}
+                    </h3>
                     <div className="flex flex-wrap gap-3">
                       {contactScales.map((option) => (
                         <button
@@ -1316,7 +1614,7 @@ export default function Home() {
                     <p>
                       {t("contact.configurator.complexityLabel")}{" "}
                       <span className="font-bold text-white">
-                        {engineeringComplexity} ({t(`contact.configurator.scaleDetails.${contactScale}`)})
+                        {engineeringComplexity} ({engineeringScaleDetail})
                       </span>
                     </p>
                   </div>
