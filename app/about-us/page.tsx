@@ -17,7 +17,10 @@ import {
   ShieldCheck,
   Zap,
   Globe,
-  Compass
+  Compass,
+  Menu,
+  X,
+  ArrowUp
 } from "lucide-react";
 import { useI18n } from "@/lib/i18n";
 import CosmicBackground from "@/components/CosmicBackground";
@@ -25,12 +28,27 @@ import Chatbot, { PersonaMode } from "@/components/Chatbot";
 import StarField from "@/components/StarField";
 import Preloader from "@/components/Preloader";
 import NeuralNetworkVisual from "@/components/NeuralNetworkVisual";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 
 export default function AboutUs() {
   const { locale, setLocale, t } = useI18n();
   const [mode, setMode] = useState<PersonaMode>("balanced");
   const [activeMilestone, setActiveMilestone] = useState(0);
+  const [scrolled, setScrolled] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [scrollProgress, setScrollProgress] = useState(0);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 20);
+      const totalHeight = document.documentElement.scrollHeight - window.innerHeight;
+      if (totalHeight > 0) {
+        setScrollProgress((window.scrollY / totalHeight) * 100);
+      }
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   // Get active theme colors for global elements
   const getGlobalThemeStyles = (activeMode: PersonaMode) => {
@@ -189,18 +207,26 @@ export default function AboutUs() {
 
       {/* Navigation */}
       <nav
-        className="fixed top-0 left-0 right-0 z-50 px-6 py-5 transition-all duration-1000"
-        style={{
-          background: "rgba(6, 8, 22, 0.85)",
-          backdropFilter: "blur(12px)",
-          borderBottom: "1px solid var(--theme-nav-border)",
-        }}
+        className={`fixed left-0 right-0 z-50 transition-all duration-500 ${
+          scrolled
+            ? "top-4 px-4 sm:px-6 md:px-8"
+            : "top-0 px-6 py-5"
+        }`}
       >
-        <div className="max-w-7xl mx-auto flex justify-between items-center">
+        <div
+          className={`mx-auto w-full max-w-7xl flex justify-between items-center transition-all duration-500 ${
+            scrolled
+              ? "rounded-2xl border bg-slate-900/40 backdrop-blur-xl px-6 py-3.5 shadow-[0_20px_40px_-15px_rgba(0,0,0,0.7),_0_0_20px_rgba(228,76,255,0.15)]"
+              : "border-b border-transparent py-2"
+          }`}
+          style={{
+            borderColor: scrolled ? "var(--theme-nav-border)" : "transparent",
+          }}
+        >
           <Link href="/" className="flex items-center hover:opacity-90 transition-opacity">
-            <div className="text-2xl sm:text-3xl font-bold tracking-tight flex items-center gap-1">
+            <div className="text-2xl sm:text-3xl font-bold tracking-tight flex items-center gap-1 group">
               <span 
-                className="bg-clip-text text-transparent transition-all duration-1000"
+                className="bg-clip-text text-transparent transition-all duration-1000 group-hover:drop-shadow-[0_0_8px_var(--theme-glow)]"
                 style={{
                   backgroundImage: mode === "creative"
                     ? "linear-gradient(to right, #E44CFF, #9F56FF)"
@@ -211,24 +237,17 @@ export default function AboutUs() {
               >
                 TRI
               </span>
-              <span className="text-white">MINDS</span>
+              <span className="text-white group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-white group-hover:to-gray-300 transition-all duration-300">MINDS</span>
             </div>
           </Link>
           <div
-            style={{ fontSize: "23px" }}
-            className="hidden lg:flex items-center gap-8"
+            className="hidden lg:flex items-center gap-8 text-[16px] font-medium"
           >
             <Link
               href="/#services"
-              className="text-white/90 hover:text-transparent hover:bg-clip-text hover:bg-gradient-to-r hover:from-[#E44CFF] hover:to-[#5861F2] transition-all duration-300"
+              className="text-white/80 hover:text-transparent hover:bg-clip-text hover:bg-gradient-to-r hover:from-[#E44CFF] hover:to-[#5861F2] transition-all duration-300"
             >
               {t("nav.solutions")}
-            </Link>
-            <Link
-              href="/#contact"
-              className="text-white/90 hover:text-transparent hover:bg-clip-text hover:bg-gradient-to-r hover:from-[#E44CFF] hover:to-[#5861F2] transition-all duration-300"
-            >
-              {t("nav.contact")}
             </Link>
             <Link
               href="/about-us"
@@ -238,20 +257,104 @@ export default function AboutUs() {
             </Link>
             <Link
               href="/#packages"
-              className="text-white/90 hover:text-transparent hover:bg-clip-text hover:bg-gradient-to-r hover:from-[#E44CFF] hover:to-[#5861F2] transition-all duration-300"
+              className="text-white/80 hover:text-transparent hover:bg-clip-text hover:bg-gradient-to-r hover:from-[#E44CFF] hover:to-[#5861F2] transition-all duration-300"
             >
               {t("nav.pricing")}
             </Link>
+            <Link
+              href="/#contact"
+              className="text-white/80 hover:text-transparent hover:bg-clip-text hover:bg-gradient-to-r hover:from-[#E44CFF] hover:to-[#5861F2] transition-all duration-300"
+            >
+              {t("nav.contact")}
+            </Link>
           </div>
-          <div className="flex items-center">
+          <div className="hidden lg:flex items-center gap-4">
             <button
-              className="px-4 py-2 rounded-xl border border-white/30 text-sm text-white/90 hover:border-[#E44CFF] hover:bg-[#E44CFF]/10 transition-all duration-300"
+              className="flex items-center gap-1.5 px-4 py-2 rounded-xl border border-white/20 text-sm text-white/90 hover:border-[#E44CFF] hover:bg-[#E44CFF]/10 transition-all duration-300"
               onClick={() => setLocale(locale === "en" ? "ar" : "en")}
             >
+              <Globe className="w-4 h-4" />
               {locale === "en" ? "العربية" : "English"}
+            </button>
+            <Link
+              href="/#contact"
+              className="px-5 py-2.5 rounded-xl text-sm font-semibold text-white transition-all duration-300 hover:scale-[1.05]"
+              style={{
+                background: "var(--theme-gradient)",
+                boxShadow: "0 0 15px var(--theme-glow-border)",
+              }}
+            >
+              {t("nav.cta")}
+            </Link>
+          </div>
+          <div className="flex lg:hidden items-center gap-3">
+            <button
+              className="p-2 rounded-xl border border-white/20 text-sm text-white/90 hover:border-[#E44CFF] hover:bg-[#E44CFF]/10 transition-all duration-300"
+              onClick={() => setLocale(locale === "en" ? "ar" : "en")}
+              aria-label="Toggle language"
+            >
+              <Globe className="w-4 h-4" />
+            </button>
+            <button
+              className="p-2 rounded-xl border border-white/20 text-white/90 hover:border-[#E44CFF] hover:bg-[#E44CFF]/10 transition-all duration-300"
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              aria-label="Toggle menu"
+            >
+              {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
             </button>
           </div>
         </div>
+        <AnimatePresence>
+          {mobileMenuOpen && (
+            <motion.div
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              transition={{ duration: 0.3 }}
+              className="absolute left-4 right-4 top-full mt-2 rounded-2xl border border-[#E44CFF]/20 bg-slate-900/80 backdrop-blur-xl p-6 shadow-2xl flex flex-col gap-4 lg:hidden z-40"
+            >
+              <Link
+                href="/#services"
+                onClick={() => setMobileMenuOpen(false)}
+                className="text-lg py-2 border-b border-white/5 text-white/90 hover:text-[#E44CFF] transition-colors"
+              >
+                {t("nav.solutions")}
+              </Link>
+              <Link
+                href="/about-us"
+                onClick={() => setMobileMenuOpen(false)}
+                className="text-lg py-2 border-b border-white/5 text-[#E44CFF] transition-colors font-semibold"
+              >
+                {t("nav.about")}
+              </Link>
+              <Link
+                href="/#packages"
+                onClick={() => setMobileMenuOpen(false)}
+                className="text-lg py-2 border-b border-white/5 text-white/90 hover:text-[#E44CFF] transition-colors"
+              >
+                {t("nav.pricing")}
+              </Link>
+              <Link
+                href="/#contact"
+                onClick={() => setMobileMenuOpen(false)}
+                className="text-lg py-2 border-b border-white/5 text-white/90 hover:text-[#E44CFF] transition-colors"
+              >
+                {t("nav.contact")}
+              </Link>
+              <Link
+                href="/#contact"
+                onClick={() => setMobileMenuOpen(false)}
+                className="w-full text-center py-3.5 rounded-xl font-semibold text-sm transition-all duration-300 mt-2"
+                style={{
+                  background: "var(--theme-gradient)",
+                  boxShadow: "0 0 15px var(--theme-glow-border)",
+                }}
+              >
+                {t("nav.cta")}
+              </Link>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </nav>
 
       {/* Hero Section */}
@@ -742,6 +845,54 @@ export default function AboutUs() {
 
       {/* Floating Chatbot */}
       <Chatbot activeMode={mode} onModeChange={setMode} />
+
+      {/* Scroll to Top Button */}
+      <AnimatePresence>
+        {scrolled && (
+          <motion.button
+            initial={{ opacity: 0, scale: 0.5, y: 20 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.5, y: 20 }}
+            onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+            className="fixed bottom-8 left-8 md:left-10 z-40 w-[52px] h-[52px] rounded-full flex items-center justify-center border border-white/10 bg-slate-950/65 backdrop-blur-md text-white hover:text-[#4EF0FF] transition-all shadow-xl hover:scale-105"
+            style={{
+              boxShadow: "0 10px 30px rgba(0, 0, 0, 0.4), 0 0 15px var(--theme-glow-border)",
+            }}
+            aria-label="Scroll to top"
+          >
+            <svg className="absolute inset-0 w-full h-full pointer-events-none" viewBox="0 0 52 52">
+              <defs>
+                <linearGradient id="progress-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stopColor="var(--theme-primary)" />
+                  <stop offset="100%" stopColor="var(--theme-secondary, #4EF0FF)" />
+                </linearGradient>
+              </defs>
+              <circle
+                cx="26"
+                cy="26"
+                r="22"
+                stroke="rgba(255, 255, 255, 0.08)"
+                strokeWidth="3.5"
+                fill="transparent"
+              />
+              <circle
+                cx="26"
+                cy="26"
+                r="22"
+                stroke="url(#progress-gradient)"
+                strokeWidth="3.5"
+                fill="transparent"
+                strokeDasharray="138.2"
+                strokeDashoffset={138.2 - (scrollProgress / 100) * 138.2}
+                strokeLinecap="round"
+                transform="rotate(-90 26 26)"
+                className="transition-all duration-100"
+              />
+            </svg>
+            <ArrowUp className="w-5 h-5 relative z-10" />
+          </motion.button>
+        )}
+      </AnimatePresence>
 
       {/* Scanline animation styles */}
       <style jsx global>{`
