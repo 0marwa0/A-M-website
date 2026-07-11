@@ -429,17 +429,8 @@ export default function Home() {
     key,
     label: t(`contact.configurator.scales.${key}`),
   }));
-  const projectedModules = [
-    t(`contact.configurator.modules.industries.${contactIndustry}`),
-    t(`contact.configurator.modules.goals.${contactGoal}`),
-  ];
-  const engineeringComplexity =
-    contactScale === "enterpriseDeployment" || contactGoal === "b2bIntegration"
-      ? t("contact.configurator.complexities.high")
-      : contactGoal === "predictiveAnalytics"
-        ? t("contact.configurator.complexities.mediumHigh")
-        : t("contact.configurator.complexities.medium");
-  const engineeringScaleDetail = t(`contact.configurator.scaleDetails.${contactScale}`);
+  const selectedScaleLabel =
+    contactScales.find((option) => option.key === contactScale)?.label ?? contactScales[0]?.label;
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -1665,10 +1656,29 @@ export default function Home() {
               </div>
 
               <div className="relative min-h-[560px] overflow-visible py-8 pr-8 sm:pr-12">
-                <div className="absolute right-3 top-0 z-0 h-[86%] w-[78%] rotate-[7deg] rounded-[2rem] border border-[#4EF0FF]/30 bg-white/[0.08] shadow-[0_0_35px_rgba(78,240,255,0.12)] backdrop-blur-md lg:-right-2" />
-                <div className="absolute right-0 top-14 z-0 h-[80%] w-[84%] -rotate-[5deg] rounded-[2rem] border border-white/[0.16] bg-[#4EF0FF]/[0.08] shadow-[0_0_35px_rgba(228,76,255,0.10)] backdrop-blur-md lg:-right-8" />
+                <motion.div
+                  className="absolute right-10 top-16 z-0 h-[500px] w-[calc(100%-3rem)] max-w-xl -rotate-[8deg] rounded-[2rem] border border-white/[0.12] bg-[#4EF0FF]/[0.06] shadow-[0_0_35px_rgba(228,76,255,0.10)] backdrop-blur-md"
+                  animate={{ y: [0, 10, 0], rotate: [-8, -6, -8] }}
+                  transition={{ duration: 9, repeat: Infinity, ease: "easeInOut" }}
+                />
+                <motion.div
+                  className="absolute right-0 top-0 z-[1] h-[500px] w-[calc(100%-3rem)] max-w-xl rotate-[6deg] rounded-[2rem] border border-[#4EF0FF]/30 bg-white/[0.08] shadow-[0_0_35px_rgba(78,240,255,0.12)] backdrop-blur-md"
+                  animate={{ y: [0, -8, 0], rotate: [6, 4, 6] }}
+                  transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
+                />
 
-                <div className="relative z-10 ml-auto mr-5 mt-7 min-h-[500px] max-w-xl rounded-[2rem] border border-white/[0.18] bg-white/[0.08] p-6 shadow-[0_0_55px_rgba(78,240,255,0.12)] backdrop-blur-2xl md:mr-8 md:p-8">
+                <motion.div
+                  className="relative z-10 ml-auto mr-5 mt-7 min-h-[500px] max-w-xl rounded-[2rem] border border-white/[0.18] bg-white/[0.08] p-6 shadow-[0_0_55px_rgba(78,240,255,0.12)] backdrop-blur-2xl md:mr-8 md:p-8"
+                  animate={{
+                    y: [0, -6, 0],
+                    boxShadow: [
+                      "0 0 45px rgba(78,240,255,0.10)",
+                      "0 0 70px rgba(228,76,255,0.16)",
+                      "0 0 45px rgba(78,240,255,0.10)",
+                    ],
+                  }}
+                  transition={{ duration: 7, repeat: Infinity, ease: "easeInOut" }}
+                >
                   <h3 className="text-3xl font-semibold tracking-tight text-white">
                     {t("contact.configurator.blueprintTitle")}
                   </h3>
@@ -1679,27 +1689,81 @@ export default function Home() {
                       className="absolute inset-0 h-full w-full"
                       aria-hidden="true"
                     >
-                      <path d="M100 55 H210 Q230 55 230 78 V112" stroke="rgba(172,160,251,0.5)" strokeWidth="3" fill="none" />
-                      <path d="M100 120 H230" stroke="rgba(172,160,251,0.5)" strokeWidth="3" fill="none" />
-                      <path d="M100 185 H210 Q230 185 230 162 V138" stroke="rgba(172,160,251,0.5)" strokeWidth="3" fill="none" />
-                      <path d="M300 125 H395 Q420 125 420 90 V58 H475" stroke="rgba(78,240,255,0.55)" strokeWidth="3" fill="none" />
-                      <path d="M300 125 H475" stroke="rgba(78,240,255,0.55)" strokeWidth="3" fill="none" />
-                      <path d="M300 125 H395 Q420 125 420 160 V198 H475" stroke="rgba(78,240,255,0.55)" strokeWidth="3" fill="none" />
+                      {[
+                        "M100 55 H210 Q230 55 230 78 V112",
+                        "M100 120 H230",
+                        "M100 185 H210 Q230 185 230 162 V138",
+                      ].map((path, index) => (
+                        <motion.path
+                          key={`input-path-${index}`}
+                          d={path}
+                          stroke="rgba(172,160,251,0.5)"
+                          strokeWidth="3"
+                          fill="none"
+                          strokeDasharray="8 10"
+                          animate={{ strokeDashoffset: [0, -36] }}
+                          transition={{ duration: 3.6 + index * 0.35, repeat: Infinity, ease: "linear" }}
+                        />
+                      ))}
+                      {[
+                        "M300 125 H395 Q420 125 420 90 V58 H475",
+                        "M300 125 H475",
+                        "M300 125 H395 Q420 125 420 160 V198 H475",
+                      ].map((path, index) => (
+                        <motion.path
+                          key={`output-path-${index}`}
+                          d={path}
+                          stroke="rgba(78,240,255,0.58)"
+                          strokeWidth="3"
+                          fill="none"
+                          strokeDasharray="10 12"
+                          animate={{ strokeDashoffset: [0, -44] }}
+                          transition={{ duration: 3.2 + index * 0.3, repeat: Infinity, ease: "linear" }}
+                        />
+                      ))}
                     </svg>
 
-                    <div className="absolute left-8 top-5 flex h-14 w-14 items-center justify-center rounded-xl border border-[#E44CFF]/30 bg-[#E44CFF]/15 shadow-[0_0_20px_rgba(228,76,255,0.22)]">
+                    <motion.div
+                      className="absolute left-8 top-5 flex h-14 w-14 items-center justify-center rounded-xl border border-[#E44CFF]/30 bg-[#E44CFF]/15 shadow-[0_0_20px_rgba(228,76,255,0.22)]"
+                      animate={{ scale: [1, 1.06, 1], y: [0, -4, 0] }}
+                      transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+                    >
                       <span className="h-6 w-6 rounded-full border-4 border-[#E44CFF]/70" />
-                    </div>
-                    <div className="absolute left-4 top-[98px] h-16 w-20 rounded-xl border border-[#ACA0FB]/25 bg-[#5861F2]/15 p-4">
-                      <span className="mb-2 block h-1.5 w-10 rounded-full bg-[#ACA0FB]/60" />
-                      <span className="mb-2 block h-1.5 w-12 rounded-full bg-[#ACA0FB]/45" />
-                      <span className="block h-1.5 w-8 rounded-full bg-[#ACA0FB]/35" />
-                    </div>
-                    <div className="absolute left-8 bottom-5 flex h-14 w-14 items-center justify-center rounded-xl border border-[#ACA0FB]/25 bg-[#5861F2]/15">
+                    </motion.div>
+                    <motion.div
+                      className="absolute left-4 top-[98px] h-16 w-20 rounded-xl border border-[#ACA0FB]/25 bg-[#5861F2]/15 p-4"
+                      animate={{ x: [0, 5, 0] }}
+                      transition={{ duration: 4.2, repeat: Infinity, ease: "easeInOut" }}
+                    >
+                      {[40, 48, 32].map((width, index) => (
+                        <motion.span
+                          key={`blueprint-left-line-${index}`}
+                          className="mb-2 block h-1.5 rounded-full bg-[#ACA0FB]/60 last:mb-0"
+                          animate={{ width: [`${Math.max(20, width - 14)}px`, `${width}px`, `${Math.max(18, width - 5)}px`] }}
+                          transition={{ duration: 2.2, repeat: Infinity, delay: index * 0.22 }}
+                        />
+                      ))}
+                    </motion.div>
+                    <motion.div
+                      className="absolute left-8 bottom-5 flex h-14 w-14 items-center justify-center rounded-xl border border-[#ACA0FB]/25 bg-[#5861F2]/15"
+                      animate={{ scale: [1, 1.05, 1], y: [0, 4, 0] }}
+                      transition={{ duration: 3.7, repeat: Infinity, ease: "easeInOut" }}
+                    >
                       <span className="h-7 w-7 rounded-full border-2 border-[#ACA0FB]/55" />
-                    </div>
+                    </motion.div>
 
-                    <div className="absolute left-1/2 top-1/2 flex h-20 w-20 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-2xl border border-[#4EF0FF]/50 bg-[linear-gradient(135deg,rgba(78,240,255,0.22),rgba(228,76,255,0.22))] shadow-[0_0_35px_rgba(78,240,255,0.22)]">
+                    <motion.div
+                      className="absolute left-1/2 top-1/2 flex h-20 w-20 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-2xl border border-[#4EF0FF]/50 bg-[linear-gradient(135deg,rgba(78,240,255,0.22),rgba(228,76,255,0.22))] shadow-[0_0_35px_rgba(78,240,255,0.22)]"
+                      animate={{
+                        scale: [1, 1.08, 1],
+                        boxShadow: [
+                          "0 0 25px rgba(78,240,255,0.18)",
+                          "0 0 48px rgba(78,240,255,0.34)",
+                          "0 0 25px rgba(78,240,255,0.18)",
+                        ],
+                      }}
+                      transition={{ duration: 2.8, repeat: Infinity, ease: "easeInOut" }}
+                    >
                       <div className="relative h-10 w-10">
                         <span className="absolute left-1 top-3 h-3 w-3 rounded-full border-2 border-white/80" />
                         <span className="absolute right-1 top-1 h-3 w-3 rounded-full border-2 border-white/80" />
@@ -1707,30 +1771,45 @@ export default function Home() {
                         <span className="absolute left-4 top-5 h-px w-5 rotate-[-35deg] bg-white/70" />
                         <span className="absolute left-4 top-5 h-px w-5 rotate-[35deg] bg-white/70" />
                       </div>
-                    </div>
+                    </motion.div>
 
-                    <div className="absolute right-4 top-3 h-16 w-16 rounded-xl border border-white/15 bg-white/[0.08]" />
-                    <div className="absolute right-4 top-[100px] flex h-16 w-16 items-center justify-center rounded-xl border border-[#4EF0FF]/25 bg-[#4EF0FF]/10">
+                    <motion.div
+                      className="absolute right-4 top-3 h-16 w-16 rounded-xl border border-white/15 bg-white/[0.08]"
+                      animate={{ opacity: [0.5, 0.95, 0.5], y: [0, -5, 0] }}
+                      transition={{ duration: 3.4, repeat: Infinity, ease: "easeInOut" }}
+                    />
+                    <motion.div
+                      className="absolute right-4 top-[100px] flex h-16 w-16 items-center justify-center rounded-xl border border-[#4EF0FF]/25 bg-[#4EF0FF]/10"
+                      animate={{ scale: [1, 1.06, 1] }}
+                      transition={{ duration: 2.8, repeat: Infinity, ease: "easeInOut" }}
+                    >
                       <span className="h-7 w-7 rounded-full border-2 border-[#4EF0FF]/60" />
-                    </div>
-                    <div className="absolute bottom-3 right-4 h-16 w-16 rounded-xl border border-white/15 bg-white/[0.08]" />
+                    </motion.div>
+                    <motion.div
+                      className="absolute bottom-3 right-4 h-16 w-16 rounded-xl border border-white/15 bg-white/[0.08]"
+                      animate={{ opacity: [0.45, 0.9, 0.45], y: [0, 5, 0] }}
+                      transition={{ duration: 3.8, repeat: Infinity, ease: "easeInOut" }}
+                    />
                   </div>
 
-                  <div className="mt-10 space-y-7 text-lg leading-relaxed text-white/68">
-                    <p>
-                      {t("contact.configurator.projectedLabel")}{" "}
-                      <span className="font-bold text-white">
-                        {projectedModules.join(", ")}
-                      </span>
-                    </p>
-                    <p>
-                      {t("contact.configurator.complexityLabel")}{" "}
-                      <span className="font-bold text-white">
-                        {engineeringComplexity} ({engineeringScaleDetail})
-                      </span>
-                    </p>
+                  <div className="mt-10 text-base leading-relaxed text-white/72">
+                    <motion.div
+                      key={`next-step-${contactScale}`}
+                      initial={{ opacity: 0, y: 8 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.35, delay: 0.08 }}
+                      className="rounded-2xl border border-white/10 bg-black/20 px-5 py-4"
+                    >
+                      <p className="mb-1 text-xs font-bold uppercase tracking-[0.18em] text-[#E44CFF]">
+                        {t("contact.configurator.nextStepLabel")}
+                      </p>
+                      <p>
+                        <span className="font-semibold text-white">{selectedScaleLabel}:</span>{" "}
+                        {t("contact.configurator.nextStepText")}
+                      </p>
+                    </motion.div>
                   </div>
-                </div>
+                </motion.div>
               </div>
             </div>
 
