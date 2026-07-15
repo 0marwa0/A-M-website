@@ -1,0 +1,26 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npx tsc *)",
+      "Bash(curl -s -X POST http://localhost:49731/api/chat -H \"Content-Type: application/json\" -d '{\"message\":\"كم سعر هذا المشروع؟\",\"mode\":\"balanced\",\"locale\":\"ar\"}')",
+      "Bash(curl -s -X POST http://localhost:49731/api/chat -H \"Content-Type: application/json\" -d '{\"message\":\"كيف أتواصل معكم؟\",\"mode\":\"balanced\",\"locale\":\"ar\"}')",
+      "Bash(curl -s -X POST http://localhost:49731/api/chat -H \"Content-Type: application/json\" -d '{\"message\":\"كم يستغرق تطوير المشروع؟\",\"mode\":\"creative\",\"locale\":\"ar\"}')",
+      "Bash(cd \"d:\\\\nashetaat\\\\work\\\\trimindes\\\\A-M-website\" && tail -50 /tmp/nextdev.log)",
+      "Read(//tmp/**)",
+      "Bash(printf '{\"message\":\"%s\",\"mode\":\"balanced\",\"locale\":\"ar\"}' 'كم سعر هذا المشروع؟')",
+      "Bash(curl -s -X POST http://localhost:49731/api/chat -H \"Content-Type: application/json\" --data-binary @/tmp/payload.json)",
+      "Bash(printf '{\"message\":\"%s\",\"mode\":\"balanced\",\"locale\":\"ar\"}' 'كيف أتواصل معكم؟')",
+      "Bash(curl -s -X POST http://localhost:49731/api/chat -H \"Content-Type: application/json\" --data-binary @/tmp/p2.json)",
+      "Bash(printf '{\"message\":\"%s\",\"mode\":\"creative\",\"locale\":\"ar\"}' 'كم يستغرق تطوير المشروع؟')",
+      "Bash(curl -s -X POST http://localhost:49731/api/chat -H \"Content-Type: application/json\" --data-binary @/tmp/p3.json)",
+      "Bash(printf '{\"message\":\"%s\",\"mode\":\"balanced\",\"locale\":\"ar\"}' 'ما هي حالة الطقس اليوم؟')",
+      "Bash(curl -s -w \"\\\\nHTTP:%{http_code}\\\\n\" -X POST http://localhost:49731/api/chat -H \"Content-Type: application/json\" -d '{\"message\":\"\"}')",
+      "Bash(python3 -c \"print\\('{\\\\\"message\\\\\":\\\\\"' + 'a'*2500 + '\\\\\"}'\\)\")",
+      "Bash(node -e \"console.log\\(JSON.stringify\\({message:'a'.repeat\\(2500\\)}\\)\\)\")",
+      "Bash(curl -s -w \"\\\\nHTTP:%{http_code}\\\\n\" -X POST http://localhost:49731/api/chat -H \"Content-Type: application/json\" --data-binary @/tmp/big.json)",
+      "Bash(curl -s -w \"\\\\nHTTP:%{http_code}\\\\n\" -X POST http://localhost:49731/api/chat -H \"Content-Type: application/json\" -d '{}')",
+      "Bash(curl -s -X POST http://localhost:49731/api/chat -H \"Content-Type: application/json\" -d '{\"message\":\"Can you build a custom CRM integration for us?\",\"locale\":\"en\"}')",
+      "Bash(curl -s -X POST http://localhost:49731/api/chat -H \"Content-Type: application/json\" -d '{\"message\":\"What tech stack do you use?\",\"locale\":\"en\"}')"
+    ]
+  }
+}

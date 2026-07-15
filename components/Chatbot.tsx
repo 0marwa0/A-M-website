@@ -13,6 +13,12 @@ interface Message {
   timestamp: Date;
 }
 
+interface ChatApiResponse {
+  reply: string;
+  intent: string;
+  shouldCaptureLead: boolean;
+}
+
 export type PersonaMode = "creative" | "balanced" | "precise";
 
 interface ChatbotProps {
@@ -108,145 +114,74 @@ export default function Chatbot({ activeMode, onModeChange }: ChatbotProps = {})
         timestamp: new Date(),
       },
     ]);
-  }, [locale, mode]);
+  }, [locale, mode, t]);
 
   // Auto scroll to bottom
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages, isTyping]);
 
-  const handleSend = (text: string) => {
-    if (!text.trim()) return;
 
-    // Add user message
+  const handleSend = async (text: string) => {
+    if (!text.trim() || isTyping) return;
+
     const userMessage: Message = {
       id: `user-${Date.now()}`,
-      text: text,
+      text,
       sender: "user",
       timestamp: new Date(),
     };
-    setMessages((prev) => [...prev, userMessage]);
+    const nextMessages = [...messages, userMessage];
+
+    setMessages(nextMessages);
     setInputValue("");
     setIsTyping(true);
 
-    // Simulate bot response
-    setTimeout(() => {
-      let botText = t("chatbot.responses.default");
-      const cleanText = text.toLowerCase();
+    try {
+      const response = await fetch("/api/chat", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          message: text,
+          mode,
+          locale,
+          history: nextMessages.map((message) => ({
+            sender: message.sender,
+            text: message.text,
+          })),
+        }),
+      });
 
-      // Check keywords for matching responses (English and Arabic)
-      const isQ1 =
-        cleanText.includes("service") ||
-        cleanText.includes("offer") ||
-        cleanText.includes("what do you do") ||
-        cleanText.includes("خدمة") ||
-        cleanText.includes("خدمات") ||
-        cleanText.includes("شغل") ||
-        cleanText.includes("تقدم");
-      const isQ2 =
-        cleanText.includes("time") ||
-        cleanText.includes("duration") ||
-        cleanText.includes("how long") ||
-        cleanText.includes("integrate") ||
-        cleanText.includes("integration") ||
-        cleanText.includes("وقت") ||
-        cleanText.includes("مدة") ||
-        cleanText.includes("تستغرق") ||
-        cleanText.includes("دمج") ||
-        cleanText.includes("تكامل");
-      const isQ3 =
-        cleanText.includes("contact") ||
-        cleanText.includes("email") ||
-        cleanText.includes("phone") ||
-        cleanText.includes("reach") ||
-        cleanText.includes("touch") ||
-        cleanText.includes("تواصل") ||
-        cleanText.includes("اتصال") ||
-        cleanText.includes("بريد") ||
-        cleanText.includes("ايميل") ||
-        cleanText.includes("رقم");
-      const isQ4 =
-        cleanText.includes("price") ||
-        cleanText.includes("pricing") ||
-        cleanText.includes("cost") ||
-        cleanText.includes("how much") ||
-        cleanText.includes("سعر") ||
-        cleanText.includes("أسعار") ||
-        cleanText.includes("اسعار") ||
-        cleanText.includes("تكلفة") ||
-        cleanText.includes("بكم");
-
-      if (isQ1) {
-        if (mode === "creative") {
-          botText = isRtl
-            ? "نحن هنا لنصنع المعجزات الرقمية! ✨ نحن متخصصون في أتمتة العمليات بالذكاء الاصطناعي (AI Automation)، وبناء تحليلات بيانات متقدمة ورائعة، وتصميم لوحات تحكم (Dashboards) تفاعلية ومبهرة، مع دمج أحدث نماذج التعلم الآلي لنمنح عملك جناحين يطير بهما! 🚀 هل ترغب في رؤية نموذج لأحد أعمالنا؟"
-            : "We are here to create digital wonders! ✨ We specialize in intelligent AI Automation, building spectacular advanced analytics, designing interactive & beautiful Dashboards, and integrating state-of-the-art Large Language Models (LLMs) to give your business superpowers! 🚀 Would you like to see a demo?";
-        } else if (mode === "precise") {
-          botText = isRtl
-            ? "الخدمات التقنية المتوفرة لدينا:\n• أتمتة سير العمل بالذكاء الاصطناعي (Workflow Automation).\n• تحليلات البيانات المتقدمة ولوحات التحكم (BI Dashboards).\n• دمج وتدريب نماذج اللغة الكبيرة (LLMs).\n• تطوير تطبيقات ويب وجوال ذكية (End-to-End)."
-            : "Available technical services:\n• Custom AI Workflow Automation.\n• Advanced data analytics & BI Dashboards.\n• LLM Integration & Fine-Tuning.\n• Smart Web & Mobile App Development (End-to-End).";
-        } else {
-          botText = t("chatbot.responses.q1");
-        }
-      } else if (isQ2) {
-        if (mode === "creative") {
-          botText = isRtl
-            ? "رحلتنا معاً نحو النجوم سريعة ومدروسة! 🌌 تستغرق عملية الدمج القياسية من 4 إلى 8 أسابيع فقط. نبني لك نظامك خطوة بخطوة بطريقة مرنة ودون انقطاع لثانية واحدة عن العمل! 🚀"
-            : "Our journey to the stars is fast and planned! 🌌 Standard integration takes just 4 to 8 weeks. We build your system step-by-step using agile workflows with zero downtime! 🚀";
-        } else if (mode === "precise") {
-          botText = isRtl
-            ? "مدة التنفيذ:\n• من 4 إلى 8 أسابيع كإطار زمني افتراضي.\n• تختلف المدة حسب تعقيد البنية التحتية وحجم البيانات.\n• يضمن بروتوكول العمل عدم توقف النظام أثناء النشر."
-            : "Execution duration:\n• 4 to 8 weeks standard timeframe.\n• Varies depending on system complexity and data volume.\n• Deployment protocol guarantees zero operational downtime.";
-        } else {
-          botText = t("chatbot.responses.q2");
-        }
-      } else if (isQ3) {
-        if (mode === "creative") {
-          botText = isRtl
-            ? "نحن بانتظارك بحماس! 🤩 يمكنك ملء النموذج أدناه للتحدث معنا فوراً، أو إرسال رسالة مباشرة إلى بريدنا info@trimindesai.com وسنرد عليك بلمح البصر! دعنا نحول أفكارك لواقع مبهر! ✨"
-            : "We are super excited to hear from you! 🤩 Fill out the contact form below to talk to us instantly, or drop a line to info@trimindesai.com. We'll get back to you in a flash! Let's build something awesome! ✨";
-        } else if (mode === "precise") {
-          botText = isRtl
-            ? "قنوات الاتصال المباشرة:\n• البريد الإلكتروني: info@trimindesai.com\n• نموذج الاتصال: متوفر في أسفل الصفحة الحالية.\nزمن الاستجابة المعتاد: خلال 24 ساعة عمل."
-            : "Direct communication channels:\n• Email: info@trimindesai.com\n• Contact Form: Available at the bottom of this page.\nStandard SLA: Under 24 business hours.";
-        } else {
-          botText = t("chatbot.responses.q3");
-        }
-      } else if (isQ4) {
-        if (mode === "creative") {
-          botText = isRtl
-            ? "بالتأكيد! 💸 نحن نؤمن بالمرونة المطلقة. لدينا باقات قياسية رائعة تبدأ من $2,999، لكن يسعدنا جداً تصميم باقة مخصصة تماماً لتناسب حجم وتطلعات عملك الفريد! لنتحدث الآن ونفصل لك ما تحتاجه بالضبط! 💎"
-            : "Absolutely! 💸 We believe in absolute flexibility. We have amazing standard packages starting from $2,999, but we would love to tailor a custom deal that fits your unique scale and goals! Let's talk and design your perfect package! 💎";
-        } else if (mode === "precise") {
-          botText = isRtl
-            ? "نموذج التسعير:\n• الباقة الأساسية: تبدأ من $2,999/شهرياً.\n• الباقة الاحترافية: تبدأ من $7,999/شهرياً.\n• باقة المؤسسات: تسعير مخصص يعتمد على حجم معالجة البيانات، ومتطلبات واجهة البرمجيات، ومستوى الخدمة المطلوبة."
-            : "Pricing structure:\n• Starter Plan: Starts at $2,999/month.\n• Professional Plan: Starts at $7,999/month.\n• Enterprise Plan: Custom pricing based on data throughput, API requirements, and support SLA.";
-        } else {
-          botText = t("chatbot.responses.q4");
-        }
-      } else {
-        if (mode === "creative") {
-          botText = isRtl
-            ? "شكراً لرسالتك المميزة! ✨ نحن متشوقون للحديث معك بشكل أعمق. أرسل لنا على info@trimindesai.com أو اترك لنا بريدك وسنقوم بالتواصل معك لتبادل الأفكار الملهمة! 🚀"
-            : "Thanks for the lovely message! ✨ We're excited to chat deeper. Reach out to us at info@trimindesai.com or leave your contact info, and we'll connect to brainstorm some amazing ideas! 🚀";
-        } else if (mode === "precise") {
-          botText = isRtl
-            ? "تم استلام رسالتك. للتواصل الرسمي والحصول على تفاصيل فنية متكاملة، يرجى مراسلتنا عبر: info@trimindesai.com أو تعبئة نموذج الاتصال أدناه."
-            : "Message received. For formal inquiries and full technical details, contact: info@trimindesai.com or complete the form below.";
-        } else {
-          botText = t("chatbot.responses.default");
-        }
+      if (!response.ok) {
+        throw new Error("Chat API request failed");
       }
 
+      const data = (await response.json()) as ChatApiResponse;
       const botMessage: Message = {
         id: `bot-${Date.now()}`,
-        text: botText,
+        text: data.reply,
         sender: "bot",
         timestamp: new Date(),
       };
+
       setMessages((prev) => [...prev, botMessage]);
+    } catch (error) {
+      const fallbackMessage: Message = {
+        id: `bot-error-${Date.now()}`,
+        text:
+          locale === "ar"
+            ? "حدثت مشكلة مؤقتة في المساعد. يمكنك التواصل معنا مباشرة عبر info@trimindesai.com أو نموذج التواصل في الصفحة."
+            : "I ran into a temporary issue. You can contact the team directly at info@trimindesai.com or through the contact form on this page.",
+        sender: "bot",
+        timestamp: new Date(),
+      };
+
+      setMessages((prev) => [...prev, fallbackMessage]);
+    } finally {
       setIsTyping(false);
-    }, 1200);
+    }
   };
 
   return (
