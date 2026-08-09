@@ -1,34 +1,31 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useEffect, useState, type CSSProperties } from "react";
 import Link from "next/link";
-import { 
-  ArrowLeft, 
-  ArrowRight, 
-  Sparkles, 
-  Cpu, 
-  Target, 
-  Eye, 
-  Flame, 
-  Users, 
-  Network,
-  Award,
-  Milestone,
-  ShieldCheck,
-  Zap,
+import {
+  ArrowUp,
+  Cpu,
+  Eye,
   Globe,
-  Compass,
   Menu,
+  Network,
+  Sparkles,
+  Target,
   X,
-  ArrowUp
+  Zap,
 } from "lucide-react";
-import { useI18n } from "@/lib/i18n";
-import CosmicBackground from "@/components/CosmicBackground";
+import { AnimatePresence, motion } from "framer-motion";
 import Chatbot, { PersonaMode } from "@/components/Chatbot";
-import StarField from "@/components/StarField";
-import Preloader from "@/components/Preloader";
-import NeuralNetworkVisual from "@/components/NeuralNetworkVisual";
-import { motion, AnimatePresence } from "framer-motion";
+import { useI18n } from "@/lib/i18n";
+
+type Milestone = {
+  year: string;
+  titleKey: string;
+  descKey: string;
+  defaultTitle: string;
+  defaultDesc: string;
+  icon: React.ReactNode;
+};
 
 export default function AboutUs() {
   const { locale, setLocale, t } = useI18n();
@@ -38,317 +35,198 @@ export default function AboutUs() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [scrollProgress, setScrollProgress] = useState(0);
 
+  const isArabic = locale === "ar";
+
   useEffect(() => {
     const handleScroll = () => {
       setScrolled(window.scrollY > 20);
       const totalHeight = document.documentElement.scrollHeight - window.innerHeight;
-      if (totalHeight > 0) {
-        setScrollProgress((window.scrollY / totalHeight) * 100);
-      }
+      setScrollProgress(totalHeight > 0 ? (window.scrollY / totalHeight) * 100 : 0);
     };
+
+    handleScroll();
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // Get active theme colors for global elements
-  const getGlobalThemeStyles = (activeMode: PersonaMode) => {
-    switch (activeMode) {
-      case "creative":
-        return {
-          "--theme-primary": "#E44CFF",
-          "--theme-secondary": "#7B4CFF",
-          "--theme-glow": "rgba(228, 76, 255, 0.5)",
-          "--theme-gradient": "linear-gradient(to right, #E44CFF, #7B4CFF)",
-          "--theme-glow-border": "rgba(228, 76, 255, 0.3)",
-          "--theme-nav-border": "rgba(228, 76, 255, 0.2)",
-          background: "#060816",
-        } as React.CSSProperties;
-      case "precise":
-        return {
-          "--theme-primary": "#4EF0FF",
-          "--theme-secondary": "#10B981",
-          "--theme-glow": "rgba(78, 240, 255, 0.5)",
-          "--theme-gradient": "linear-gradient(to right, #4EF0FF, #10B981)",
-          "--theme-glow-border": "rgba(78, 240, 255, 0.3)",
-          "--theme-nav-border": "rgba(78, 240, 255, 0.2)",
-          background: "#060816",
-        } as React.CSSProperties;
-      case "balanced":
-      default:
-        return {
-          "--theme-primary": "#E44CFF",
-          "--theme-secondary": "#5861F2",
-          "--theme-glow": "rgba(228, 76, 255, 0.5)",
-          "--theme-gradient": "linear-gradient(to right, #E44CFF, #5861F2)",
-          "--theme-glow-border": "rgba(228, 76, 255, 0.3)",
-          "--theme-nav-border": "rgba(228, 76, 255, 0.12)",
-          background: "#060816",
-        } as React.CSSProperties;
-    }
-  };
+  const pageStyle = {
+    "--theme-primary": "#142143",
+    "--theme-secondary": "#b27a4f",
+    "--theme-glow": "rgba(20, 33, 67, 0.28)",
+    "--theme-gradient": "linear-gradient(135deg, #101b39 0%, #213c67 100%)",
+    "--theme-glow-border": "rgba(28, 39, 76, 0.24)",
+    "--theme-nav-border": "rgba(112, 93, 67, 0.2)",
+  } as CSSProperties;
 
-  const milestones = [
+  const milestones: Milestone[] = [
     {
       year: "2023",
       titleKey: "milestone.launch.title",
       descKey: "milestone.launch.desc",
-      icon: <Zap className="w-5 h-5 text-[#4EF0FF]" />,
       defaultTitle: "Neural Core Launch",
-      defaultDesc: "Triminds AI is established with a commitment to orchestrate intelligent business automation workflows.",
+      defaultDesc:
+        "Established with a commitment to orchestrate intelligent business automation workflows.",
+      icon: <Zap className="h-5 w-5" />,
     },
     {
       year: "2024",
       titleKey: "milestone.agents.title",
       descKey: "milestone.agents.desc",
-      icon: <Network className="w-5 h-5 text-[#E44CFF]" />,
       defaultTitle: "Multi-Agent Frameworks",
-      defaultDesc: "Developed custom agent-based architectures that execute complex decisions with minimal human overhead.",
+      defaultDesc:
+        "Developed custom agent-based architectures that execute complex decisions with minimal human overhead.",
+      icon: <Network className="h-5 w-5" />,
     },
     {
       year: "2025",
       titleKey: "milestone.scale.title",
       descKey: "milestone.scale.desc",
-      icon: <Globe className="w-5 h-5 text-[#5861F2]" />,
       defaultTitle: "International Scaling",
-      defaultDesc: "Expanded operations to worldwide clients, helping automate portfolios and driving millions in revenue.",
+      defaultDesc:
+        "Expanded operations to global clients, helping teams automate portfolios and scale high-value workflows.",
+      icon: <Globe className="h-5 w-5" />,
     },
     {
       year: "2026",
       titleKey: "milestone.autonomous.title",
       descKey: "milestone.autonomous.desc",
-      icon: <Cpu className="w-5 h-5 text-[#10B981]" />,
       defaultTitle: "Next-Gen Autonomous Systems",
-      defaultDesc: "Integrating real-time generative feedback loops, giving systems the power of self-guided refinement.",
+      defaultDesc:
+        "Integrating real-time generative feedback loops so deployed systems can continuously refine their own outputs.",
+      icon: <Cpu className="h-5 w-5" />,
     },
   ];
 
-  const teamMembers = [
-    {
-      name: "Syed Muhammad Haris",
-      roleKey: "ceo",
-      image: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=120&h=120&q=80&crop=faces",
-    },
-    {
-      name: "Malik Murtaza",
-      roleKey: "cto",
-      image: "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=120&h=120&q=80&crop=faces",
-    },
-    {
-      name: "Haseeb Arshad",
-      roleKey: "sales",
-      image: "https://images.unsplash.com/photo-1502685104226-ee32379fefbe?auto=format&fit=crop&w=120&h=120&q=80&crop=faces",
-    },
-    {
-      name: "Saffuan Mushtaq",
-      roleKey: "dev",
-      image: "https://images.unsplash.com/photo-1544723795-3fb6469f5b39?auto=format&fit=crop&w=120&h=120&q=80&crop=faces",
-    },
-    {
-      name: "Sarah Chen",
-      roleKey: "designer",
-      image: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&w=120&h=120&q=80&crop=faces",
-    },
-    {
-      name: "James Wilson",
-      roleKey: "product",
-      image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=120&h=120&q=80&crop=faces",
-    },
-    {
-      name: "Emily Parker",
-      roleKey: "marketing",
-      image: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=120&h=120&q=80&crop=faces",
-    },
-    {
-      name: "Alex Kumar",
-      roleKey: "engineer",
-      image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=120&h=120&q=80&crop=faces",
-    },
-  ];
+  const activeMilestoneData = milestones[activeMilestone] ?? milestones[0];
+  const progressWidth = `${(activeMilestone / Math.max(milestones.length - 1, 1)) * 100}%`;
+  const activeMilestoneTitle =
+    t(activeMilestoneData.titleKey) !== activeMilestoneData.titleKey
+      ? t(activeMilestoneData.titleKey)
+      : activeMilestoneData.defaultTitle;
+  const activeMilestoneDesc =
+    t(activeMilestoneData.descKey) !== activeMilestoneData.descKey
+      ? t(activeMilestoneData.descKey)
+      : activeMilestoneData.defaultDesc;
+
+  const navLinkClass =
+    "text-[#25304a]/78 transition-colors duration-300 hover:text-[#9A6847]";
+  const cardClass = "rounded-[28px] border border-[#d8cbb8] bg-[#fffdf8]";
 
   return (
     <div
-      className="min-h-screen text-white relative overflow-hidden transition-all duration-1000 select-none"
+      className="min-h-screen overflow-hidden bg-[#f7f3ea] text-[#10172d]"
       lang={locale}
-      dir={locale === "ar" ? "rtl" : "ltr"}
-      style={getGlobalThemeStyles(mode)}
+      dir={isArabic ? "rtl" : "ltr"}
+      style={pageStyle}
     >
-      {/* Preloader */}
-      {/* <Preloader /> */}
-
-      {/* Persistent star-field background */}
-      <div
-        aria-hidden="true"
-        style={{
-          position: "fixed",
-          inset: 0,
-          zIndex: 0,
-          pointerEvents: "none",
-        }}
-      >
-        <StarField bgColor="#060816" />
-      </div>
-
-      {/* Cybernetic grid overlay */}
-      <div 
-        className="fixed inset-0 z-0 pointer-events-none opacity-20"
-        style={{
-          backgroundImage: "linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px)",
-          backgroundSize: "40px 40px",
-        }}
-      />
-
-      {/* Dynamic light orb overlay */}
-      <div 
-        className="absolute top-[-10%] left-[20%] w-[600px] h-[600px] rounded-full blur-[150px] pointer-events-none z-0 opacity-40 transition-all duration-1000"
-        style={{
-          background: "radial-gradient(circle, var(--theme-primary) 0%, transparent 70%)"
-        }}
-      />
-
-      {/* Navigation */}
       <nav
         className={`fixed left-0 right-0 z-50 transition-all duration-500 ${
-          scrolled
-            ? "top-4 px-4 sm:px-6 md:px-8"
-            : "top-0 px-6 py-5"
+          scrolled ? "top-4 px-4 sm:px-6 md:px-8" : "top-0 px-6 py-5"
         }`}
       >
         <div
-          className={`mx-auto w-full max-w-7xl flex justify-between items-center transition-all duration-500 ${
+          className={`mx-auto flex w-full max-w-7xl items-center justify-between transition-all duration-500 ${
             scrolled
-              ? "rounded-2xl border bg-slate-900/40 backdrop-blur-xl px-6 py-3.5 shadow-[0_20px_40px_-15px_rgba(0,0,0,0.7),_0_0_20px_rgba(228,76,255,0.15)]"
+              ? "rounded-2xl border border-[#d8cbb8] bg-[#faf6ed]/86 px-6 py-3.5 shadow-[0_18px_44px_-28px_rgba(61,43,22,0.55)] backdrop-blur-xl"
               : "border-b border-transparent py-2"
           }`}
-          style={{
-            borderColor: scrolled ? "var(--theme-nav-border)" : "transparent",
-          }}
         >
-          <Link href="/" className="flex items-center hover:opacity-90 transition-opacity">
-            <div className="text-2xl sm:text-3xl font-bold tracking-tight flex items-center gap-1 group">
-              <span 
-                className="bg-clip-text text-transparent transition-all duration-1000 group-hover:drop-shadow-[0_0_8px_var(--theme-glow)]"
-                style={{
-                  backgroundImage: mode === "creative"
-                    ? "linear-gradient(to right, #E44CFF, #9F56FF)"
-                    : mode === "precise"
-                    ? "linear-gradient(to right, #4EF0FF, #2EDAA2)"
-                    : "linear-gradient(to right, #4EF0FF, #5861F2)"
-                }}
+          <Link href="/" className="flex items-center transition-opacity hover:opacity-90">
+            <div className="flex items-center gap-1 text-2xl font-bold tracking-tight sm:text-3xl">
+              <span
+                className="bg-clip-text text-transparent"
+                style={{ backgroundImage: "var(--theme-gradient)" }}
               >
                 TRI
               </span>
-              <span className="text-white group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-white group-hover:to-gray-300 transition-all duration-300">MINDS</span>
+              <span className="text-[#10172d]">MINDS</span>
             </div>
           </Link>
-          <div
-            className="hidden lg:flex items-center gap-8 text-[16px] font-medium"
-          >
-            <Link
-              href="/#services"
-              className="text-white/80 hover:text-transparent hover:bg-clip-text hover:bg-gradient-to-r hover:from-[#E44CFF] hover:to-[#5861F2] transition-all duration-300"
-            >
+
+          <div className="hidden items-center gap-8 text-[16px] font-medium lg:flex">
+            <Link href="/#services" className={navLinkClass}>
               {t("nav.solutions")}
             </Link>
-            <Link
-              href="/about-us"
-              className="text-transparent bg-clip-text bg-gradient-to-r from-[#E44CFF] to-[#5861F2] font-semibold transition-all duration-300 filter drop-shadow-[0_0_8px_var(--theme-glow-border)]"
-            >
+            <Link href="/about-us" className="font-semibold text-[#9A6847]">
               {t("nav.about")}
             </Link>
-            <Link
-              href="/#packages"
-              className="text-white/80 hover:text-transparent hover:bg-clip-text hover:bg-gradient-to-r hover:from-[#E44CFF] hover:to-[#5861F2] transition-all duration-300"
-            >
+            <Link href="/#packages" className={navLinkClass}>
               {t("nav.pricing")}
             </Link>
-            <Link
-              href="/#contact"
-              className="text-white/80 hover:text-transparent hover:bg-clip-text hover:bg-gradient-to-r hover:from-[#E44CFF] hover:to-[#5861F2] transition-all duration-300"
-            >
+            <Link href="/#contact" className={navLinkClass}>
               {t("nav.contact")}
             </Link>
           </div>
-          <div className="hidden lg:flex items-center gap-4">
+
+          <div className="hidden items-center gap-4 lg:flex">
             <button
-              className="flex items-center gap-1.5 px-4 py-2 rounded-xl border border-white/20 text-sm text-white/90 hover:border-[#E44CFF] hover:bg-[#E44CFF]/10 transition-all duration-300"
-              onClick={() => setLocale(locale === "en" ? "ar" : "en")}
+              className="flex items-center gap-1.5 rounded-xl border border-[#d8cbb8] bg-[#fbf8f1]/72 px-4 py-2 text-sm text-[#25304a] transition-all duration-300 hover:border-[#9A6847]/40 hover:text-[#9A6847]"
+              onClick={() => setLocale(isArabic ? "en" : "ar")}
             >
-              <Globe className="w-4 h-4" />
-              {locale === "en" ? "العربية" : "English"}
+              <Globe className="h-4 w-4" />
+              {isArabic ? "English" : "العربية"}
             </button>
             <Link
               href="/#contact"
-              className="px-5 py-2.5 rounded-xl text-sm font-semibold text-white transition-all duration-300 hover:scale-[1.05]"
+              className="rounded-xl px-5 py-2.5 text-sm font-semibold text-white transition-transform duration-300 hover:scale-[1.04]"
               style={{
                 background: "var(--theme-gradient)",
-                boxShadow: "0 0 15px var(--theme-glow-border)",
+                boxShadow: "0 14px 28px -18px rgba(61, 43, 22, 0.75)",
               }}
             >
               {t("nav.cta")}
             </Link>
           </div>
-          <div className="flex lg:hidden items-center gap-3">
+
+          <div className="flex items-center gap-3 lg:hidden">
             <button
-              className="p-2 rounded-xl border border-white/20 text-sm text-white/90 hover:border-[#E44CFF] hover:bg-[#E44CFF]/10 transition-all duration-300"
-              onClick={() => setLocale(locale === "en" ? "ar" : "en")}
+              className="rounded-xl border border-[#d8cbb8] bg-[#fbf8f1]/72 p-2 text-[#25304a] transition-all duration-300 hover:border-[#9A6847]/40 hover:text-[#9A6847]"
+              onClick={() => setLocale(isArabic ? "en" : "ar")}
               aria-label="Toggle language"
             >
-              <Globe className="w-4 h-4" />
+              <Globe className="h-4 w-4" />
             </button>
             <button
-              className="p-2 rounded-xl border border-white/20 text-white/90 hover:border-[#E44CFF] hover:bg-[#E44CFF]/10 transition-all duration-300"
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              className="rounded-xl border border-[#d8cbb8] bg-[#fbf8f1]/72 p-2 text-[#25304a] transition-all duration-300 hover:border-[#9A6847]/40 hover:text-[#9A6847]"
+              onClick={() => setMobileMenuOpen((open) => !open)}
               aria-label="Toggle menu"
             >
-              {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+              {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
             </button>
           </div>
         </div>
+
         <AnimatePresence>
           {mobileMenuOpen && (
             <motion.div
               initial={{ opacity: 0, y: -20 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
-              transition={{ duration: 0.3 }}
-              className="absolute left-4 right-4 top-full mt-2 rounded-2xl border border-[#E44CFF]/20 bg-slate-900/80 backdrop-blur-xl p-6 shadow-2xl flex flex-col gap-4 lg:hidden z-40"
+              transition={{ duration: 0.25 }}
+              className="absolute left-4 right-4 top-full z-40 mt-2 flex flex-col gap-4 rounded-2xl border border-[#d8cbb8] bg-[#faf6ed]/94 p-6 shadow-2xl backdrop-blur-xl lg:hidden"
             >
-              <Link
-                href="/#services"
-                onClick={() => setMobileMenuOpen(false)}
-                className="text-lg py-2 border-b border-white/5 text-white/90 hover:text-[#E44CFF] transition-colors"
-              >
-                {t("nav.solutions")}
-              </Link>
-              <Link
-                href="/about-us"
-                onClick={() => setMobileMenuOpen(false)}
-                className="text-lg py-2 border-b border-white/5 text-[#E44CFF] transition-colors font-semibold"
-              >
-                {t("nav.about")}
-              </Link>
-              <Link
-                href="/#packages"
-                onClick={() => setMobileMenuOpen(false)}
-                className="text-lg py-2 border-b border-white/5 text-white/90 hover:text-[#E44CFF] transition-colors"
-              >
-                {t("nav.pricing")}
-              </Link>
+              {[
+                { href: "/#services", label: t("nav.solutions") },
+                { href: "/about-us", label: t("nav.about"), active: true },
+                { href: "/#packages", label: t("nav.pricing") },
+                { href: "/#contact", label: t("nav.contact") },
+              ].map((item) => (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  onClick={() => setMobileMenuOpen(false)}
+                  className={`border-b border-[#d8cbb8] py-2 text-lg transition-colors ${
+                    item.active ? "font-semibold text-[#9A6847]" : "text-[#25304a]/88 hover:text-[#9A6847]"
+                  }`}
+                >
+                  {item.label}
+                </Link>
+              ))}
               <Link
                 href="/#contact"
                 onClick={() => setMobileMenuOpen(false)}
-                className="text-lg py-2 border-b border-white/5 text-white/90 hover:text-[#E44CFF] transition-colors"
-              >
-                {t("nav.contact")}
-              </Link>
-              <Link
-                href="/#contact"
-                onClick={() => setMobileMenuOpen(false)}
-                className="w-full text-center py-3.5 rounded-xl font-semibold text-sm transition-all duration-300 mt-2"
-                style={{
-                  background: "var(--theme-gradient)",
-                  boxShadow: "0 0 15px var(--theme-glow-border)",
-                }}
+                className="mt-2 w-full rounded-xl py-3.5 text-center text-sm font-semibold text-white"
+                style={{ background: "var(--theme-gradient)" }}
               >
                 {t("nav.cta")}
               </Link>
@@ -357,496 +235,303 @@ export default function AboutUs() {
         </AnimatePresence>
       </nav>
 
-      {/* Hero Section */}
-      <section
-        className="relative z-10 flex flex-col items-center justify-center px-6 min-h-[70vh] pt-36 pb-20 overflow-hidden"
-      >
-        <CosmicBackground mode={mode} />
-        
-        <div className="max-w-4xl mx-auto text-center space-y-6 relative z-10 mt-10">
-          <motion.div
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.6 }}
-            className="inline-flex items-center gap-2 px-5 py-2 rounded-full border border-white/10 bg-white/5 backdrop-blur-md text-[10px] md:text-xs tracking-widest uppercase text-white/70 shadow-[0_0_15px_rgba(255,255,255,0.05)]"
-          >
-            <Sparkles className="w-4 h-4 text-[#4EF0FF] animate-pulse" />
-            {locale === "en" ? "Bridging Core Intelligences" : "دمج العقول الذكية"}
-          </motion.div>
-          
-          <motion.h1
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.1 }}
-            className="text-4xl sm:text-6xl md:text-7xl font-extrabold leading-tight text-white tracking-tight"
-          >
-            {t("aboutPage.title")}
-          </motion.h1>
-          
-          <motion.p
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
-            className="text-lg sm:text-2xl text-gray-300 font-light max-w-3xl mx-auto leading-relaxed"
-          >
-            {t("aboutPage.subtitle")}
-          </motion.p>
-        </div>
+      <main className="relative z-10 mx-auto w-full max-w-[1540px] px-4 pb-12 pt-24 sm:px-6 lg:px-8">
+        <section className={`${cardClass} min-h-[460px] px-8 py-10 shadow-[0_20px_70px_-58px_rgba(61,43,22,0.45)] sm:px-12 lg:px-14`}>
+          <div className="flex flex-col gap-8 lg:flex-row lg:items-start lg:justify-between">
+            <div className="flex items-center gap-3 text-xs font-bold uppercase tracking-[0.26em] text-[#6f604f]">
+              <span className="h-px w-7 bg-[#9A6847]" />
+              {isArabic ? "من نحن" : "Who We Are"}
+            </div>
+            <div className="inline-flex w-fit items-center rounded-full border border-[#d8cbb8] px-4 py-1.5 font-mono text-xs font-semibold text-[#6f604f]">
+              AI <span className="px-2 text-[#b69c77]">.</span> Systems{" "}
+              <span className="px-2 text-[#b69c77]">.</span> Intelligence
+            </div>
+          </div>
 
-        {/* Futuristic Interactive Key Stat Cards below Hero */}
-        <div className="relative z-10 grid grid-cols-2 md:grid-cols-4 gap-6 max-w-5xl mx-auto w-full px-6 mt-16">
-          {[
-            { value: "50M+", label: locale === "en" ? "Revenue Handled" : "حجم الإيرادات المدارة", icon: <Award className="text-[#E44CFF] w-5 h-5" /> },
-            { value: "98%", label: locale === "en" ? "Client Satisfaction" : "معدل رضا العملاء", icon: <ShieldCheck className="text-[#4EF0FF] w-5 h-5" /> },
-            { value: "100%", label: locale === "en" ? "Loyalty Rate" : "معدل ولاء العملاء", icon: <Users className="text-[#5861F2] w-5 h-5" /> },
-            { value: "24/7", label: locale === "en" ? "Monitoring SLA" : "مراقبة الأنظمة الذكية", icon: <Cpu className="text-[#10B981] w-5 h-5" /> }
-          ].map((stat, idx) => (
-            <motion.div
-              key={idx}
-              initial={{ opacity: 0, y: 30 }}
+          <div className="grid gap-10 pt-16 lg:grid-cols-[1fr_0.58fr] lg:items-end">
+            <motion.h1
+              initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.3 + idx * 0.1 }}
-              className="p-6 rounded-2xl flex flex-col justify-between space-y-4 hover:translate-y-[-5px] transition-transform duration-300 border border-white/5 backdrop-blur-lg"
-              style={{
-                background: "linear-gradient(135deg, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0.01) 100%)",
-                boxShadow: "0 10px 30px rgba(0,0,0,0.2)"
-              }}
+              transition={{ duration: 0.6 }}
+              className="max-w-4xl font-serif text-[2rem] font-black leading-[1.08] tracking-normal sm:text-[2.7rem] md:text-5xl lg:text-6xl xl:text-[4.8rem]"
             >
-              <div className="flex justify-between items-center">
-                <span className="text-3xl font-extrabold text-white tracking-tight">{stat.value}</span>
-                {stat.icon}
-              </div>
-              <span className="text-xs text-gray-400 font-medium tracking-wide uppercase">{stat.label}</span>
-            </motion.div>
-          ))}
-        </div>
-      </section>
-
-      {/* Main Narrative Card with cyber-corners */}
-      <section className="relative z-10 py-16 px-6 max-w-6xl mx-auto">
-        <motion.div 
-          initial={{ opacity: 0, y: 50 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8 }}
-          className="relative grid grid-cols-1 lg:grid-cols-12 gap-12 items-center rounded-3xl p-8 md:p-12 overflow-hidden border border-white/10"
-          style={{
-            background: "rgba(10, 15, 42, 0.4)",
-            backdropFilter: "blur(20px)",
-          }}
-        >
-          {/* Cybernetic decorative corners */}
-          <div className="absolute top-0 left-0 w-8 h-8 border-t-2 border-l-2 border-[#E44CFF]/40 pointer-events-none" />
-          <div className="absolute top-0 right-0 w-8 h-8 border-t-2 border-r-2 border-[#4EF0FF]/40 pointer-events-none" />
-          <div className="absolute bottom-0 left-0 w-8 h-8 border-b-2 border-l-2 border-[#4EF0FF]/40 pointer-events-none" />
-          <div className="absolute bottom-0 right-0 w-8 h-8 border-b-2 border-r-2 border-[#E44CFF]/40 pointer-events-none" />
-
-          <div className="lg:col-span-7 space-y-6">
-            <div className="flex items-center gap-2">
-              <span className="h-px w-8 bg-[#E44CFF]" />
-              <h2 className="text-sm font-semibold tracking-[0.2em] uppercase text-[#E44CFF]">
-                {locale === "en" ? "Who We Are" : "من نحن"}
-              </h2>
-            </div>
-            <h3 className="text-3xl sm:text-4xl font-extrabold text-white leading-tight">
-              {locale === "en" ? "Bridging Human Ingenuity & Systems Intelligence" : "دمج العبقرية البشرية وذكاء الأنظمة"}
-            </h3>
-            <p className="text-base sm:text-lg text-gray-300 leading-relaxed font-light">
-              {t("aboutPage.intro")}
-            </p>
-          </div>
-          
-          <div className="lg:col-span-5 flex justify-center relative">
-            <NeuralNetworkVisual mode={mode} />
-          </div>
-        </motion.div>
-      </section>
-
-      {/* Purpose, Mission & Vision Section */}
-      <section className="relative z-10 py-24 px-6 max-w-6xl mx-auto">
-        {/* Soft backdrop radial glows */}
-        <div className="absolute top-[20%] right-[-5%] w-[400px] h-[400px] bg-[#4EF0FF]/5 rounded-full blur-[120px] pointer-events-none" />
-        <div className="absolute bottom-[20%] left-[-5%] w-[400px] h-[400px] bg-[#E44CFF]/5 rounded-full blur-[120px] pointer-events-none" />
-
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center relative z-10">
-          
-          {/* Left Column: Heading and intro */}
-          <div className="lg:col-span-4 space-y-6 text-center lg:text-left rtl:lg:text-right">
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-white/10 bg-white/5 backdrop-blur-md text-[10px] md:text-xs tracking-widest uppercase text-[#4EF0FF]">
-              <span className="w-1.5 h-1.5 rounded-full bg-[#4EF0FF] animate-pulse" />
-              {locale === "en" ? "Company Core" : "جوهر الشركة"}
-            </div>
-            <h2 className="text-3xl md:text-4xl lg:text-5xl font-black tracking-tight leading-tight text-white">
-              {locale === "en" ? (
+              {isArabic ? (
                 <>
-                  Our Dual <br />
-                  <span className="bg-gradient-to-r from-[#4EF0FF] to-[#E44CFF] bg-clip-text text-transparent">
-                    Driving Forces
+                  نصل بين
+                  <br />
+                  <span
+                    className="bg-clip-text text-transparent"
+                    style={{ backgroundImage: "linear-gradient(to right, #10172d, #9A6847, #152143)" }}
+                  >
+                    الابتكار البشري
                   </span>
+                  <br />
+                  وذكاء الأنظمة
                 </>
               ) : (
                 <>
-                  قوتنا <br />
-                  <span className="bg-gradient-to-r from-[#4EF0FF] to-[#E44CFF] bg-clip-text text-transparent">
-                    المحركة للنجاح
+                  Bridging
+                  <br />
+                  <span
+                    className="bg-clip-text text-transparent"
+                    style={{ backgroundImage: "linear-gradient(to right, #10172d, #9A6847, #152143)" }}
+                  >
+                    Human Ingenuity
                   </span>
+                  <br />
+                  &amp; Systems
+                  <br />
+                  Intelligence
                 </>
               )}
-            </h2>
-            <p className="text-gray-400 text-sm md:text-base leading-relaxed">
-              {locale === "en" 
-                ? "At Triminds AI, our vision guides where we are heading, while our mission shapes the precision of how we build and deliver value every single day."
-                : "في تراي مايندز للذكاء الاصطناعي، ترسم رؤيتنا المسار الذي نمضي فيه، بينما تصوغ مهمتنا دقة الطريقة التي نبني ونقدم بها القيمة كل يوم."}
-            </p>
-          </div>
+            </motion.h1>
 
-          {/* Right Column: Mission & Vision Cards */}
-          <div className="lg:col-span-8 flex flex-col gap-6">
-            
-            {/* Mission Card - Horizontal Row style */}
-            <motion.div
-              initial={{ opacity: 0, x: locale === "ar" ? -50 : 50 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.7 }}
-              className="p-8 rounded-3xl border border-white/5 bg-gradient-to-r from-white/[0.02] to-white/[0.01] hover:border-[#4EF0FF]/30 hover:shadow-[0_20px_50px_rgba(78,240,255,0.08)] transition-all duration-500 relative group overflow-hidden flex flex-col md:flex-row gap-6 items-start cursor-default"
-              style={{ backdropFilter: "blur(20px)" }}
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.1 }}
+              className="max-w-[470px] pb-4 text-lg font-semibold leading-relaxed text-[#25304a] lg:justify-self-end"
             >
-              {/* Inner ambient light streak */}
-              <div className="absolute top-0 left-0 w-[2px] h-full bg-gradient-to-b from-[#4EF0FF] to-transparent opacity-50 group-hover:opacity-100 transition-opacity" />
-              
-              {/* Icon / Number badge */}
-              <div className="flex-shrink-0 w-16 h-16 rounded-2xl bg-[#4EF0FF]/5 border border-[#4EF0FF]/25 flex items-center justify-center text-[#4EF0FF] group-hover:bg-[#4EF0FF]/15 group-hover:scale-105 transition-all duration-500 shadow-[0_0_15px_rgba(78,240,255,0.05)]">
-                <Target className="w-8 h-8" />
-              </div>
-              
-              <div className="space-y-2 flex-grow w-full">
-                <div className="flex justify-between items-center">
-                  <h3 className="text-xl md:text-2xl font-extrabold text-white group-hover:text-[#4EF0FF] transition-colors duration-300">
-                    {t("aboutPage.missionTitle")}
-                  </h3>
-                  <span className="text-xs font-mono text-[#4EF0FF]/40 group-hover:text-[#4EF0FF]/80 transition-colors">01 / CORE</span>
-                </div>
-                <p className="text-gray-300 leading-relaxed text-sm md:text-base font-light">
-                  {t("aboutPage.missionDesc")}
-                </p>
-              </div>
-            </motion.div>
-
-            {/* Vision Card - Horizontal Row style */}
-            <motion.div
-              initial={{ opacity: 0, x: locale === "ar" ? -50 : 50 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.7, delay: 0.15 }}
-              className="p-8 rounded-3xl border border-white/5 bg-gradient-to-r from-white/[0.02] to-white/[0.01] hover:border-[#E44CFF]/30 hover:shadow-[0_20px_50px_rgba(228,76,255,0.08)] transition-all duration-500 relative group overflow-hidden flex flex-col md:flex-row gap-6 items-start cursor-default"
-              style={{ backdropFilter: "blur(20px)" }}
-            >
-              {/* Inner ambient light streak */}
-              <div className="absolute top-0 left-0 w-[2px] h-full bg-gradient-to-b from-[#E44CFF] to-transparent opacity-50 group-hover:opacity-100 transition-opacity" />
-              
-              {/* Icon / Number badge */}
-              <div className="flex-shrink-0 w-16 h-16 rounded-2xl bg-[#E44CFF]/5 border border-[#E44CFF]/25 flex items-center justify-center text-[#E44CFF] group-hover:bg-[#E44CFF]/15 group-hover:scale-105 transition-all duration-500 shadow-[0_0_15px_rgba(228,76,255,0.05)]">
-                <Eye className="w-8 h-8" />
-              </div>
-              
-              <div className="space-y-2 flex-grow w-full">
-                <div className="flex justify-between items-center">
-                  <h3 className="text-xl md:text-2xl font-extrabold text-white group-hover:text-[#E44CFF] transition-colors duration-300">
-                    {t("aboutPage.visionTitle")}
-                  </h3>
-                  <span className="text-xs font-mono text-[#E44CFF]/40 group-hover:text-[#E44CFF]/80 transition-colors">02 / CORE</span>
-                </div>
-                <p className="text-gray-300 leading-relaxed text-sm md:text-base font-light">
-                  {t("aboutPage.visionDesc")}
-                </p>
-              </div>
-            </motion.div>
-
+              {t("aboutPage.intro")}
+            </motion.p>
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* Timeline Section ("Our Journey") */}
-      <section className="relative z-10 py-16 px-6 max-w-6xl mx-auto">
-        <div className="text-center mb-16 space-y-4">
-          <div className="inline-flex items-center gap-2 px-4 py-1 rounded-full border border-white/10 bg-white/5 backdrop-blur-md text-[10px] md:text-xs tracking-widest uppercase text-white/70">
-            <Milestone className="w-4 h-4 text-[#4EF0FF]" />
-            {locale === "en" ? "Evolution Timeline" : "خط النمو والتطور"}
-          </div>
-          <h2 className="text-3xl md:text-5xl font-extrabold tracking-tight">
-            {locale === "en" ? "How We Evolved" : "كيف تطورنا"}
-          </h2>
-          <div className="w-20 h-1 bg-gradient-to-r from-[#E44CFF] to-[#4EF0FF] mx-auto rounded-full" />
-        </div>
-
-        <div className="relative mt-12">
-          {/* Vertical central bar */}
-          <div className="absolute left-[50%] top-0 bottom-0 w-[2px] bg-gradient-to-b from-[#E44CFF]/30 via-[#4EF0FF]/30 to-[#5861F2]/10 transform translate-x-[-50%] hidden md:block" />
-
-          <div className="space-y-12">
-            {milestones.map((milestone, idx) => (
-              <motion.div
-                key={idx}
-                initial={{ opacity: 0, y: 40 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6, delay: idx * 0.1 }}
-                className={`relative flex flex-col md:flex-row items-center justify-between w-full ${
-                  idx % 2 === 0 ? "md:flex-row-reverse" : ""
-                }`}
-              >
-                {/* Visual node on vertical bar */}
-                <div className="absolute left-[50%] top-[24px] transform translate-x-[-50%] z-20 hidden md:block">
-                  <div className="w-10 h-10 rounded-full bg-[#0a0f2c] border-2 border-white/20 flex items-center justify-center group shadow-[0_0_15px_rgba(255,255,255,0.05)] hover:border-[#4EF0FF] transition-colors duration-300">
-                    {milestone.icon}
-                  </div>
-                </div>
-
-                {/* Timeline content card */}
-                <div className="w-full md:w-[45%] p-6 md:p-8 rounded-3xl border border-white/5 shadow-lg space-y-3 relative overflow-hidden group hover:scale-[1.02] transition-transform duration-300"
-                     style={{
-                       background: "rgba(16, 19, 44, 0.45)",
-                       backdropFilter: "blur(12px)"
-                     }}
-                >
-                  {/* Glowing background stripe */}
-                  <div className="absolute left-0 top-0 bottom-0 w-[4px] bg-gradient-to-b from-[#E44CFF] to-[#4EF0FF]" />
-                  
-                  <span className="text-3xl font-extrabold text-[#4EF0FF]/80 tracking-wide">{milestone.year}</span>
-                  <h3 className="text-xl font-bold text-white tracking-wide">
-                    {t(milestone.titleKey) !== milestone.titleKey ? t(milestone.titleKey) : milestone.defaultTitle}
-                  </h3>
-                  <p className="text-gray-300 text-sm font-light leading-relaxed">
-                    {t(milestone.descKey) !== milestone.descKey ? t(milestone.descKey) : milestone.defaultDesc}
-                  </p>
-                </div>
-
-                {/* Empty block for layout spacer */}
-                <div className="w-full md:w-[45%] hidden md:block" />
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Core Values Section */}
-      <section className="relative z-10 py-16 px-6 max-w-6xl mx-auto">
-        <div className="text-center mb-16 space-y-4">
-          <div className="inline-flex items-center gap-2 px-4 py-1 rounded-full border border-white/10 bg-white/5 backdrop-blur-md text-[10px] md:text-xs tracking-widest uppercase text-white/70">
-            <Compass className="w-4 h-4 text-[#E44CFF]" />
-            {locale === "en" ? "Organizational Ethics" : "القيم والأخلاقيات"}
-          </div>
-          <h2 className="text-3xl md:text-5xl font-extrabold tracking-tight">
-            {t("aboutPage.valuesTitle")}
-          </h2>
-          <div className="w-20 h-1 bg-gradient-to-r from-[#E44CFF] to-[#4EF0FF] mx-auto rounded-full" />
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {[
-            {
-              key: "innovation",
-              icon: <Flame className="w-7 h-7 text-[#E44CFF]" />,
-              glowColor: "rgba(228, 76, 255, 0.15)",
-              borderColor: "rgba(228, 76, 255, 0.2)",
-              gradient: "from-[#E44CFF]/10 to-[#7B4CFF]/5",
-            },
-            {
-              key: "precision",
-              icon: <Cpu className="w-7 h-7 text-[#4EF0FF]" />,
-              glowColor: "rgba(78, 240, 255, 0.15)",
-              borderColor: "rgba(78, 240, 255, 0.2)",
-              gradient: "from-[#4EF0FF]/10 to-[#10B981]/5",
-            },
-            {
-              key: "collaboration",
-              icon: <Users className="w-7 h-7 text-[#5861F2]" />,
-              glowColor: "rgba(88, 97, 242, 0.15)",
-              borderColor: "rgba(88, 97, 242, 0.2)",
-              gradient: "from-[#5861F2]/10 to-[#4EF0FF]/5",
-            },
-          ].map((val, idx) => (
-            <motion.div
-              key={val.key}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: idx * 0.1 }}
-              className="p-8 rounded-3xl flex flex-col space-y-4 hover:scale-[1.05] hover:translate-y-[-5px] transition-all duration-300 border cursor-default relative overflow-hidden group shadow-lg"
-              style={{
-                background: "rgba(10, 15, 42, 0.6)",
-                borderColor: val.borderColor,
-                boxShadow: `0 8px 30px ${val.glowColor}`,
-              }}
-            >
-              {/* Internal glow patch */}
-              <div className={`absolute inset-0 bg-gradient-to-br ${val.gradient} opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none`} />
-
-              <div className="w-14 h-14 rounded-2xl bg-white/5 flex items-center justify-center border border-white/10 group-hover:border-white/20 transition-all shadow-[0_0_15px_rgba(255,255,255,0.02)]">
-                {val.icon}
-              </div>
-              
-              <h3 className="text-xl font-bold text-white relative z-10 group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-white group-hover:to-gray-400">
-                {t(`aboutPage.values.${val.key}.title`)}
-              </h3>
-              
-              <p className="text-gray-400 text-sm font-light leading-relaxed relative z-10">
-                {t(`aboutPage.values.${val.key}.desc`)}
-              </p>
-            </motion.div>
-          ))}
-        </div>
-      </section>
-
-      {/* Team Section with Scan Line Effect */}
-      <section className="relative z-10 py-16 px-6 max-w-6xl mx-auto">
-        <div className="text-center mb-16 space-y-4">
-          <div className="inline-flex items-center gap-2 px-4 py-1 rounded-full border border-white/10 bg-white/5 backdrop-blur-md text-[10px] md:text-xs tracking-widest uppercase text-white/70">
-            <Users className="w-4 h-4 text-[#4EF0FF]" />
-            {locale === "en" ? "Specialist Network" : "فريق الاختصاصيين"}
-          </div>
-          <h2 className="text-3xl md:text-5xl font-extrabold tracking-tight animate-fade-in">
-            {t("aboutPage.teamTitle")}
-          </h2>
-          <p className="text-gray-400 max-w-2xl mx-auto font-light text-sm md:text-base">
-            {t("aboutPage.teamSubtitle")}
-          </p>
-          <div className="w-20 h-1 bg-gradient-to-r from-[#E44CFF] to-[#4EF0FF] mx-auto rounded-full" />
-        </div>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-          {teamMembers.map((member, idx) => (
-            <motion.div
-              key={idx}
-              initial={{ opacity: 0, y: 45 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: (idx % 4) * 0.1 }}
-              className="group relative rounded-3xl p-6 flex flex-col items-center text-center transition-all duration-500 hover:scale-[1.03] border border-white/5 overflow-hidden shadow-md"
-              style={{
-                background: "rgba(16, 19, 44, 0.45)",
-                backdropFilter: "blur(10px)",
-              }}
-            >
-              {/* Scanline Animation Effect */}
-              <div className="absolute top-[-100%] left-0 w-full h-[5px] bg-gradient-to-r from-transparent via-white/40 to-transparent group-hover:animate-[scanline_2s_ease-in-out_infinite] pointer-events-none z-10" />
-
-              {/* Card hover border glow */}
-              <div className="absolute inset-0 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" 
-                   style={{
-                     border: "1px solid var(--theme-primary)",
-                     boxShadow: "0 0 20px var(--theme-glow-border)",
-                   }} 
-              />
-              
-              <div className="relative w-24 h-24 mb-5 rounded-full p-[3px] bg-gradient-to-tr from-[#E44CFF]/40 to-[#4EF0FF]/40 group-hover:from-[#E44CFF] group-hover:to-[#4EF0FF] transition-all duration-500 shadow-md">
-                <img
-                  src={member.image}
-                  alt={member.name}
-                  className="w-full h-full object-cover rounded-full filter grayscale-[30%] group-hover:grayscale-0 transition-all duration-300"
-                />
-              </div>
-
-              <h3 className="text-lg font-bold text-white tracking-wide group-hover:text-[#4EF0FF] transition-colors duration-300">
-                {member.name}
-              </h3>
-              
-              <p className="text-xs text-gray-400 mt-1 uppercase tracking-widest font-semibold">
-                {t(`aboutPage.roles.${member.roleKey}`)}
-              </p>
-
-              {/* Holographic grid backing on card hover */}
-              <div className="absolute inset-0 z-[-1] opacity-0 group-hover:opacity-[0.03] transition-opacity duration-500 pointer-events-none"
-                   style={{
-                     backgroundImage: "linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px)",
-                     backgroundSize: "10px 10px",
-                   }}
-              />
-            </motion.div>
-          ))}
-        </div>
-      </section>
-
-      {/* Back to Home CTA */}
-      <section className="relative z-10 py-16 px-6 text-center max-w-4xl mx-auto">
-        <motion.div
-          initial={{ opacity: 0, scale: 0.95 }}
-          whileInView={{ opacity: 1, scale: 1 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="rounded-3xl p-10 flex flex-col items-center space-y-6 relative overflow-hidden"
-          style={{
-            background: "linear-gradient(135deg, rgba(228, 76, 255, 0.04), rgba(78, 240, 255, 0.04))",
-            border: "1px solid rgba(228, 76, 255, 0.15)",
-            boxShadow: "0 0 30px rgba(78, 240, 255, 0.05)",
-          }}
-        >
-          {/* Subtle cosmic circle glow */}
-          <div className="absolute w-[200px] h-[200px] rounded-full bg-gradient-to-tr from-[#E44CFF]/10 to-[#4EF0FF]/10 blur-[80px] top-[-50px] left-[50%] translate-x-[-50%] pointer-events-none" />
-
-          <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight relative z-10">
-            {locale === "en" ? "Ready to scale your intelligence?" : "جاهز لترقية مستوى ذكاء أعمالك؟"}
-          </h2>
-          <p className="text-gray-300 text-base max-w-xl mx-auto font-light leading-relaxed relative z-10">
-            {locale === "en" 
-              ? "Let's explore how our state-of-the-art AI automation processes can elevate your brand and efficiency."
-              : "دعنا نستكشف كيف يمكن لأتمتة الذكاء الاصطناعي الحديثة أن ترفع من كفاءة علامتك التجارية."
-            }
-          </p>
-          
-          <div className="flex flex-col sm:flex-row gap-4 pt-2 relative z-10">
-            <Link
-              href="/#contact"
-              className="px-8 py-3.5 rounded-full text-sm font-semibold transition-all duration-300 hover:scale-[1.05]"
-              style={{
-                background: "linear-gradient(135deg, #E44CFF, #5861F2)",
-                boxShadow: "0 0 25px rgba(228,76,255,0.3)",
-              }}
-            >
-              {locale === "en" ? "Contact Our Experts" : "اتصل بخبرائنا"}
-            </Link>
-            
-            <Link
-              href="/"
-              className="px-8 py-3.5 rounded-full text-sm font-semibold border border-white/20 hover:border-white/40 bg-white/5 backdrop-blur-sm transition-all duration-300 hover:scale-[1.05] inline-flex items-center gap-2 justify-center"
-            >
-              {locale === "en" ? "Back to Home" : "العودة للرئيسية"}
-              {locale === "ar" ? <ArrowLeft className="w-4 h-4" /> : <ArrowRight className="w-4 h-4" />}
-            </Link>
-          </div>
-        </motion.div>
-      </section>
-
-      {/* Footer */}
-      <footer
-        className="relative z-10 py-12 px-6"
-        style={{
-          borderTop: "1px solid rgba(228, 76, 255, 0.2)",
-        }}
-      >
-        <div className="text-center">
-          <div className="text-2xl font-bold mb-6 bg-gradient-to-r from-[#E44CFF] to-[#4EF0FF] bg-clip-text text-transparent">
-            {t("footer.company")}
-          </div>
-          <p className="text-gray-300 mb-8 max-w-2xl mx-auto font-light text-sm md:text-base">
-            {t("footer.description")}
-          </p>
-          <div
-            className="pt-6"
+        <section className="grid gap-4 py-4 lg:grid-cols-2">
+          <motion.article
+            initial={{ opacity: 0, y: 26 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.55, delay: 0.08 }}
+            className="relative min-h-[220px] overflow-hidden rounded-[28px] p-8 text-white lg:min-h-[240px]"
             style={{
-              borderTop: "1px solid rgba(228, 76, 255, 0.2)",
+              background: "var(--theme-gradient)",
+              boxShadow: "0 24px 50px -32px rgba(61,43,22,0.72)",
             }}
           >
-            <p className="text-gray-400 text-xs md:text-sm">{t("footer.copyright")}</p>
+            <div className="flex items-center justify-between">
+              <span className="font-mono text-sm font-bold uppercase tracking-[0.28em] text-white/58">
+                01 / Mission
+              </span>
+              <span className="flex h-9 w-9 items-center justify-center rounded-full border border-white/18">
+                <span className="h-2.5 w-2.5 rounded-full border-2 border-white/55" />
+              </span>
+            </div>
+            <h2 className="mt-12 font-serif text-3xl font-black">{t("aboutPage.missionTitle")}</h2>
+            <p className="mt-5 max-w-2xl text-base font-semibold leading-relaxed text-white/72">
+              {t("aboutPage.missionDesc")}
+            </p>
+          </motion.article>
+
+          <motion.article
+            initial={{ opacity: 0, y: 26 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.55, delay: 0.16 }}
+            className={`${cardClass} min-h-[220px] p-8 lg:min-h-[240px]`}
+          >
+            <div className="flex items-center justify-between">
+              <span className="font-mono text-sm font-bold uppercase tracking-[0.28em] text-[#6f604f]">
+                02 / Vision
+              </span>
+              <span className="flex h-9 w-9 items-center justify-center rounded-full border border-[#d8cbb8] bg-[#fbf8f1]">
+                <span className="h-2.5 w-2.5 rounded-full bg-[#9A6847] shadow-[0_0_14px_rgba(154,104,71,0.55)]" />
+              </span>
+            </div>
+            <h2 className="mt-12 font-serif text-3xl font-black">{t("aboutPage.visionTitle")}</h2>
+            <p className="mt-5 max-w-2xl text-base font-semibold leading-relaxed text-[#25304a]">
+              {t("aboutPage.visionDesc")}
+            </p>
+          </motion.article>
+        </section>
+
+        <section className={`${cardClass} px-8 py-10 sm:px-12`}>
+          <div className="flex flex-col gap-8 lg:flex-row lg:items-start lg:justify-between">
+            <div>
+              <div className="flex items-center gap-3 text-xs font-bold uppercase tracking-[0.26em] text-[#6f604f]">
+                <span className="h-px w-7 bg-[#9A6847]" />
+                {isArabic ? "خط التطور" : "Evolution Timeline"}
+              </div>
+              <h2 className="mt-4 font-serif text-4xl font-black tracking-normal sm:text-5xl">
+                {isArabic ? "كيف تطورنا" : "How We Evolved"}
+              </h2>
+            </div>
+
+            <div className="flex flex-wrap gap-3">
+              {milestones.map((milestone, index) => {
+                const isActive = activeMilestone === index;
+
+                return (
+                  <button
+                    key={milestone.year}
+                    type="button"
+                    aria-pressed={isActive}
+                    onClick={() => setActiveMilestone(index)}
+                    className={`min-h-11 rounded-full border px-6 text-sm font-extrabold transition-all duration-300 ${
+                      isActive
+                        ? "border-transparent text-white shadow-[0_16px_34px_-24px_rgba(61,43,22,0.95)]"
+                        : "border-[#d8cbb8] bg-[#fbf8f1] text-[#6f604f] hover:border-[#9A6847]/35 hover:text-[#9A6847]"
+                    }`}
+                    style={isActive ? { background: "#142143" } : undefined}
+                  >
+                    {milestone.year}
+                  </button>
+                );
+              })}
+            </div>
           </div>
+
+          <div className="relative mt-12 px-1 pb-8">
+            <div className="absolute left-4 right-4 top-4 h-px bg-[#d8cbb8]" />
+            <div
+              className="absolute top-4 h-px bg-gradient-to-r from-[#142143] to-[#9A6847] transition-all duration-500"
+              style={{
+                left: isArabic ? undefined : "1rem",
+                right: isArabic ? "1rem" : undefined,
+                width: progressWidth,
+              }}
+            />
+            <div className="relative grid grid-cols-4">
+              {milestones.map((milestone, index) => {
+                const isActive = activeMilestone === index;
+
+                return (
+                  <button
+                    key={milestone.year}
+                    type="button"
+                    onClick={() => setActiveMilestone(index)}
+                    className={`group flex flex-col gap-3 ${
+                      index === 0
+                        ? "items-start"
+                        : index === milestones.length - 1
+                        ? "items-end"
+                        : "items-center"
+                    }`}
+                    aria-label={`${isArabic ? "عرض عام" : "Show year"} ${milestone.year}`}
+                  >
+                    <span
+                      className={`h-8 w-8 rounded-full border-[3px] transition-all duration-300 ${
+                        isActive
+                          ? "border-[#142143] bg-[#142143] shadow-[0_0_0_6px_rgba(20,33,67,0.08)]"
+                          : "border-[#d8cbb8] bg-white group-hover:border-[#9A6847]/40"
+                      }`}
+                    />
+                    <span
+                      className={`font-mono text-sm font-bold ${
+                        isActive ? "text-[#142143]" : "text-[#6f604f]"
+                      }`}
+                    >
+                      {milestone.year}
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={activeMilestoneData.year}
+              initial={{ opacity: 0, y: 14 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -14 }}
+              transition={{ duration: 0.28 }}
+              className="mt-5 flex flex-col gap-6 sm:flex-row sm:items-center"
+            >
+              <div
+                className="flex h-20 w-20 shrink-0 items-center justify-center rounded-2xl text-3xl font-black text-white"
+                style={{
+                  background: "var(--theme-gradient)",
+                  boxShadow: "0 18px 34px -24px rgba(61,43,22,0.72)",
+                }}
+              >
+                {activeMilestoneData.year.slice(-2)}
+              </div>
+              <div className="max-w-3xl">
+                <div className="mb-2 flex items-center gap-2 text-[#9A6847]">
+                  {activeMilestoneData.icon}
+                  <span className="font-mono text-xs font-bold uppercase tracking-[0.24em]">
+                    {activeMilestoneData.year}
+                  </span>
+                </div>
+                <h3 className="font-serif text-3xl font-black tracking-normal">
+                  {activeMilestoneTitle}
+                </h3>
+                <p className="mt-4 text-lg font-semibold leading-relaxed text-[#25304a]">
+                  {activeMilestoneDesc}
+                </p>
+              </div>
+            </motion.div>
+          </AnimatePresence>
+        </section>
+
+        <section className="grid gap-4 py-4 lg:grid-cols-3">
+          {[
+            {
+              title: t("aboutPage.values.innovation.title"),
+              desc: t("aboutPage.values.innovation.desc"),
+              icon: <Sparkles className="h-5 w-5" />,
+            },
+            {
+              title: t("aboutPage.values.precision.title"),
+              desc: t("aboutPage.values.precision.desc"),
+              icon: <Target className="h-5 w-5" />,
+            },
+            {
+              title: t("aboutPage.values.collaboration.title"),
+              desc: t("aboutPage.values.collaboration.desc"),
+              icon: <Eye className="h-5 w-5" />,
+            },
+          ].map((value, index) => (
+            <article key={index} className={`${cardClass} p-8`}>
+              <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-[#f7f3ea] text-[#9A6847]">
+                {value.icon}
+              </div>
+              <h3 className="mt-7 font-serif text-2xl font-black">{value.title}</h3>
+              <p className="mt-4 font-semibold leading-relaxed text-[#25304a]">{value.desc}</p>
+            </article>
+          ))}
+        </section>
+
+        <section className={`${cardClass} mb-4 flex flex-col items-start justify-between gap-6 px-8 py-10 sm:px-12 lg:flex-row lg:items-center`}>
+          <div>
+            <div className="text-xs font-bold uppercase tracking-[0.26em] text-[#6f604f]">
+              {isArabic ? "ابدأ الآن" : "Build With Us"}
+            </div>
+            <h2 className="mt-4 font-serif text-4xl font-black">
+              {isArabic ? "جاهز لترقية ذكاء أعمالك؟" : "Ready to scale your intelligence?"}
+            </h2>
+          </div>
+          <Link
+            href="/#contact"
+            className="inline-flex min-h-14 items-center justify-center rounded-full px-10 py-4 text-base font-semibold text-white transition-all duration-300 hover:scale-[1.05] hover:shadow-[0_18px_38px_-22px_rgba(61,43,22,0.85)]"
+            style={{
+              background: "var(--theme-gradient)",
+              boxShadow: "0 18px 38px -24px rgba(61,43,22,0.78)",
+            }}
+          >
+            {isArabic ? "تواصل مع الخبراء" : "Contact Our Experts"}
+          </Link>
+        </section>
+      </main>
+
+      <footer className="relative z-10 border-t border-[#d8cbb8] px-6 py-10">
+        <div className="mx-auto max-w-7xl text-center">
+          <div
+            className="bg-clip-text text-2xl font-bold text-transparent"
+            style={{ backgroundImage: "var(--theme-gradient)" }}
+          >
+            {t("footer.company")}
+          </div>
+          <p className="mx-auto mt-4 max-w-2xl text-sm font-semibold leading-relaxed text-[#25304a]">
+            {t("footer.description")}
+          </p>
+          <p className="mt-8 text-xs text-[#6f604f]">{t("footer.copyright")}</p>
         </div>
       </footer>
 
-      {/* Floating Chatbot */}
-      <Chatbot activeMode={mode} onModeChange={setMode} />
+      <Chatbot activeMode={mode} onModeChange={setMode} lightMode />
 
-      {/* Scroll to Top Button */}
       <AnimatePresence>
         {scrolled && (
           <motion.button
@@ -854,32 +539,22 @@ export default function AboutUs() {
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.5, y: 20 }}
             onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-            className="fixed bottom-8 left-8 md:left-10 z-40 w-[52px] h-[52px] rounded-full flex items-center justify-center border border-white/10 bg-slate-950/65 backdrop-blur-md text-white hover:text-[#4EF0FF] transition-all shadow-xl hover:scale-105"
-            style={{
-              boxShadow: "0 10px 30px rgba(0, 0, 0, 0.4), 0 0 15px var(--theme-glow-border)",
-            }}
+            className="fixed bottom-8 left-8 z-40 flex h-[52px] w-[52px] items-center justify-center rounded-full border border-[#d8cbb8] bg-[#fffdf8]/82 text-[#25304a] shadow-xl backdrop-blur-md transition-all hover:scale-105 hover:text-[#9A6847] md:left-10"
             aria-label="Scroll to top"
           >
-            <svg className="absolute inset-0 w-full h-full pointer-events-none" viewBox="0 0 52 52">
+            <svg className="pointer-events-none absolute inset-0 h-full w-full" viewBox="0 0 52 52">
               <defs>
-                <linearGradient id="progress-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                  <stop offset="0%" stopColor="var(--theme-primary)" />
-                  <stop offset="100%" stopColor="var(--theme-secondary, #4EF0FF)" />
+                <linearGradient id="about-progress-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stopColor="#142143" />
+                  <stop offset="100%" stopColor="#9A6847" />
                 </linearGradient>
               </defs>
+              <circle cx="26" cy="26" r="22" stroke="#d8cbb8" strokeWidth="3.5" fill="transparent" />
               <circle
                 cx="26"
                 cy="26"
                 r="22"
-                stroke="rgba(255, 255, 255, 0.08)"
-                strokeWidth="3.5"
-                fill="transparent"
-              />
-              <circle
-                cx="26"
-                cy="26"
-                r="22"
-                stroke="url(#progress-gradient)"
+                stroke="url(#about-progress-gradient)"
                 strokeWidth="3.5"
                 fill="transparent"
                 strokeDasharray="138.2"
@@ -889,25 +564,10 @@ export default function AboutUs() {
                 className="transition-all duration-100"
               />
             </svg>
-            <ArrowUp className="w-5 h-5 relative z-10" />
+            <ArrowUp className="relative z-10 h-5 w-5" />
           </motion.button>
         )}
       </AnimatePresence>
-
-      {/* Scanline animation styles */}
-      <style jsx global>{`
-        @keyframes scanline {
-          0% {
-            top: -100%;
-          }
-          50% {
-            top: 100%;
-          }
-          100% {
-            top: 100%;
-          }
-        }
-      `}</style>
     </div>
   );
 }

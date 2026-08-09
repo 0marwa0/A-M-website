@@ -2,9 +2,8 @@
 
 import { useState, useEffect, useRef, type CSSProperties, type FormEvent } from "react";
 import Link from "next/link";
-import { Check, Star, ArrowRight, ArrowLeft, Sparkles, Cpu, Activity, Menu, X, Globe, ArrowUp, Copy, Facebook, Instagram, Linkedin, Sun, Moon } from "lucide-react";
+import { Check, Star, ArrowRight, ArrowLeft, Sparkles, Cpu, Activity, Menu, X, Globe, ArrowUp, Copy, Facebook, Instagram, Linkedin } from "lucide-react";
 import { useI18n } from "@/lib/i18n";
-import CosmicBackground from "@/components/CosmicBackground";
 import LightHeroBackground from "@/components/LightHeroBackground";
 import Chatbot, { PersonaMode } from "@/components/Chatbot";
 import { Component as TypewriterTestimonial } from "@/components/ui/typewriter-testimonial";
@@ -427,7 +426,7 @@ export default function Home() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [scrollProgress, setScrollProgress] = useState(0);
-  const [lightHero, setLightHero] = useState(false);
+  const lightHero = true;
 
   const rawWords = t("hero.words");
   const words = Array.isArray(rawWords) ? rawWords : ["Business", "Future", "Growth", "Workflows", "Success"];
@@ -788,9 +787,7 @@ export default function Home() {
         color: isActive ? "#FFFFFF" : "rgba(255, 255, 255, 0.78)",
       };
   const lightInputClassName = "h-[58px] w-full rounded-[14px] border border-[#c6ad89]/60 bg-[#fbf8f1]/85 px-5 py-4 text-lg leading-none text-[#10172d] outline-none transition-all duration-300 placeholder:text-[#25304a]/45 focus:border-[#9A6847]/75 focus:bg-white/70 focus:ring-2 focus:ring-[#9A6847]/20";
-  const darkInputClassName = "h-[58px] w-full rounded-[14px] border border-[#8B56FF]/30 bg-[#080B22]/75 px-5 py-4 text-lg leading-none text-white outline-none transition-all duration-300 placeholder:text-white/25 focus:border-[#E44CFF]/75 focus:ring-2 focus:ring-[#E44CFF]/25";
   const lightTextareaClassName = "min-h-[142px] w-full resize-y rounded-[14px] border border-[#c6ad89]/60 bg-[#fbf8f1]/85 px-5 py-4 text-lg leading-relaxed text-[#10172d] outline-none transition-all duration-300 placeholder:text-[#25304a]/45 focus:border-[#9A6847]/75 focus:bg-white/70 focus:ring-2 focus:ring-[#9A6847]/20";
-  const darkTextareaClassName = "min-h-[142px] w-full resize-y rounded-[14px] border border-[#8B56FF]/30 bg-[#080B22]/75 px-5 py-4 text-lg leading-relaxed text-white outline-none transition-all duration-300 placeholder:text-white/25 focus:border-[#E44CFF]/75 focus:ring-2 focus:ring-[#E44CFF]/25";
   const lightInputStyle: CSSProperties | undefined = lightHero
     ? {
         backgroundColor: "rgba(251, 248, 241, 0.85)",
@@ -927,31 +924,6 @@ export default function Home() {
           </div>
           <div className="hidden lg:flex items-center gap-4">
             <button
-              type="button"
-              aria-pressed={lightHero}
-              aria-label={lightHero ? "Switch hero to dark mode" : "Switch hero to light mode"}
-              className={`inline-flex items-center gap-2 rounded-xl border px-3.5 py-2 text-sm font-medium transition-all duration-300 ${
-                lightHero
-                  ? "border-[#c6ad89]/60 bg-white/65 text-[#121a31] shadow-[0_10px_24px_-18px_rgba(61,43,22,0.8)] hover:border-[#9A6847]"
-                  : "border-white/20 text-white/90 hover:border-[#E44CFF] hover:bg-[#E44CFF]/10"
-              }`}
-              onClick={() => setLightHero((isLight) => !isLight)}
-            >
-              {lightHero ? <Moon className="h-4 w-4" /> : <Sun className="h-4 w-4" />}
-              <span>Light</span>
-              <span
-                className={`relative h-4 w-7 rounded-full transition-colors duration-300 ${
-                  lightHero ? "bg-[#142143]" : "bg-white/20"
-                }`}
-              >
-                <span
-                  className={`absolute top-0.5 h-3 w-3 rounded-full bg-white transition-transform duration-300 ${
-                    lightHero ? "translate-x-3.5" : "translate-x-0.5"
-                  }`}
-                />
-              </span>
-            </button>
-            <button
               className={`flex items-center gap-1.5 px-4 py-2 rounded-xl border text-sm transition-all duration-300 ${
                 lightHero
                   ? "border-[#c6ad89]/60 bg-white/45 text-[#121a31] hover:border-[#9A6847] hover:bg-white/70"
@@ -975,18 +947,6 @@ export default function Home() {
             </a>
           </div>
           <div className="flex lg:hidden items-center gap-3">
-            <button
-              className={`p-2 rounded-xl border transition-all duration-300 ${
-                lightHero
-                  ? "border-[#c6ad89]/60 bg-white/45 text-[#121a31] hover:border-[#9A6847]"
-                  : "border-white/20 text-white/90 hover:border-[#E44CFF] hover:bg-[#E44CFF]/10"
-              }`}
-              onClick={() => setLightHero((isLight) => !isLight)}
-              aria-pressed={lightHero}
-              aria-label={lightHero ? "Switch hero to dark mode" : "Switch hero to light mode"}
-            >
-              {lightHero ? <Moon className="w-4 h-4" /> : <Sun className="w-4 h-4" />}
-            </button>
             <button
               className={`p-2 rounded-xl border text-sm transition-all duration-300 ${
                 lightHero
@@ -1091,7 +1051,7 @@ export default function Home() {
         className="relative z-10 flex items-center justify-center px-6 overflow-hidden min-h-screen pt-24 pb-12"
       >
         {/* Cinematic cosmic background */}
-        {lightHero ? <LightHeroBackground /> : <CosmicBackground mode={mode} />}
+        <LightHeroBackground />
 
         <div className="max-w-7xl mx-auto relative w-full z-10 grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
           
@@ -2188,7 +2148,7 @@ export default function Home() {
                       type="text"
                       value={contactName}
                       onChange={(event) => setContactName(event.target.value)}
-                      className={lightHero ? lightInputClassName : darkInputClassName}
+                      className={lightInputClassName}
                       style={lightInputStyle}
                       placeholder={t("contact.configurator.namePlaceholder")}
                       required
@@ -2208,7 +2168,7 @@ export default function Home() {
                       type="email"
                       value={contactEmailAddress}
                       onChange={(event) => setContactEmailAddress(event.target.value)}
-                      className={lightHero ? lightInputClassName : darkInputClassName}
+                      className={lightInputClassName}
                       style={lightInputStyle}
                       placeholder={t("contact.configurator.emailPlaceholder")}
                       required
@@ -2227,7 +2187,7 @@ export default function Home() {
                     <textarea
                       value={contactMessage}
                       onChange={(event) => setContactMessage(event.target.value)}
-                      className={lightHero ? lightTextareaClassName : darkTextareaClassName}
+                      className={lightTextareaClassName}
                       style={lightInputStyle}
                       placeholder={t("contact.configurator.messagePlaceholder")}
                       required
