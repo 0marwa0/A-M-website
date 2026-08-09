@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef, type CSSProperties, type FormEvent } from "react";
 import Link from "next/link";
-import { Check, Star, ArrowRight, ArrowLeft, Sparkles, Cpu, Activity, Menu, X, Globe, ArrowUp, Copy, Facebook, Instagram, Linkedin } from "lucide-react";
+import { Check, Star, ArrowRight, ArrowLeft, Sparkles, Cpu, Activity, Menu, X, Globe, ArrowUp, Copy, Facebook, Instagram, Linkedin, BarChart3, Folder, Settings } from "lucide-react";
 import { useI18n } from "@/lib/i18n";
 import LightHeroBackground from "@/components/LightHeroBackground";
 import Chatbot, { PersonaMode } from "@/components/Chatbot";
@@ -2254,9 +2254,9 @@ export default function Home() {
                       aria-hidden="true"
                     >
                       {[
-                        "M100 55 H210 Q230 55 230 78 V112",
-                        "M100 120 H230",
-                        "M100 185 H210 Q230 185 230 162 V138",
+                        "M82 54 C120 54 126 88 116 106 C112 118 122 125 126 125",
+                        "M82 125 H126",
+                        "M82 196 C122 196 126 160 126 137",
                       ].map((path, index) => (
                         <motion.path
                           key={`input-path-${index}`}
@@ -2270,9 +2270,14 @@ export default function Home() {
                         />
                       ))}
                       {[
-                        "M300 125 H395 Q420 125 420 90 V58 H475",
-                        "M300 125 H475",
-                        "M300 125 H395 Q420 125 420 160 V198 H475",
+                        "M206 125 H214",
+                        "M320 125 C342 125 338 88 360 84",
+                        "M320 125 C342 125 338 162 360 166",
+                        "M430 84 C452 72 442 25 463 25",
+                        "M430 84 C448 82 445 78 463 78",
+                        "M430 164 C452 154 442 131 463 131",
+                        "M430 176 C448 176 445 184 463 184",
+                        "M430 188 C452 202 442 232 463 232",
                       ].map((path, index) => (
                         <motion.path
                           key={`output-path-${index}`}
@@ -2287,54 +2292,52 @@ export default function Home() {
                       ))}
                     </svg>
 
+                    {[
+                      { key: "top", className: "left-4 top-5", delay: 0 },
+                      { key: "middle", className: "left-4 top-[92px]", delay: 0.18 },
+                      { key: "bottom", className: "left-4 bottom-5", delay: 0.36 },
+                    ].map((node) => (
+                      <motion.div
+                        key={`blueprint-input-${node.key}`}
+                        className={`absolute flex h-16 w-16 items-center justify-center rounded-2xl border ${node.className} ${
+                          lightHero
+                            ? "border-[#c6ad89]/26 bg-white/28 shadow-[0_18px_32px_-28px_rgba(61,43,22,0.45)]"
+                            : "border-white/10 bg-white/[0.04]"
+                        }`}
+                        animate={{ opacity: [0.52, 0.94, 0.52], y: [0, -3, 0] }}
+                        transition={{ duration: 3.4, repeat: Infinity, ease: "easeInOut", delay: node.delay }}
+                      >
+                        <span
+                          className="h-7 w-7 rounded-full border-[6px]"
+                          style={{ borderColor: lightHero ? "rgba(154,104,71,0.72)" : "rgba(228,76,255,0.70)" }}
+                        />
+                      </motion.div>
+                    ))}
+
                     <motion.div
-                      className={`absolute left-8 top-5 flex h-14 w-14 items-center justify-center rounded-xl border ${
+                      className={`absolute left-[24%] top-1/2 flex h-20 w-20 -translate-y-1/2 flex-col justify-center rounded-2xl border px-5 ${
                         lightHero
-                          ? "border-[#9A6847]/35 bg-white/68 shadow-[0_14px_28px_-20px_rgba(61,43,22,0.58)]"
-                          : "border-[#E44CFF]/30 bg-[#E44CFF]/15 shadow-[0_0_20px_rgba(228,76,255,0.22)]"
+                          ? "border-[#10172d]/70 bg-[#fbf8f1]/78 shadow-[0_18px_34px_-26px_rgba(61,43,22,0.5)]"
+                          : "border-white/35 bg-white/[0.08]"
                       }`}
-                      animate={{ scale: [1, 1.06, 1], y: [0, -4, 0] }}
-                      transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-                    >
-                      <span
-                        className="h-6 w-6 rounded-full border-4"
-                        style={{ borderColor: lightHero ? "rgba(154,104,71,0.70)" : "rgba(228,76,255,0.70)" }}
-                      />
-                    </motion.div>
-                    <motion.div
-                      className={`absolute left-4 top-[98px] h-16 w-20 rounded-xl border p-4 ${
-                        lightHero ? "border-[#c6ad89]/50 bg-white/58" : "border-[#ACA0FB]/25 bg-[#5861F2]/15"
-                      }`}
-                      animate={{ x: [0, 5, 0] }}
+                      animate={{ x: [0, 4, 0] }}
                       transition={{ duration: 4.2, repeat: Infinity, ease: "easeInOut" }}
                     >
-                      {[40, 48, 32].map((width, index) => (
+                      {[42, 58, 34].map((width, index) => (
                         <motion.span
-                          key={`blueprint-left-line-${index}`}
-                          className="mb-2 block h-1.5 rounded-full last:mb-0"
+                          key={`blueprint-document-line-${index}`}
+                          className="mb-2 block h-2 rounded-full last:mb-0"
                           style={{ background: lightHero ? "rgba(20,33,67,0.42)" : "rgba(172,160,251,0.60)" }}
-                          animate={{ width: [`${Math.max(20, width - 14)}px`, `${width}px`, `${Math.max(18, width - 5)}px`] }}
+                          animate={{ width: [`${Math.max(20, width - 12)}px`, `${width}px`, `${Math.max(18, width - 5)}px`] }}
                           transition={{ duration: 2.2, repeat: Infinity, delay: index * 0.22 }}
                         />
                       ))}
                     </motion.div>
-                    <motion.div
-                      className={`absolute left-8 bottom-5 flex h-14 w-14 items-center justify-center rounded-xl border ${
-                        lightHero ? "border-[#c6ad89]/50 bg-white/58" : "border-[#ACA0FB]/25 bg-[#5861F2]/15"
-                      }`}
-                      animate={{ scale: [1, 1.05, 1], y: [0, 4, 0] }}
-                      transition={{ duration: 3.7, repeat: Infinity, ease: "easeInOut" }}
-                    >
-                      <span
-                        className="h-7 w-7 rounded-full border-2"
-                        style={{ borderColor: lightHero ? "rgba(20,33,67,0.45)" : "rgba(172,160,251,0.55)" }}
-                      />
-                    </motion.div>
 
                     <motion.div
-                      className={`absolute left-1/2 top-1/2 flex h-20 w-20 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-2xl border ${
+                      className={`absolute left-1/2 top-1/2 flex h-24 w-24 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-2xl border ${
                         lightHero
-                          ? "border-[#142143]/35 bg-[linear-gradient(135deg,rgba(20,33,67,0.12),rgba(154,104,71,0.18))] shadow-[0_18px_34px_-24px_rgba(61,43,22,0.72)]"
+                          ? "border-[#142143]/18 bg-[linear-gradient(135deg,rgba(255,255,255,0.62),rgba(154,104,71,0.18))] shadow-[0_18px_34px_-24px_rgba(61,43,22,0.72)]"
                           : "border-[#4EF0FF]/50 bg-[linear-gradient(135deg,rgba(78,240,255,0.22),rgba(228,76,255,0.22))] shadow-[0_0_35px_rgba(78,240,255,0.22)]"
                       }`}
                       animate={{
@@ -2356,32 +2359,297 @@ export default function Home() {
                       </div>
                     </motion.div>
 
-                    <motion.div
-                      className={`absolute right-4 top-3 h-16 w-16 rounded-xl border ${
-                        lightHero ? "border-[#d8c7aa]/55 bg-white/58" : "border-white/15 bg-white/[0.08]"
-                      }`}
-                      animate={{ opacity: [0.5, 0.95, 0.5], y: [0, -5, 0] }}
-                      transition={{ duration: 3.4, repeat: Infinity, ease: "easeInOut" }}
-                    />
-                    <motion.div
-                      className={`absolute right-4 top-[100px] flex h-16 w-16 items-center justify-center rounded-xl border ${
-                        lightHero ? "border-[#142143]/28 bg-white/58" : "border-[#4EF0FF]/25 bg-[#4EF0FF]/10"
-                      }`}
-                      animate={{ scale: [1, 1.06, 1] }}
-                      transition={{ duration: 2.8, repeat: Infinity, ease: "easeInOut" }}
+                    {[
+                      { key: "chart", className: "right-[18%] top-[52px]", Icon: BarChart3 },
+                      { key: "folder", className: "right-[18%] bottom-[42px]", Icon: Folder },
+                    ].map(({ key, className, Icon }, index) => (
+                      <motion.div
+                        key={`blueprint-output-card-${key}`}
+                        className={`absolute flex h-16 w-16 items-center justify-center rounded-2xl border ${className} ${
+                          lightHero
+                            ? "border-[#10172d]/55 bg-[#fbf8f1]/78 text-[#10172d]/70 shadow-[0_14px_28px_-22px_rgba(61,43,22,0.5)]"
+                            : "border-[#4EF0FF]/25 bg-[#4EF0FF]/10 text-white/70"
+                        }`}
+                        animate={{ scale: [1, 1.05, 1] }}
+                        transition={{ duration: 3 + index * 0.45, repeat: Infinity, ease: "easeInOut" }}
+                      >
+                        <Icon className="h-8 w-8" />
+                      </motion.div>
+                    ))}
+
+                    {[
+                      { key: "gear-top", className: "right-3 top-1", Icon: Settings, delay: 0 },
+                      { key: "gear-mid", className: "right-3 top-[54px]", Icon: Settings, delay: 0.15 },
+                      { key: "chip", className: "right-3 top-[107px]", Icon: Cpu, delay: 0.3 },
+                      { key: "activity", className: "right-3 top-[160px]", Icon: Activity, delay: 0.45 },
+                      { key: "blank", className: "right-3 bottom-0", Icon: null, delay: 0.6 },
+                    ].map(({ key, className, Icon, delay }) => (
+                      <motion.div
+                        key={`blueprint-output-circle-${key}`}
+                        className={`absolute flex h-12 w-12 items-center justify-center rounded-full border ${className} ${
+                          lightHero
+                            ? "border-[#10172d]/42 bg-[#fbf8f1]/44 text-[#10172d]/18"
+                            : "border-white/20 bg-white/[0.05] text-white/18"
+                        }`}
+                        animate={{ opacity: [0.5, 0.9, 0.5], y: [0, -4, 0] }}
+                        transition={{ duration: 3.4, repeat: Infinity, ease: "easeInOut", delay }}
+                      >
+                        {Icon ? <Icon className="h-7 w-7" /> : null}
+                      </motion.div>
+                    ))}
+                    <svg
+                      viewBox="0 0 820 360"
+                      className="absolute inset-0 z-20 h-full w-full"
+                      preserveAspectRatio="xMidYMid meet"
+                      aria-hidden="true"
                     >
-                      <span
-                        className="h-7 w-7 rounded-full border-2"
-                        style={{ borderColor: lightHero ? "rgba(20,33,67,0.52)" : "rgba(78,240,255,0.60)" }}
+                      <defs>
+                        <marker
+                          id="blueprint-reference-arrow"
+                          markerWidth="9"
+                          markerHeight="9"
+                          refX="7"
+                          refY="4.5"
+                          orient="auto"
+                          markerUnits="strokeWidth"
+                        >
+                          <path
+                            d="M0 0 L9 4.5 L0 9 Z"
+                            fill={lightHero ? "rgba(154,104,71,0.78)" : "rgba(172,160,251,0.88)"}
+                          />
+                        </marker>
+                        <filter id="blueprint-reference-shadow" x="-30%" y="-30%" width="160%" height="160%">
+                          <feDropShadow dx="0" dy="18" stdDeviation="14" floodColor="rgba(61,43,22,0.20)" />
+                        </filter>
+                      </defs>
+
+                      <rect
+                        x="0"
+                        y="0"
+                        width="820"
+                        height="360"
+                        rx="24"
+                        fill={lightHero ? "#f5efe3" : "#080b22"}
                       />
-                    </motion.div>
-                    <motion.div
-                      className={`absolute bottom-3 right-4 h-16 w-16 rounded-xl border ${
-                        lightHero ? "border-[#d8c7aa]/55 bg-white/58" : "border-white/15 bg-white/[0.08]"
-                      }`}
-                      animate={{ opacity: [0.45, 0.9, 0.45], y: [0, 5, 0] }}
-                      transition={{ duration: 3.8, repeat: Infinity, ease: "easeInOut" }}
-                    />
+                      <rect
+                        x="0"
+                        y="0"
+                        width="820"
+                        height="360"
+                        rx="24"
+                        fill={lightHero ? "url(#blueprint-reference-warm)" : "transparent"}
+                      />
+                      <defs>
+                        <radialGradient id="blueprint-reference-warm" cx="42%" cy="36%" r="78%">
+                          <stop offset="0%" stopColor="rgba(255,255,255,0.82)" />
+                          <stop offset="54%" stopColor="rgba(255,255,255,0.18)" />
+                          <stop offset="100%" stopColor="rgba(154,104,71,0.12)" />
+                        </radialGradient>
+                      </defs>
+
+                      <g opacity="0.24">
+                        <path d="M612 -12 V28 Q612 46 630 46 H742" fill="none" stroke={lightHero ? "#d8c7aa" : "rgba(255,255,255,0.24)"} strokeWidth="1.5" />
+                        <path d="M674 -10 V32 Q674 54 696 54 H808" fill="none" stroke={lightHero ? "#d8c7aa" : "rgba(255,255,255,0.24)"} strokeWidth="1.5" />
+                        <path d="M708 -5 H808" fill="none" stroke={lightHero ? "#d8c7aa" : "rgba(255,255,255,0.18)"} strokeWidth="1.5" />
+                      </g>
+
+                      {[
+                        "M108 78 C160 78 178 112 170 145 C166 164 188 176 220 176",
+                        "M108 176 H220",
+                        "M108 278 C160 278 178 234 170 208 C166 190 188 176 220 176",
+                      ].map((path, index) => (
+                        <motion.path
+                          key={`reference-input-flow-${index}`}
+                          d={path}
+                          fill="none"
+                          stroke={lightHero ? "rgba(154,104,71,0.60)" : "rgba(172,160,251,0.62)"}
+                          strokeWidth="5"
+                          strokeLinecap="round"
+                          strokeDasharray="14 18"
+                          markerEnd="url(#blueprint-reference-arrow)"
+                          animate={{ strokeDashoffset: [0, -64] }}
+                          transition={{ duration: 4.4 + index * 0.22, repeat: Infinity, ease: "linear" }}
+                        />
+                      ))}
+
+                      {[
+                        "M316 176 H390",
+                        "M510 176 C548 176 540 106 580 106",
+                        "M510 176 C548 176 540 256 580 256",
+                        "M668 92 C704 78 694 44 716 44",
+                        "M668 116 H716",
+                        "M668 242 C704 232 694 176 716 176",
+                        "M668 256 H716",
+                        "M668 270 C704 288 694 316 716 316",
+                      ].map((path, index) => (
+                        <motion.path
+                          key={`reference-output-flow-${index}`}
+                          d={path}
+                          fill="none"
+                          stroke={lightHero ? "rgba(16,23,45,0.48)" : "rgba(78,240,255,0.62)"}
+                          strokeWidth="5"
+                          strokeLinecap="round"
+                          strokeDasharray="14 18"
+                          markerEnd={index < 3 ? "url(#blueprint-reference-arrow)" : undefined}
+                          animate={{ strokeDashoffset: [0, -64] }}
+                          transition={{ duration: 4 + index * 0.12, repeat: Infinity, ease: "linear" }}
+                        />
+                      ))}
+
+                      {[78, 176, 278].map((cy, index) => (
+                        <motion.g
+                          key={`reference-input-node-${cy}`}
+                          animate={{ opacity: [0.5, 0.88, 0.5] }}
+                          transition={{ duration: 3.3, repeat: Infinity, delay: index * 0.2 }}
+                        >
+                          <rect
+                            x="22"
+                            y={cy - 43}
+                            width="86"
+                            height="86"
+                            rx="22"
+                            fill={lightHero ? "rgba(255,255,255,0.24)" : "rgba(255,255,255,0.04)"}
+                            stroke={lightHero ? "rgba(216,199,170,0.28)" : "rgba(255,255,255,0.12)"}
+                          />
+                          <circle
+                            cx="65"
+                            cy={cy}
+                            r="18"
+                            fill="none"
+                            stroke={lightHero ? "rgba(154,104,71,0.76)" : "rgba(228,76,255,0.72)"}
+                            strokeWidth="9"
+                          />
+                        </motion.g>
+                      ))}
+
+                      <motion.g
+                        filter="url(#blueprint-reference-shadow)"
+                        animate={{ x: [0, 4, 0] }}
+                        transition={{ duration: 4.2, repeat: Infinity, ease: "easeInOut" }}
+                      >
+                        <rect
+                          x="220"
+                          y="128"
+                          width="96"
+                          height="96"
+                          rx="24"
+                          fill={lightHero ? "rgba(251,248,241,0.84)" : "rgba(255,255,255,0.08)"}
+                          stroke={lightHero ? "rgba(16,23,45,0.72)" : "rgba(255,255,255,0.38)"}
+                          strokeWidth="2.5"
+                        />
+                        <rect x="248" y="154" width="38" height="8" rx="4" fill={lightHero ? "rgba(16,23,45,0.44)" : "rgba(255,255,255,0.55)"} />
+                        <rect x="248" y="174" width="58" height="8" rx="4" fill={lightHero ? "rgba(16,23,45,0.34)" : "rgba(255,255,255,0.45)"} />
+                        <rect x="248" y="194" width="40" height="8" rx="4" fill={lightHero ? "rgba(16,23,45,0.36)" : "rgba(255,255,255,0.48)"} />
+                      </motion.g>
+
+                      <motion.g
+                        filter="url(#blueprint-reference-shadow)"
+                        animate={{ scale: [1, 1.04, 1], transformOrigin: "450px 176px" }}
+                        transition={{ duration: 3.1, repeat: Infinity, ease: "easeInOut" }}
+                      >
+                        <rect
+                          x="390"
+                          y="116"
+                          width="120"
+                          height="120"
+                          rx="26"
+                          fill={lightHero ? "rgba(154,104,71,0.16)" : "rgba(78,240,255,0.16)"}
+                          stroke={lightHero ? "rgba(255,255,255,0.42)" : "rgba(78,240,255,0.46)"}
+                        />
+                        <circle cx="431" cy="176" r="11" fill="none" stroke={lightHero ? "rgba(16,23,45,0.88)" : "rgba(255,255,255,0.88)"} strokeWidth="4" />
+                        <circle cx="470" cy="153" r="11" fill="none" stroke={lightHero ? "rgba(16,23,45,0.88)" : "rgba(255,255,255,0.88)"} strokeWidth="4" />
+                        <circle cx="470" cy="199" r="11" fill="none" stroke={lightHero ? "rgba(16,23,45,0.88)" : "rgba(255,255,255,0.88)"} strokeWidth="4" />
+                        <path d="M440 172 L461 158 M440 181 L461 195 M454 164 L446 188" stroke={lightHero ? "rgba(16,23,45,0.72)" : "rgba(255,255,255,0.72)"} strokeWidth="3" strokeLinecap="round" />
+                      </motion.g>
+
+                      {[
+                        { y: 66, kind: "chart" },
+                        { y: 216, kind: "folder" },
+                      ].map(({ y, kind }, index) => (
+                        <motion.g
+                          key={`reference-output-card-${kind}`}
+                          filter="url(#blueprint-reference-shadow)"
+                          animate={{ scale: [1, 1.035, 1], transformOrigin: `624px ${y + 44}px` }}
+                          transition={{ duration: 3.2 + index * 0.32, repeat: Infinity, ease: "easeInOut" }}
+                        >
+                          <rect
+                            x="580"
+                            y={y}
+                            width="88"
+                            height="88"
+                            rx="22"
+                            fill={lightHero ? "rgba(251,248,241,0.78)" : "rgba(255,255,255,0.08)"}
+                            stroke={lightHero ? "rgba(16,23,45,0.68)" : "rgba(255,255,255,0.38)"}
+                            strokeWidth="2.5"
+                          />
+                          {kind === "chart" ? (
+                            <>
+                              <rect x="604" y="112" width="10" height="24" rx="4" fill="none" stroke={lightHero ? "rgba(16,23,45,0.72)" : "rgba(255,255,255,0.72)"} strokeWidth="4" />
+                              <rect x="622" y="94" width="10" height="42" rx="4" fill="none" stroke={lightHero ? "rgba(16,23,45,0.72)" : "rgba(255,255,255,0.72)"} strokeWidth="4" />
+                              <rect x="640" y="80" width="10" height="56" rx="4" fill="none" stroke={lightHero ? "rgba(16,23,45,0.72)" : "rgba(255,255,255,0.72)"} strokeWidth="4" />
+                            </>
+                          ) : (
+                            <path d="M604 257 H650 V288 H598 V246 H619 L626 257 H650" fill="none" stroke={lightHero ? "rgba(16,23,45,0.72)" : "rgba(255,255,255,0.72)"} strokeWidth="4" strokeLinejoin="round" strokeLinecap="round" />
+                          )}
+                        </motion.g>
+                      ))}
+
+                      {[
+                        { cy: 44, kind: "gear" },
+                        { cy: 116, kind: "gear" },
+                        { cy: 176, kind: "chip" },
+                        { cy: 256, kind: "spiral" },
+                        { cy: 316, kind: "blank" },
+                      ].map(({ cy, kind }, index) => (
+                        <motion.g
+                          key={`reference-output-circle-${kind}-${cy}`}
+                          animate={{ opacity: [0.54, 0.9, 0.54] }}
+                          transition={{ duration: 3.4, repeat: Infinity, delay: index * 0.16 }}
+                        >
+                          <circle
+                            cx="748"
+                            cy={cy}
+                            r="32"
+                            fill={lightHero ? "rgba(251,248,241,0.44)" : "rgba(255,255,255,0.05)"}
+                            stroke={lightHero ? "rgba(16,23,45,0.48)" : "rgba(255,255,255,0.24)"}
+                            strokeWidth="2.5"
+                          />
+                          {kind === "gear" && (
+                            <>
+                              <circle cx="748" cy={cy} r="11" fill="none" stroke={lightHero ? "rgba(16,23,45,0.13)" : "rgba(255,255,255,0.16)"} strokeWidth="4" />
+                              {[0, 45, 90, 135, 180, 225, 270, 315].map((angle) => (
+                                <line
+                                  key={angle}
+                                  x1="748"
+                                  y1={cy - 23}
+                                  x2="748"
+                                  y2={cy - 17}
+                                  stroke={lightHero ? "rgba(16,23,45,0.11)" : "rgba(255,255,255,0.14)"}
+                                  strokeWidth="3"
+                                  strokeLinecap="round"
+                                  transform={`rotate(${angle} 748 ${cy})`}
+                                />
+                              ))}
+                            </>
+                          )}
+                          {kind === "chip" && (
+                            <>
+                              <rect x="736" y={cy - 12} width="24" height="24" rx="3" fill="none" stroke={lightHero ? "rgba(16,23,45,0.16)" : "rgba(255,255,255,0.18)"} strokeWidth="4" />
+                              <rect x="742" y={cy - 6} width="12" height="12" rx="2" fill={lightHero ? "rgba(16,23,45,0.08)" : "rgba(255,255,255,0.10)"} />
+                            </>
+                          )}
+                          {kind === "spiral" && (
+                            <path
+                              d={`M748 ${cy} m-18 0 a18 18 0 1 0 36 0 a18 18 0 1 0 -36 0 M748 ${cy} m-9 0 a9 9 0 1 0 18 0 a9 9 0 1 0 -18 0`}
+                              fill="none"
+                              stroke={lightHero ? "rgba(16,23,45,0.12)" : "rgba(255,255,255,0.14)"}
+                              strokeWidth="3"
+                              strokeDasharray="2 4"
+                            />
+                          )}
+                        </motion.g>
+                      ))}
+                    </svg>
                   </div>
 
                   <div
