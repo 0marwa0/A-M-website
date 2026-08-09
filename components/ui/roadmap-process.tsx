@@ -73,9 +73,15 @@ const STEPS = [
 ];
 
 // ─── Component ────────────────────────────────────────────────────────────────
-export function RoadmapProcess() {
+type RoadmapProcessProps = {
+    lightMode?: boolean;
+};
+
+const LIGHT_ACCENTS = ["#142143", "#9A6847", "#213c67", "#8a6640", "#142143", "#9A6847"];
+
+export function RoadmapProcess({ lightMode = false }: RoadmapProcessProps) {
     return (
-        <div className="relative w-full">
+        <div className={`relative w-full ${lightMode ? "roadmap-light-rm" : ""}`}>
             {/* Animated connecting line — only meaningful once all 6 nodes share a single row */}
             <div className="hidden lg:block" style={{ position: "relative", height: "2px", marginBottom: "0" }}>
                 <div
@@ -85,7 +91,7 @@ export function RoadmapProcess() {
                         left: "8.33%",           // aligns with first node center
                         right: "8.33%",          // aligns with last node center
                         height: "2px",
-                        background: "rgba(255,255,255,0.08)",
+                        background: lightMode ? "rgba(20,33,67,0.14)" : "rgba(255,255,255,0.08)",
                         overflow: "hidden",
                         zIndex: 1,
                     }}
@@ -97,7 +103,9 @@ export function RoadmapProcess() {
                             left: "-100%",
                             width: "100%",
                             height: "100%",
-                            background: "linear-gradient(90deg, transparent, #E44CFF, #5861F2, #4EF0FF, transparent)",
+                            background: lightMode
+                                ? "linear-gradient(90deg, transparent, #142143, #9A6847, #213c67, transparent)"
+                                : "linear-gradient(90deg, transparent, #E44CFF, #5861F2, #4EF0FF, transparent)",
                             animation: "dataFlow 4s linear infinite",
                         }}
                     />
@@ -106,7 +114,10 @@ export function RoadmapProcess() {
 
             {/* Nodes grid */}
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-x-4 sm:gap-x-6 gap-y-10 sm:gap-y-12 lg:gap-x-0 relative z-10">
-                {STEPS.map((step, i) => (
+                {STEPS.map((step, i) => {
+                    const accentColor = lightMode ? LIGHT_ACCENTS[i] : step.accentColor;
+
+                    return (
                     <div
                         key={step.num}
                         className="node-container-rm group relative flex flex-col items-center cursor-default"
@@ -120,7 +131,7 @@ export function RoadmapProcess() {
                         <div
                             className="glass-node-rm w-16 h-16 sm:w-20 sm:h-20 rounded-full flex items-center justify-center mb-4 sm:mb-5"
                             style={{
-                                color: step.accentColor,
+                                color: accentColor,
                                 willChange: "transform, box-shadow, border-color",
                             }}
                         >
@@ -131,22 +142,27 @@ export function RoadmapProcess() {
                         <div className="text-center px-2">
                             <span
                                 className="block font-mono text-xs mb-1"
-                                style={{ color: step.accentColor }}
+                                style={{ color: accentColor }}
                             >
                                 {step.num}
                             </span>
-                            <h3 className="text-sm sm:text-base font-semibold tracking-tight text-white">{step.name}</h3>
+                            <h3 className={`text-sm sm:text-base font-semibold tracking-tight ${lightMode ? "text-[#10172d]" : "text-white"}`}>
+                                {step.name}
+                            </h3>
                             {/* Always visible on mobile/tablet (stacked); collapses to hover-expand on lg+ (single row) */}
-                            <p className="node-desc-rm text-xs text-slate-400 leading-snug">{step.desc}</p>
+                            <p className={`node-desc-rm text-xs leading-snug ${lightMode ? "text-[#25304a]/72" : "text-slate-400"}`}>
+                                {step.desc}
+                            </p>
                         </div>
 
                         {/* Hover glow behind the circle */}
                         <div
                             className="node-glow-rm"
-                            style={{ background: `radial-gradient(circle, ${step.accentColor}25 0%, transparent 70%)` }}
+                            style={{ background: `radial-gradient(circle, ${accentColor}25 0%, transparent 70%)` }}
                         />
                     </div>
-                ))}
+                    );
+                })}
             </div>
 
             {/* Scoped keyframes + hover styles via a <style> tag */}
@@ -179,6 +195,17 @@ export function RoadmapProcess() {
           transform: scale(1.15) translateY(-8px);
           box-shadow: 0 16px 40px rgba(0,0,0,0.5), 0 0 22px rgba(99,102,241,0.35);
           border-color: rgba(255,255,255,0.38);
+        }
+
+        .roadmap-light-rm .glass-node-rm {
+          background: rgba(255, 255, 255, 0.70);
+          border-color: rgba(216, 199, 170, 0.72);
+          box-shadow: 0 18px 42px -28px rgba(61,43,22,0.75), inset 0 0 0 1px rgba(255,255,255,0.55);
+        }
+
+        .roadmap-light-rm .node-container-rm:hover .glass-node-rm {
+          box-shadow: 0 24px 54px -30px rgba(61,43,22,0.85), 0 0 22px rgba(154,104,71,0.18);
+          border-color: rgba(154,104,71,0.54);
         }
 
         /* Description: visible by default on mobile/tablet (stacked layout) */

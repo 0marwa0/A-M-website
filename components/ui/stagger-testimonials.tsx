@@ -24,13 +24,27 @@ interface ServiceCardProps {
     offset: number;
     total: number;
     cardSize: number;
+    lightMode?: boolean;
     onClick: () => void;
 }
 
-const ServiceCard: React.FC<ServiceCardProps> = ({ service, offset, total, cardSize, onClick }) => {
+const ServiceCard: React.FC<ServiceCardProps> = ({ service, offset, total, cardSize, lightMode = false, onClick }) => {
     const isCenter = offset === 0;
     const dist = Math.abs(offset);
     const zIdx = isCenter ? 20 : Math.max(0, (total - dist) * 2);
+    const primaryText = lightMode ? '#10172d' : 'rgba(209,213,219,1)';
+    const mutedText = lightMode ? 'rgba(37,48,74,0.72)' : 'rgba(156,163,175,1)';
+    const softText = lightMode ? 'rgba(111,96,79,0.72)' : 'rgba(172,160,251,0.5)';
+    const inactiveBorder = lightMode ? 'rgba(198,173,137,0.52)' : 'rgba(88,97,242,0.2)';
+    const centerBackground = lightMode
+        ? 'linear-gradient(135deg, rgba(255,255,255,0.92) 0%, rgba(245,239,227,0.86) 100%)'
+        : 'linear-gradient(135deg, rgba(123,76,255,0.28) 0%, rgba(78,240,255,0.18) 100%)';
+    const inactiveBackground = lightMode
+        ? 'rgba(250, 246, 237, 0.82)'
+        : 'rgba(14, 17, 38, 0.80)';
+    const centerShadow = lightMode
+        ? '0 22px 54px -34px rgba(61,43,22,0.7), 0 0 0 1px rgba(255,255,255,0.5) inset'
+        : `0px 8px 0px 4px rgba(88,97,242,0.30), 0 0 50px ${service.accentColor}44`;
 
     return (
         <div
@@ -42,16 +56,12 @@ const ServiceCard: React.FC<ServiceCardProps> = ({ service, offset, total, cardS
                 width: cardSize,
                 height: cardSize,
                 cursor: isCenter ? 'default' : 'pointer',
-                border: `2px solid ${isCenter ? service.accentColor : 'rgba(88,97,242,0.2)'}`,
+                border: `2px solid ${isCenter ? service.accentColor : inactiveBorder}`,
                 padding: '2rem',
                 transition: 'all 0.65s cubic-bezier(0.4, 0, 0.2, 1)',
-                background: isCenter
-                    ? 'linear-gradient(135deg, rgba(123,76,255,0.28) 0%, rgba(78,240,255,0.18) 100%)'
-                    : 'rgba(14, 17, 38, 0.80)',
+                background: isCenter ? centerBackground : inactiveBackground,
                 backdropFilter: 'blur(20px)',
-                boxShadow: isCenter
-                    ? `0px 8px 0px 4px rgba(88,97,242,0.30), 0 0 50px ${service.accentColor}44`
-                    : '0px 0px 0px 0px transparent',
+                boxShadow: isCenter ? centerShadow : '0px 0px 0px 0px transparent',
                 clipPath: 'polygon(50px 0%, calc(100% - 50px) 0%, 100% 50px, 100% 100%, calc(100% - 50px) 100%, 50px 100%, 0 100%, 0 0)',
                 transform: `
                     translate(-50%, -50%)
@@ -70,34 +80,21 @@ const ServiceCard: React.FC<ServiceCardProps> = ({ service, offset, total, cardS
                 right: -2, top: 48,
                 width: SQRT_5000, height: 2,
                 transformOrigin: 'top right', transform: 'rotate(45deg)',
-                background: isCenter ? service.accentColor : 'rgba(88,97,242,0.25)',
+                background: isCenter ? service.accentColor : lightMode ? 'rgba(154,104,71,0.36)' : 'rgba(88,97,242,0.25)',
                 transition: 'background 0.65s ease',
             }} />
-
-            {/* Badge */}
-            <div style={{
-                marginBottom: '1rem', display: 'flex', alignItems: 'center', justifyContent: 'center',
-                width: 40, height: 40, borderRadius: '50%',
-                fontSize: '0.85rem', fontWeight: 700,
-                background: `linear-gradient(135deg, ${service.accentColor}33, ${service.accentColor2}22)`,
-                border: `1.5px solid ${service.accentColor}66`,
-                color: service.accentColor, transition: 'all 0.65s ease',
-            }}>
-                ✦
-            </div>
 
             {/* Title */}
             <h3 style={{
                 marginBottom: '0.75rem', fontSize: '1rem', fontWeight: 700, lineHeight: 1.3,
-                background: `linear-gradient(90deg, ${service.accentColor}, ${service.accentColor2})`,
-                WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent',
+                color: lightMode ? '#10172d' : service.accentColor,
             }}>
                 {service.title}
             </h3>
 
             {/* Description */}
             <p style={{
-                fontSize: '0.8rem', color: 'rgba(156,163,175,1)', marginBottom: '1rem', lineHeight: 1.6,
+                fontSize: '0.8rem', color: mutedText, marginBottom: '1rem', lineHeight: 1.6,
                 display: '-webkit-box', WebkitLineClamp: 2,
                 WebkitBoxOrient: 'vertical', overflow: 'hidden',
             }}>
@@ -107,7 +104,7 @@ const ServiceCard: React.FC<ServiceCardProps> = ({ service, offset, total, cardS
             {/* Features */}
             <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
                 {service.features.slice(0, 3).map((f, i) => (
-                    <li key={i} style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', fontSize: '0.75rem', color: 'rgba(209,213,219,1)' }}>
+                    <li key={i} style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', fontSize: '0.75rem', color: primaryText }}>
                         <Check style={{ width: 12, height: 12, flexShrink: 0, color: service.accentColor2 }} />
                         {f}
                     </li>
@@ -117,7 +114,7 @@ const ServiceCard: React.FC<ServiceCardProps> = ({ service, offset, total, cardS
             {!isCenter && (
                 <div style={{
                     position: 'absolute', bottom: '1.5rem', left: '1.5rem', right: '1.5rem',
-                    fontSize: '0.65rem', color: 'rgba(172,160,251,0.5)',
+                    fontSize: '0.65rem', color: softText,
                     textAlign: 'center', letterSpacing: '0.08em', textTransform: 'uppercase',
                 }}>
                     click to focus
@@ -131,9 +128,10 @@ const ServiceCard: React.FC<ServiceCardProps> = ({ service, offset, total, cardS
 
 interface StaggerServicesProps {
     services: ServiceItem[];
+    lightMode?: boolean;
 }
 
-export const StaggerTestimonials: React.FC<StaggerServicesProps> = ({ services }) => {
+export const StaggerTestimonials: React.FC<StaggerServicesProps> = ({ services, lightMode = false }) => {
     const total = services.length;
 
     // Index of the card currently in the center spotlight
@@ -225,7 +223,9 @@ export const StaggerTestimonials: React.FC<StaggerServicesProps> = ({ services }
             {/* Background glow */}
             <div style={{
                 pointerEvents: 'none', position: 'absolute', inset: 0,
-                background: 'radial-gradient(ellipse 60% 50% at 50% 55%, rgba(88,97,242,0.08) 0%, transparent 80%)',
+                background: lightMode
+                    ? 'radial-gradient(ellipse 60% 50% at 50% 55%, rgba(154,104,71,0.12) 0%, transparent 78%)'
+                    : 'radial-gradient(ellipse 60% 50% at 50% 55%, rgba(88,97,242,0.08) 0%, transparent 80%)',
             }} />
 
             {/* Cards */}
@@ -236,6 +236,7 @@ export const StaggerTestimonials: React.FC<StaggerServicesProps> = ({ services }
                     offset={offset}
                     total={total}
                     cardSize={cardSize}
+                    lightMode={lightMode}
                     onClick={() => advance(offset)}
                 />
             ))}
@@ -246,7 +247,7 @@ export const StaggerTestimonials: React.FC<StaggerServicesProps> = ({ services }
                 display: 'flex', alignItems: 'center', gap: 14,
             }}>
                 {/* Prev */}
-                <NavButton direction="prev" onClick={() => advance(-1)} />
+                <NavButton direction="prev" lightMode={lightMode} onClick={() => advance(-1)} />
 
                 {/* Dot indicators */}
                 <div style={{ display: 'flex', alignItems: 'center', gap: 7 }}>
@@ -265,8 +266,12 @@ export const StaggerTestimonials: React.FC<StaggerServicesProps> = ({ services }
                                     width: isActive ? 32 : 8, height: 8,
                                     borderRadius: 4, border: 'none', padding: 0,
                                     cursor: 'pointer', overflow: 'hidden',
-                                    background: isActive ? 'rgba(123,76,255,0.25)' : 'rgba(88,97,242,0.28)',
-                                    boxShadow: isActive ? '0 0 10px rgba(123,76,255,0.5)' : 'none',
+                                    background: lightMode
+                                        ? isActive ? 'rgba(20,33,67,0.18)' : 'rgba(154,104,71,0.22)'
+                                        : isActive ? 'rgba(123,76,255,0.25)' : 'rgba(88,97,242,0.28)',
+                                    boxShadow: lightMode
+                                        ? isActive ? '0 0 10px rgba(154,104,71,0.2)' : 'none'
+                                        : isActive ? '0 0 10px rgba(123,76,255,0.5)' : 'none',
                                     transition: 'all 0.4s cubic-bezier(0.4,0,0.2,1)',
                                 }}
                             >
@@ -276,7 +281,9 @@ export const StaggerTestimonials: React.FC<StaggerServicesProps> = ({ services }
                                         style={{
                                             position: 'absolute', inset: 0, width: '0%',
                                             borderRadius: 4,
-                                            background: 'linear-gradient(90deg, #7B4CFF, #4EF0FF)',
+                                            background: lightMode
+                                                ? 'linear-gradient(90deg, #142143, #9A6847)'
+                                                : 'linear-gradient(90deg, #7B4CFF, #4EF0FF)',
                                         }}
                                     />
                                 )}
@@ -286,7 +293,7 @@ export const StaggerTestimonials: React.FC<StaggerServicesProps> = ({ services }
                 </div>
 
                 {/* Next */}
-                <NavButton direction="next" onClick={() => advance(1)} />
+                <NavButton direction="next" lightMode={lightMode} onClick={() => advance(1)} />
             </div>
         </div>
     );
@@ -294,30 +301,42 @@ export const StaggerTestimonials: React.FC<StaggerServicesProps> = ({ services }
 
 // ─── Shared nav button ────────────────────────────────────────────────────────
 
-const NavButton: React.FC<{ direction: 'prev' | 'next'; onClick: () => void }> = ({ direction, onClick }) => (
-    <button
-        onClick={onClick}
-        aria-label={direction === 'prev' ? 'Previous service' : 'Next service'}
-        style={{
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-            width: 40, height: 40, borderRadius: 8,
-            border: '2px solid rgba(88,97,242,0.35)',
-            background: 'rgba(16,19,42,0.85)',
-            color: '#ACA0FB', cursor: 'pointer',
-            transition: 'all 0.2s ease', flexShrink: 0,
-        }}
-        onMouseEnter={e => {
-            (e.currentTarget as HTMLElement).style.background = 'rgba(88,97,242,0.3)';
-            (e.currentTarget as HTMLElement).style.borderColor = '#7B4CFF';
-        }}
-        onMouseLeave={e => {
-            (e.currentTarget as HTMLElement).style.background = 'rgba(16,19,42,0.85)';
-            (e.currentTarget as HTMLElement).style.borderColor = 'rgba(88,97,242,0.35)';
-        }}
-    >
-        {direction === 'prev'
-            ? <ChevronLeft style={{ width: 18, height: 18 }} />
-            : <ChevronRight style={{ width: 18, height: 18 }} />
-        }
-    </button>
-);
+const NavButton: React.FC<{ direction: 'prev' | 'next'; lightMode?: boolean; onClick: () => void }> = ({
+    direction,
+    lightMode = false,
+    onClick,
+}) => {
+    const defaultBackground = lightMode ? 'rgba(255,255,255,0.70)' : 'rgba(16,19,42,0.85)';
+    const defaultBorder = lightMode ? 'rgba(198,173,137,0.58)' : 'rgba(88,97,242,0.35)';
+    const hoverBackground = lightMode ? 'rgba(250,246,237,0.96)' : 'rgba(88,97,242,0.3)';
+    const hoverBorder = lightMode ? '#9A6847' : '#7B4CFF';
+
+    return (
+        <button
+            onClick={onClick}
+            aria-label={direction === 'prev' ? 'Previous service' : 'Next service'}
+            style={{
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                width: 40, height: 40, borderRadius: 8,
+                border: `2px solid ${defaultBorder}`,
+                background: defaultBackground,
+                color: lightMode ? '#142143' : '#ACA0FB', cursor: 'pointer',
+                transition: 'all 0.2s ease', flexShrink: 0,
+                boxShadow: lightMode ? '0 12px 28px -20px rgba(61,43,22,0.75)' : 'none',
+            }}
+            onMouseEnter={e => {
+                (e.currentTarget as HTMLElement).style.background = hoverBackground;
+                (e.currentTarget as HTMLElement).style.borderColor = hoverBorder;
+            }}
+            onMouseLeave={e => {
+                (e.currentTarget as HTMLElement).style.background = defaultBackground;
+                (e.currentTarget as HTMLElement).style.borderColor = defaultBorder;
+            }}
+        >
+            {direction === 'prev'
+                ? <ChevronLeft style={{ width: 18, height: 18 }} />
+                : <ChevronRight style={{ width: 18, height: 18 }} />
+            }
+        </button>
+    );
+};

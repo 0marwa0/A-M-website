@@ -346,12 +346,19 @@
       "namePlaceholder": "اسمك الكامل",
       "emailLabel": "بريد العمل الإلكتروني",
       "emailPlaceholder": "you@company.com",
+      "messageLabel": "نص الرسالة",
+      "messagePlaceholder": "أخبرنا بما تريد بناءه، أو سير العمل الذي تريد تحسينه، أو أي ملاحظات عن الجدول الزمني.",
       "blueprintTitle": "مخطط بداية المشروع",
       "nextStepLabel": "البداية المقترحة",
       "nextStepText": "نرسم سير العمل، ونبني نموذجاً أولياً لأعلى مسار قيمة، ثم نحدد أول إطلاق.",
       "projectedLabel": "الوحدات المتوقعة:",
       "complexityLabel": "تعقيد التنفيذ:",
       "submit": "ابدأ نقاش المشروع",
+      "status": {
+        "sending": "جارٍ الإرسال...",
+        "sent": "تم إرسال نقاش المشروع. سنتواصل معك قريباً.",
+        "fallback": "تم فتح تطبيق البريد مع الرسالة كاملة وجاهزة للإرسال."
+      },
       "industries": {
         "education": "التعليم",
         "realEstate": "العقارات",

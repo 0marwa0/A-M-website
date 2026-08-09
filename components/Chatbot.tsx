@@ -24,9 +24,10 @@ export type PersonaMode = "creative" | "balanced" | "precise";
 interface ChatbotProps {
   activeMode?: PersonaMode;
   onModeChange?: (mode: PersonaMode) => void;
+  lightMode?: boolean;
 }
 
-export default function Chatbot({ activeMode, onModeChange }: ChatbotProps = {}) {
+export default function Chatbot({ activeMode, onModeChange, lightMode = false }: ChatbotProps = {}) {
   const { t, locale } = useI18n();
   const [isOpen, setIsOpen] = useState(false);
   const [localMode, setLocalMode] = useState<PersonaMode>("balanced");
@@ -42,6 +43,21 @@ export default function Chatbot({ activeMode, onModeChange }: ChatbotProps = {})
 
   // Get active theme tokens according to the selected mode
   const getThemeColors = (activeMode: PersonaMode) => {
+    if (lightMode) {
+      return {
+        gradient: "from-[#101b39] via-[#213c67] to-[#9A6847]",
+        border: "border-[#d8c7aa]/70",
+        text: "text-[#9A6847]",
+        bgGlow: "rgba(154, 104, 71, 0.18)",
+        avatarBg: "from-[#101b39] via-[#213c67] to-[#9A6847]",
+        shadow: "shadow-[0_24px_58px_-30px_rgba(61,43,22,0.62)]",
+        glowColor: "#9A6847",
+        buttonHover: "hover:border-[#9A6847]/45 hover:bg-white/80",
+        userBubble: "bg-gradient-to-r from-[#101b39] to-[#213c67] text-white rounded-2xl rounded-tr-none",
+        activePulse: "bg-[#9A6847]",
+      };
+    }
+
     switch (activeMode) {
       case "creative":
         return {
@@ -88,6 +104,44 @@ export default function Chatbot({ activeMode, onModeChange }: ChatbotProps = {})
 
   const theme = getThemeColors(mode);
   const isRtl = locale === "ar";
+  const windowClassName = lightMode
+    ? "border-[#d8c7aa]/70 bg-[#f7f3ea]/94 text-[#10172d] shadow-[0_24px_58px_-30px_rgba(61,43,22,0.62)]"
+    : `${theme.border} bg-[#060816]/90 ${theme.shadow}`;
+  const gridClassName = lightMode
+    ? "bg-[linear-gradient(to_right,rgba(20,33,67,0.045)_1px,transparent_1px),linear-gradient(to_bottom,rgba(20,33,67,0.045)_1px,transparent_1px)]"
+    : "bg-[linear-gradient(to_right,rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.02)_1px,transparent_1px)]";
+  const headerClassName = lightMode
+    ? "border-[#d8c7aa]/60 bg-white/52"
+    : "border-white/10 bg-white/[0.03]";
+  const stripClassName = lightMode
+    ? "border-[#d8c7aa]/50 bg-[#fbf8f1]/66"
+    : "border-white/[0.08] bg-white/[0.01]";
+  const titleTextClassName = lightMode ? "text-[#10172d]" : "text-white";
+  const mutedTextClassName = lightMode ? "text-[#25304a]/62" : "text-white/50";
+  const faintTextClassName = lightMode ? "text-[#25304a]/45" : "text-white/40";
+  const botBubbleClassName = lightMode
+    ? "bg-white/72 border border-[#d8c7aa]/65 backdrop-blur-md text-[#10172d] rounded-2xl rounded-tl-none"
+    : "bg-white/[0.04] border border-white/10 backdrop-blur-md text-white/90 rounded-2xl rounded-tl-none";
+  const userAvatarClassName = lightMode
+    ? "bg-[#fbf8f1]/82 border border-[#d8c7aa]/70 text-[#10172d]"
+    : "bg-white/10 border border-white/20 text-white/80";
+  const historyClassName = lightMode
+    ? "scrollbar-thumb-[#c6ad89]/45"
+    : "scrollbar-thumb-white/10";
+  const quickChipClassName = lightMode
+    ? "border-[#d8c7aa]/60 bg-white/58 text-[#25304a]/78 hover:border-[#9A6847]/45 hover:bg-white/85 hover:text-[#10172d]"
+    : `border-white/10 bg-white/5 text-white/70 hover:text-white ${theme.buttonHover}`;
+  const inputPromptClassName = lightMode ? "text-[#25304a]/45" : "text-white/30";
+  const inputClassName = lightMode
+    ? "bg-[#fbf8f1]/82 border-[#d8c7aa]/65 text-[#10172d] placeholder:text-[#25304a]/45 focus:bg-white/72"
+    : "bg-white/5 border-white/10 text-white placeholder-white/30 focus:bg-white/[0.07]";
+  const lightInputStyle = lightMode
+    ? {
+        color: "#10172d",
+        WebkitTextFillColor: "#10172d",
+        caretColor: "#10172d",
+      }
+    : undefined;
 
   // Hide the floating tooltip after 8 seconds
   useEffect(() => {
@@ -194,7 +248,7 @@ export default function Chatbot({ activeMode, onModeChange }: ChatbotProps = {})
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.85, y: 35 }}
             transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
-            className={`relative w-[90vw] sm:w-[420px] h-[80vh] max-h-[640px] min-h-[450px] rounded-3xl border ${theme.border} bg-[#060816]/90 backdrop-blur-2xl flex flex-col overflow-hidden ${theme.shadow} mb-5`}
+            className={`relative w-[90vw] sm:w-[420px] h-[80vh] max-h-[640px] min-h-[450px] rounded-3xl border backdrop-blur-2xl flex flex-col overflow-hidden mb-5 ${windowClassName}`}
             dir={isRtl ? "rtl" : "ltr"}
           >
             {/* Cyber Glow Aura behind chat window */}
@@ -206,15 +260,15 @@ export default function Chatbot({ activeMode, onModeChange }: ChatbotProps = {})
             />
 
             {/* Cyber Grid Background */}
-            <div className="absolute inset-0 -z-10 bg-[linear-gradient(to_right,rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:20px_20px] pointer-events-none opacity-40" />
+            <div className={`absolute inset-0 -z-10 bg-[size:20px_20px] pointer-events-none ${lightMode ? "opacity-70" : "opacity-40"} ${gridClassName}`} />
 
             {/* Meteor background inside chat window */}
             <div className="absolute inset-0 -z-10 overflow-hidden pointer-events-none">
-              <Meteors number={12} className="opacity-20" />
+              <Meteors number={12} className={lightMode ? "opacity-10" : "opacity-20"} />
             </div>
 
             {/* Header */}
-            <div className="p-4 border-b border-white/10 bg-white/[0.03] flex items-center justify-between relative">
+            <div className={`p-4 border-b flex items-center justify-between relative ${headerClassName}`}>
               <div className="flex items-center gap-3">
                 {/* Glowing Avatar */}
                 <div
@@ -237,19 +291,23 @@ export default function Chatbot({ activeMode, onModeChange }: ChatbotProps = {})
                   <span
                     className={`absolute bottom-0 ${
                       isRtl ? "left-0" : "right-0"
-                    } w-3 h-3 rounded-full ${theme.activePulse} border-2 border-[#060816] transition-colors duration-500`}
+                    } w-3 h-3 rounded-full ${theme.activePulse} border-2 transition-colors duration-500 ${
+                      lightMode ? "border-[#f7f3ea]" : "border-[#060816]"
+                    }`}
                   />
                   <span
                     className={`absolute bottom-0 ${
                       isRtl ? "left-0" : "right-0"
-                    } w-3 h-3 rounded-full ${theme.activePulse} border-2 border-[#060816] animate-ping opacity-75`}
+                    } w-3 h-3 rounded-full ${theme.activePulse} border-2 animate-ping opacity-75 ${
+                      lightMode ? "border-[#f7f3ea]" : "border-[#060816]"
+                    }`}
                   />
                 </div>
                 <div>
-                  <h3 className="text-sm font-bold text-white tracking-wide flex items-center gap-1.5">
+                  <h3 className={`text-sm font-bold tracking-wide flex items-center gap-1.5 ${titleTextClassName}`}>
                     {t("chatbot.title")}
                   </h3>
-                  <p className="text-[10px] text-white/50 flex items-center gap-1.5 font-medium mt-0.5">
+                  <p className={`text-[10px] flex items-center gap-1.5 font-medium mt-0.5 ${mutedTextClassName}`}>
                     <span className={`w-1.5 h-1.5 rounded-full ${theme.activePulse} transition-colors duration-500`} />
                     {t("chatbot.status")}
                   </p>
@@ -257,18 +315,26 @@ export default function Chatbot({ activeMode, onModeChange }: ChatbotProps = {})
               </div>
               <button
                 onClick={() => setIsOpen(false)}
-                className="w-8 h-8 rounded-full border border-white/10 bg-white/5 flex items-center justify-center text-white/70 hover:text-white hover:bg-white/10 hover:rotate-90 transition-all duration-300"
+                className={`w-8 h-8 rounded-full border flex items-center justify-center hover:rotate-90 transition-all duration-300 ${
+                  lightMode
+                    ? "border-[#c6ad89]/55 bg-white/58 text-[#25304a]/72 hover:bg-white hover:text-[#10172d]"
+                    : "border-white/10 bg-white/5 text-white/70 hover:text-white hover:bg-white/10"
+                }`}
               >
                 <X className="w-4 h-4" />
               </button>
             </div>
 
             {/* Persona Switcher Tab Row */}
-            <div className="px-4 py-2 bg-white/[0.01] border-b border-white/[0.08] flex items-center justify-between gap-2 shrink-0">
-              <span className="text-[10px] text-white/40 uppercase font-bold tracking-wider">
+            <div className={`px-4 py-2 border-b flex items-center justify-between gap-2 shrink-0 ${stripClassName}`}>
+              <span className={`text-[10px] uppercase font-bold tracking-wider ${faintTextClassName}`}>
                 {t("chatbot.modes.title")}
               </span>
-              <div className="flex bg-white/[0.04] rounded-xl p-1 border border-white/5 relative">
+              <div
+                className={`flex rounded-xl p-1 border relative ${
+                  lightMode ? "border-[#d8c7aa]/45 bg-white/58" : "border-white/5 bg-white/[0.04]"
+                }`}
+              >
                 {(["creative", "balanced", "precise"] as const).map((m) => {
                   const isActive = mode === m;
                   return (
@@ -276,7 +342,11 @@ export default function Chatbot({ activeMode, onModeChange }: ChatbotProps = {})
                       key={m}
                       onClick={() => setMode(m)}
                       className={`relative z-10 px-2.5 py-1 text-[10px] font-semibold rounded-lg transition-all duration-300 flex items-center gap-1 capitalize ${
-                        isActive ? "text-white shadow-sm" : "text-white/40 hover:text-white/70"
+                        isActive
+                          ? "text-white shadow-sm"
+                          : lightMode
+                          ? "text-[#25304a]/55 hover:text-[#10172d]"
+                          : "text-white/40 hover:text-white/70"
                       }`}
                     >
                       {m === "creative" && <Zap className="w-3 h-3 text-[#E44CFF]" />}
@@ -297,7 +367,7 @@ export default function Chatbot({ activeMode, onModeChange }: ChatbotProps = {})
             </div>
 
             {/* Message History */}
-            <div className="flex-1 overflow-y-auto p-4 space-y-4 scrollbar-thin scrollbar-thumb-white/10 scrollbar-track-transparent">
+            <div className={`flex-1 overflow-y-auto p-4 space-y-4 scrollbar-thin scrollbar-track-transparent ${historyClassName}`}>
               <AnimatePresence initial={false}>
                 {messages.map((msg) => {
                   const isUser = msg.sender === "user";
@@ -326,7 +396,7 @@ export default function Chatbot({ activeMode, onModeChange }: ChatbotProps = {})
                           className={`px-4 py-2.5 text-sm shadow-md leading-relaxed whitespace-pre-wrap ${
                             isUser
                               ? theme.userBubble
-                              : "bg-white/[0.04] border border-white/10 backdrop-blur-md text-white/90 rounded-2xl rounded-tl-none"
+                              : botBubbleClassName
                           } ${
                             isRtl
                               ? isUser
@@ -339,7 +409,11 @@ export default function Chatbot({ activeMode, onModeChange }: ChatbotProps = {})
                         >
                           {msg.text}
                         </div>
-                        <span className={`text-[9px] text-white/30 mt-1 px-1 ${isUser ? "text-right" : "text-left"}`}>
+                        <span
+                          className={`text-[9px] mt-1 px-1 ${isUser ? "text-right" : "text-left"} ${
+                            lightMode ? "text-[#25304a]/42" : "text-white/30"
+                          }`}
+                        >
                           {msg.timestamp.toLocaleTimeString([], {
                             hour: "2-digit",
                             minute: "2-digit",
@@ -349,8 +423,8 @@ export default function Chatbot({ activeMode, onModeChange }: ChatbotProps = {})
 
                       {/* Avatar for User */}
                       {isUser && (
-                        <div className="w-8 h-8 rounded-full bg-white/10 border border-white/20 flex items-center justify-center shrink-0 mt-0.5">
-                          <User className="w-3.5 h-3.5 text-white/80" />
+                        <div className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 mt-0.5 ${userAvatarClassName}`}>
+                          <User className="w-3.5 h-3.5" />
                         </div>
                       )}
                     </motion.div>
@@ -370,13 +444,15 @@ export default function Chatbot({ activeMode, onModeChange }: ChatbotProps = {})
                   </div>
                   <div className="flex flex-col">
                     <div
-                      className={`flex items-center gap-1.5 px-4 py-3.5 bg-white/[0.04] border border-white/10 rounded-2xl rounded-tl-none shadow-sm ${
+                      className={`flex items-center gap-1.5 px-4 py-3.5 border rounded-2xl rounded-tl-none shadow-sm ${
+                        lightMode ? "border-[#d8c7aa]/65 bg-white/72" : "border-white/10 bg-white/[0.04]"
+                      } ${
                         isRtl ? "rounded-tl-none rounded-tr-2xl" : ""
                       }`}
                     >
-                      <span className="w-1.5 h-1.5 rounded-full bg-white/50 animate-bounce" style={{ animationDelay: "0ms" }} />
-                      <span className="w-1.5 h-1.5 rounded-full bg-white/50 animate-bounce" style={{ animationDelay: "150ms" }} />
-                      <span className="w-1.5 h-1.5 rounded-full bg-white/50 animate-bounce" style={{ animationDelay: "300ms" }} />
+                      <span className={`w-1.5 h-1.5 rounded-full animate-bounce ${lightMode ? "bg-[#9A6847]/70" : "bg-white/50"}`} style={{ animationDelay: "0ms" }} />
+                      <span className={`w-1.5 h-1.5 rounded-full animate-bounce ${lightMode ? "bg-[#9A6847]/70" : "bg-white/50"}`} style={{ animationDelay: "150ms" }} />
+                      <span className={`w-1.5 h-1.5 rounded-full animate-bounce ${lightMode ? "bg-[#9A6847]/70" : "bg-white/50"}`} style={{ animationDelay: "300ms" }} />
                     </div>
                   </div>
                 </div>
@@ -386,14 +462,18 @@ export default function Chatbot({ activeMode, onModeChange }: ChatbotProps = {})
             </div>
 
             {/* Quick Questions Chips */}
-            <div className="px-4 py-2.5 bg-white/[0.01] border-t border-white/[0.06] overflow-x-auto whitespace-nowrap flex gap-2 shrink-0 py-3 scrollbar-none">
+            <div
+              className={`px-4 py-2.5 border-t overflow-x-auto whitespace-nowrap flex gap-2 shrink-0 py-3 scrollbar-none ${
+                lightMode ? "border-[#d8c7aa]/45 bg-[#fbf8f1]/58" : "border-white/[0.06] bg-white/[0.01]"
+              }`}
+            >
               {(["q1", "q2", "q3", "q4"] as const).map((qKey) => (
                 <button
                   key={qKey}
                   onClick={() => handleSend(t(`chatbot.quickQuestions.${qKey}`))}
-                  className={`inline-flex items-center gap-1.5 px-3 py-2 rounded-full border border-white/10 bg-white/5 text-xs text-white/70 hover:text-white transition-all duration-300 ${theme.buttonHover}`}
+                  className={`inline-flex items-center gap-1.5 px-3 py-2 rounded-full border text-xs transition-all duration-300 ${quickChipClassName}`}
                 >
-                  <Sparkles className="w-3 h-3 text-[#4EF0FF] shrink-0" />
+                  <Sparkles className={`w-3 h-3 shrink-0 ${lightMode ? "text-[#9A6847]" : "text-[#4EF0FF]"}`} />
                   <span>{t(`chatbot.quickQuestions.${qKey}`)}</span>
                 </button>
               ))}
@@ -405,10 +485,12 @@ export default function Chatbot({ activeMode, onModeChange }: ChatbotProps = {})
                 e.preventDefault();
                 handleSend(inputValue);
               }}
-              className="p-3 border-t border-white/10 bg-white/[0.03] flex items-center gap-2"
+              className={`p-3 border-t flex items-center gap-2 ${
+                lightMode ? "border-[#d8c7aa]/55 bg-white/52" : "border-white/10 bg-white/[0.03]"
+              }`}
             >
               <div className="flex-1 relative flex items-center">
-                <span className="absolute left-3 text-white/30 text-xs font-mono select-none pointer-events-none">
+                <span className={`absolute left-3 text-xs font-mono select-none pointer-events-none ${inputPromptClassName}`}>
                   {isRtl ? "" : ">"}
                 </span>
                 <input
@@ -416,16 +498,17 @@ export default function Chatbot({ activeMode, onModeChange }: ChatbotProps = {})
                   value={inputValue}
                   onChange={(e) => setInputValue(e.target.value)}
                   placeholder={t("chatbot.inputPlaceholder")}
-                  className={`w-full bg-white/5 border border-white/10 rounded-xl ${
+                  className={`w-full border rounded-xl ${
                     isRtl ? "px-4" : "pl-7 pr-4"
-                  } py-2.5 text-sm text-white placeholder-white/30 focus:outline-none transition-all duration-300 focus:bg-white/[0.07]`}
+                  } py-2.5 text-sm focus:outline-none transition-all duration-300 ${inputClassName}`}
                   style={{
                     borderColor: inputValue.trim() ? theme.glowColor : undefined,
                     boxShadow: inputValue.trim() ? `0 0 10px ${theme.glowColor}20` : undefined,
+                    ...lightInputStyle,
                   }}
                 />
                 {isRtl && (
-                  <span className="absolute right-3 text-white/30 text-xs font-mono select-none pointer-events-none">
+                  <span className={`absolute right-3 text-xs font-mono select-none pointer-events-none ${inputPromptClassName}`}>
                     {"<"}
                   </span>
                 )}
@@ -451,6 +534,9 @@ export default function Chatbot({ activeMode, onModeChange }: ChatbotProps = {})
             className={`absolute bottom-16 mb-2 ${
               isRtl ? "left-0" : "right-0"
             } whitespace-nowrap bg-gradient-to-r ${theme.gradient} text-white text-xs font-semibold py-2 px-4 rounded-2xl shadow-lg border border-white/20 select-none z-[999] cursor-pointer`}
+            style={{
+              boxShadow: lightMode ? "0 14px 30px -18px rgba(61,43,22,0.72)" : undefined,
+            }}
             onClick={() => {
               setIsOpen(true);
               setShowTooltip(false);
@@ -461,7 +547,11 @@ export default function Chatbot({ activeMode, onModeChange }: ChatbotProps = {})
               <span>{isRtl ? "أهلاً بك! كيف يمكنني مساعدتك؟" : "Hi! How can I help you today?"}</span>
             </div>
             {/* Tiny Arrow */}
-            <div className={`absolute bottom-[-5px] ${isRtl ? "left-6" : "right-6"} w-2.5 h-2.5 bg-[#7B4CFF] rotate-45 border-r border-b border-white/20`} />
+            <div
+              className={`absolute bottom-[-5px] ${isRtl ? "left-6" : "right-6"} w-2.5 h-2.5 rotate-45 border-r border-b border-white/20 ${
+                lightMode ? "bg-[#213c67]" : "bg-[#7B4CFF]"
+              }`}
+            />
           </motion.div>
         )}
       </AnimatePresence>
@@ -474,9 +564,13 @@ export default function Chatbot({ activeMode, onModeChange }: ChatbotProps = {})
         }}
         whileHover={{ scale: 1.08 }}
         whileTap={{ scale: 0.95 }}
-        className={`w-14 h-14 rounded-full bg-gradient-to-r ${theme.gradient} flex items-center justify-center text-white shadow-lg transition-all duration-500 cursor-pointer border border-white/20 relative overflow-hidden`}
+        className={`w-14 h-14 rounded-full bg-gradient-to-r ${theme.gradient} flex items-center justify-center text-white shadow-lg transition-all duration-500 cursor-pointer border relative overflow-hidden ${
+          lightMode ? "border-[#d8c7aa]/70" : "border-white/20"
+        }`}
         style={{
-          boxShadow: `0 0 25px ${theme.glowColor}60`,
+          boxShadow: lightMode
+            ? "0 16px 34px -18px rgba(61,43,22,0.82), 0 0 18px rgba(154,104,71,0.26)"
+            : `0 0 25px ${theme.glowColor}60`,
         }}
       >
         {/* Pulsing ring around the button */}

@@ -1,10 +1,11 @@
 "use client";
 
-import { useState, useEffect, useRef, type CSSProperties } from "react";
+import { useState, useEffect, useRef, type CSSProperties, type FormEvent } from "react";
 import Link from "next/link";
-import { Check, Star, ArrowRight, ArrowLeft, Sparkles, Cpu, Activity, Menu, X, Globe, ArrowUp, Copy, Facebook, Instagram, Linkedin } from "lucide-react";
+import { Check, Star, ArrowRight, ArrowLeft, Sparkles, Cpu, Activity, Menu, X, Globe, ArrowUp, Copy, Facebook, Instagram, Linkedin, Sun, Moon } from "lucide-react";
 import { useI18n } from "@/lib/i18n";
 import CosmicBackground from "@/components/CosmicBackground";
+import LightHeroBackground from "@/components/LightHeroBackground";
 import Chatbot, { PersonaMode } from "@/components/Chatbot";
 import { Component as TypewriterTestimonial } from "@/components/ui/typewriter-testimonial";
 import { StaggerTestimonials } from "@/components/ui/stagger-testimonials";
@@ -121,9 +122,10 @@ type ShowcaseInterfaceProps = {
   color: string;
   stats: string[];
   showcaseLabel: string;
+  lightMode?: boolean;
 };
 
-function ShowcaseInterface({ showcaseKey, label, color, stats, showcaseLabel }: ShowcaseInterfaceProps) {
+function ShowcaseInterface({ showcaseKey, label, color, stats, showcaseLabel, lightMode = false }: ShowcaseInterfaceProps) {
   const fallbackStats = stats.length > 0 ? stats : ["Telemetry", "Automation", "Guardrails"];
   const waveform = [36, 58, 44, 72, 63, 86, 48, 78, 54, 91, 68, 74, 47, 82, 61, 88];
   const workflowNodes = [
@@ -134,6 +136,18 @@ function ShowcaseInterface({ showcaseKey, label, color, stats, showcaseLabel }: 
     { left: "68%", top: "70%", label: "API" },
   ];
   const screenshotLabels = ["Ops", "Risk", "Spend"];
+  const panelClass = lightMode
+    ? "border-[#d8c7aa]/70 bg-white/82 shadow-[0_24px_70px_-36px_rgba(61,43,22,0.62)]"
+    : "border-white/10 bg-[#050816]/88 shadow-[0_24px_70px_rgba(0,0,0,0.38)]";
+  const smallPanelClass = lightMode
+    ? "border-[#d8c7aa]/70 bg-white/82 shadow-[0_18px_44px_-28px_rgba(61,43,22,0.58)]"
+    : "border-white/[0.12] bg-[#050711]/95 shadow-2xl";
+  const modulePanelClass = lightMode
+    ? "border-[#d8c7aa]/60 bg-[#fbf8f1]/78"
+    : "border-white/10 bg-black/20";
+  const mutedTextClass = lightMode ? "text-[#25304a]/62" : "text-white/45";
+  const softTextClass = lightMode ? "text-[#25304a]/72" : "text-white/62";
+  const strongTextClass = lightMode ? "text-[#10172d]" : "text-white";
 
   return (
     <motion.div
@@ -152,17 +166,17 @@ function ShowcaseInterface({ showcaseKey, label, color, stats, showcaseLabel }: 
       />
 
       <motion.div
-        className="absolute left-[3%] top-[4%] h-[58%] w-[76%] rounded-2xl border border-white/10 bg-[#050816]/88 p-3 shadow-[0_24px_70px_rgba(0,0,0,0.38)] backdrop-blur-md sm:left-[5%] sm:h-[62%]"
+        className={`absolute left-[3%] top-[4%] h-[58%] w-[76%] rounded-2xl border p-3 backdrop-blur-md sm:left-[5%] sm:h-[62%] ${panelClass}`}
         animate={{ y: [0, -8, 0] }}
         transition={{ duration: 7, repeat: Infinity, ease: "easeInOut" }}
       >
         <div className="flex h-full gap-3">
-          <div className="hidden w-8 shrink-0 flex-col items-center gap-2 rounded-xl bg-white/[0.04] py-2 sm:flex">
+          <div className={`hidden w-8 shrink-0 flex-col items-center gap-2 rounded-xl py-2 sm:flex ${lightMode ? "bg-[#f1e6d7]/70" : "bg-white/[0.04]"}`}>
             {[0, 1, 2, 3, 4].map((item) => (
               <span
                 key={`${showcaseKey}-rail-${item}`}
                 className="h-2.5 w-2.5 rounded-full"
-                style={{ background: item === 1 ? color : "rgba(255,255,255,0.16)" }}
+                style={{ background: item === 1 ? color : lightMode ? "rgba(20,33,67,0.18)" : "rgba(255,255,255,0.16)" }}
               />
             ))}
           </div>
@@ -179,14 +193,14 @@ function ShowcaseInterface({ showcaseKey, label, color, stats, showcaseLabel }: 
               >
                 {label}
               </span>
-              <span className="hidden text-[10px] font-semibold uppercase tracking-[0.22em] text-white/45 sm:inline">
+              <span className={`hidden text-[10px] font-semibold uppercase tracking-[0.22em] sm:inline ${mutedTextClass}`}>
                 {showcaseLabel}
               </span>
             </div>
 
             <div className="grid min-h-0 flex-1 grid-cols-1 gap-3 sm:grid-cols-[1.35fr_0.85fr]">
-              <div className="flex min-h-0 flex-col rounded-xl border border-white/10 bg-black/24 p-3">
-                <div className="mb-3 flex items-center justify-between text-[10px] font-semibold uppercase text-white/50">
+              <div className={`flex min-h-0 flex-col rounded-xl border p-3 ${modulePanelClass}`}>
+                <div className={`mb-3 flex items-center justify-between text-[10px] font-semibold uppercase ${lightMode ? "text-[#25304a]/62" : "text-white/50"}`}>
                   <span>Live operations surface</span>
                   <motion.span
                     style={{ color }}
@@ -196,7 +210,7 @@ function ShowcaseInterface({ showcaseKey, label, color, stats, showcaseLabel }: 
                     Streaming
                   </motion.span>
                 </div>
-                <div className="relative flex min-h-0 flex-1 items-end gap-1.5 overflow-hidden rounded-lg bg-white/[0.03] px-2 pb-2">
+                <div className={`relative flex min-h-0 flex-1 items-end gap-1.5 overflow-hidden rounded-lg px-2 pb-2 ${lightMode ? "bg-[#f1e6d7]/45" : "bg-white/[0.03]"}`}>
                   {waveform.map((height, index) => (
                     <motion.span
                       key={`${showcaseKey}-wave-${index}`}
@@ -222,10 +236,10 @@ function ShowcaseInterface({ showcaseKey, label, color, stats, showcaseLabel }: 
                 </div>
                 <div className="mt-3 grid grid-cols-3 gap-2">
                   {fallbackStats.slice(0, 3).map((stat, index) => (
-                    <div key={`${showcaseKey}-metric-${stat}`} className="rounded-lg bg-white/[0.04] px-2 py-2">
-                      <p className="truncate text-[9px] uppercase text-white/40">{stat}</p>
+                    <div key={`${showcaseKey}-metric-${stat}`} className={`rounded-lg px-2 py-2 ${lightMode ? "bg-white/68" : "bg-white/[0.04]"}`}>
+                      <p className={`truncate text-[9px] uppercase ${lightMode ? "text-[#25304a]/55" : "text-white/40"}`}>{stat}</p>
                       <motion.p
-                        className="mt-1 text-sm font-bold text-white"
+                        className={`mt-1 text-sm font-bold ${strongTextClass}`}
                         animate={{ opacity: [0.66, 1, 0.66] }}
                         transition={{ duration: 2.5, repeat: Infinity, delay: index * 0.35 }}
                       >
@@ -237,8 +251,8 @@ function ShowcaseInterface({ showcaseKey, label, color, stats, showcaseLabel }: 
               </div>
 
               <div className="hidden min-h-0 flex-col gap-3 sm:flex">
-                <div className="relative flex-1 overflow-hidden rounded-xl border border-white/10 bg-white/[0.045] p-3">
-                  <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-white/45">
+                <div className={`relative flex-1 overflow-hidden rounded-xl border p-3 ${lightMode ? "border-[#d8c7aa]/60 bg-white/58" : "border-white/10 bg-white/[0.045]"}`}>
+                  <p className={`text-[10px] font-semibold uppercase tracking-[0.16em] ${mutedTextClass}`}>
                     Workflow map
                   </p>
                   <svg className="absolute inset-0 h-full w-full" viewBox="0 0 220 160" aria-hidden="true">
@@ -256,7 +270,11 @@ function ShowcaseInterface({ showcaseKey, label, color, stats, showcaseLabel }: 
                   {workflowNodes.map((node, index) => (
                     <motion.div
                       key={`${showcaseKey}-node-${node.label}`}
-                      className="absolute grid h-9 w-9 place-items-center rounded-lg border border-white/10 bg-[#07101D]/95 text-[8px] font-semibold text-white/65"
+                      className={`absolute grid h-9 w-9 place-items-center rounded-lg border text-[8px] font-semibold ${
+                        lightMode
+                          ? "border-[#d8c7aa]/70 bg-[#fbf8f1]/95 text-[#25304a]/78"
+                          : "border-white/10 bg-[#07101D]/95 text-white/65"
+                      }`}
                       style={{ left: node.left, top: node.top }}
                       animate={{ scale: [1, 1.08, 1], boxShadow: [`0 0 0 ${color}00`, `0 0 18px ${color}44`, `0 0 0 ${color}00`] }}
                       transition={{ duration: 2.8, repeat: Infinity, delay: index * 0.35 }}
@@ -268,7 +286,7 @@ function ShowcaseInterface({ showcaseKey, label, color, stats, showcaseLabel }: 
 
                 <div className="grid h-20 grid-cols-3 gap-2">
                   {[82, 64, 91].map((height, index) => (
-                    <div key={`${showcaseKey}-module-${index}`} className="flex items-end rounded-lg border border-white/10 bg-black/20 p-1.5">
+                    <div key={`${showcaseKey}-module-${index}`} className={`flex items-end rounded-lg border p-1.5 ${modulePanelClass}`}>
                       <motion.span
                         className="block w-full rounded-md"
                         style={{ background: `${color}${index % 2 === 0 ? "88" : "55"}` }}
@@ -285,18 +303,18 @@ function ShowcaseInterface({ showcaseKey, label, color, stats, showcaseLabel }: 
       </motion.div>
 
       <motion.div
-        className="absolute left-[2%] top-[64%] hidden w-[48%] rounded-xl border border-white/[0.12] bg-[#050711]/95 p-3 shadow-2xl sm:block"
+        className={`absolute left-[2%] top-[64%] hidden w-[48%] rounded-xl border p-3 sm:block ${smallPanelClass}`}
         animate={{ x: [0, 8, 0] }}
         transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
       >
-        <div className="mb-2 flex items-center justify-between text-[10px] font-semibold uppercase text-white/45">
+        <div className={`mb-2 flex items-center justify-between text-[10px] font-semibold uppercase ${mutedTextClass}`}>
           <span>Decision log</span>
           <span style={{ color }}>13ms</span>
         </div>
         {["Semantic cache hit", "Budget policy passed", "Worker action queued"].map((item, index) => (
           <motion.div
             key={`${showcaseKey}-log-${item}`}
-            className="mb-1.5 flex items-center gap-2 text-[10px] text-white/62 last:mb-0"
+            className={`mb-1.5 flex items-center gap-2 text-[10px] last:mb-0 ${softTextClass}`}
             animate={{ opacity: [0.45, 1, 0.62] }}
             transition={{ duration: 2.4, repeat: Infinity, delay: index * 0.42 }}
           >
@@ -310,23 +328,27 @@ function ShowcaseInterface({ showcaseKey, label, color, stats, showcaseLabel }: 
         {screenshotLabels.map((item, index) => (
           <motion.div
             key={`${showcaseKey}-shot-${item}`}
-            className="absolute left-0 right-0 rounded-xl border border-white/[0.12] bg-[#080B18]/92 p-3 shadow-2xl backdrop-blur-md"
+            className={`absolute left-0 right-0 rounded-xl border p-3 backdrop-blur-md ${
+              lightMode
+                ? "border-[#d8c7aa]/70 bg-white/82 shadow-[0_18px_44px_-28px_rgba(61,43,22,0.58)]"
+                : "border-white/[0.12] bg-[#080B18]/92 shadow-2xl"
+            }`}
             style={{ top: `${index * 27}%` }}
             animate={{ y: [0, index % 2 === 0 ? -7 : 7, 0], rotate: [0, index % 2 === 0 ? -1 : 1, 0] }}
             transition={{ duration: 6 + index, repeat: Infinity, ease: "easeInOut" }}
           >
             <div className="mb-3 flex items-center justify-between">
-              <p className="text-[10px] font-semibold uppercase tracking-[0.13em] text-white/50">
+              <p className={`text-[10px] font-semibold uppercase tracking-[0.13em] ${lightMode ? "text-[#25304a]/62" : "text-white/50"}`}>
                 {item} screen
               </p>
               <span className="h-2 w-2 rounded-full" style={{ background: color }} />
             </div>
             <div className="space-y-2">
               {[68, 48, 82].map((width, barIndex) => (
-                <div key={`${showcaseKey}-shot-${item}-${barIndex}`} className="h-1.5 overflow-hidden rounded-full bg-white/10">
+                <div key={`${showcaseKey}-shot-${item}-${barIndex}`} className={`h-1.5 overflow-hidden rounded-full ${lightMode ? "bg-[#d8c7aa]/42" : "bg-white/10"}`}>
                   <motion.span
                     className="block h-full rounded-full"
-                    style={{ background: barIndex === 1 ? "rgba(255,255,255,0.62)" : color }}
+                    style={{ background: barIndex === 1 ? lightMode ? "rgba(20,33,67,0.42)" : "rgba(255,255,255,0.62)" : color }}
                     animate={{ width: [`${Math.max(20, width - 24)}%`, `${width}%`, `${Math.max(18, width - 9)}%`] }}
                     transition={{ duration: 2.2, repeat: Infinity, delay: barIndex * 0.22 + index * 0.18 }}
                   />
@@ -338,11 +360,15 @@ function ShowcaseInterface({ showcaseKey, label, color, stats, showcaseLabel }: 
       </div>
 
       <motion.div
-        className="absolute bottom-[2%] right-[9%] hidden w-[37%] rounded-xl border border-white/[0.12] bg-[#07101D]/95 p-3 shadow-2xl sm:block"
+        className={`absolute bottom-[2%] right-[9%] hidden w-[37%] rounded-xl border p-3 sm:block ${
+          lightMode
+            ? "border-[#d8c7aa]/70 bg-white/82 shadow-[0_18px_44px_-28px_rgba(61,43,22,0.58)]"
+            : "border-white/[0.12] bg-[#07101D]/95 shadow-2xl"
+        }`}
         animate={{ y: [0, -6, 0] }}
         transition={{ duration: 6.5, repeat: Infinity, ease: "easeInOut" }}
       >
-        <div className="mb-3 flex items-center justify-between text-[10px] font-semibold uppercase tracking-[0.13em] text-white/50">
+        <div className={`mb-3 flex items-center justify-between text-[10px] font-semibold uppercase tracking-[0.13em] ${lightMode ? "text-[#25304a]/62" : "text-white/50"}`}>
           <span>Guardrail cockpit</span>
           <motion.span
             className="h-2 w-2 rounded-full"
@@ -353,7 +379,7 @@ function ShowcaseInterface({ showcaseKey, label, color, stats, showcaseLabel }: 
         </div>
         {[78, 55, 88].map((width, index) => (
           <div key={`${showcaseKey}-guardrail-${index}`} className="mb-2 last:mb-0">
-            <div className="h-1.5 rounded-full bg-white/10">
+            <div className={`h-1.5 rounded-full ${lightMode ? "bg-[#d8c7aa]/42" : "bg-white/10"}`}>
               <motion.span
                 className="block h-full rounded-full"
                 style={{ background: color }}
@@ -394,9 +420,14 @@ export default function Home() {
   const [contactIndustry, setContactIndustry] = useState<ContactIndustryKey>("education");
   const [contactGoal, setContactGoal] = useState<ContactGoalKey>("llmAutomation");
   const [contactScale, setContactScale] = useState<ContactScaleKey>("initialPilot");
+  const [contactName, setContactName] = useState("");
+  const [contactEmailAddress, setContactEmailAddress] = useState("");
+  const [contactMessage, setContactMessage] = useState("");
+  const [contactSubmitStatus, setContactSubmitStatus] = useState<"idle" | "sending" | "sent" | "fallback">("idle");
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [scrollProgress, setScrollProgress] = useState(0);
+  const [lightHero, setLightHero] = useState(false);
 
   const rawWords = t("hero.words");
   const words = Array.isArray(rawWords) ? rawWords : ["Business", "Future", "Growth", "Workflows", "Success"];
@@ -429,8 +460,68 @@ export default function Home() {
     key,
     label: t(`contact.configurator.scales.${key}`),
   }));
+  const selectedIndustryLabel =
+    contactIndustries.find((option) => option.key === contactIndustry)?.label ?? contactIndustries[0]?.label;
+  const selectedGoalLabel =
+    contactGoals.find((option) => option.key === contactGoal)?.label ?? contactGoals[0]?.label;
   const selectedScaleLabel =
     contactScales.find((option) => option.key === contactScale)?.label ?? contactScales[0]?.label;
+  const projectDiscussionEmail = "marwajawad19@gmail.com";
+
+  const getContactEmailHref = (body: string) =>
+    `mailto:${projectDiscussionEmail}?subject=${encodeURIComponent("Initiate Project Discussion")}&body=${encodeURIComponent(body)}`;
+
+  const handleContactSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    setContactSubmitStatus("sending");
+
+    const recommendedStart = `${selectedScaleLabel || "Selected scale"} - ${t("contact.configurator.nextStepText")}`;
+    const emailBody = [
+      "New project discussion request from TRI MINDS website.",
+      "",
+      `Name: ${contactName.trim() || "Not provided"}`,
+      `Email: ${contactEmailAddress.trim() || "Not provided"}`,
+      `Industry Focus: ${selectedIndustryLabel || "Not selected"}`,
+      `Primary Goal: ${selectedGoalLabel || "Not selected"}`,
+      `Scale: ${selectedScaleLabel || "Not selected"}`,
+      "",
+      "Message:",
+      contactMessage.trim() || "Not provided",
+      "",
+      `Recommended Start: ${recommendedStart}`,
+    ].join("\n");
+
+    try {
+      const response = await fetch("/api/contact", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name: contactName,
+          email: contactEmailAddress,
+          industry: selectedIndustryLabel,
+          goal: selectedGoalLabel,
+          scale: selectedScaleLabel,
+          message: contactMessage,
+          recommendedStart,
+        }),
+      });
+
+      if (response.ok) {
+        setContactSubmitStatus("sent");
+        setContactName("");
+        setContactEmailAddress("");
+        setContactMessage("");
+        return;
+      }
+    } catch {
+      // Fall back to the visitor's mail app below when direct delivery is unavailable.
+    }
+
+    setContactSubmitStatus("fallback");
+    window.location.href = getContactEmailHref(emailBody);
+  };
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -612,7 +703,19 @@ export default function Home() {
   ];
 
   // Get active theme colors for global elements
-  const getGlobalThemeStyles = (activeMode: PersonaMode) => {
+  const getGlobalThemeStyles = (activeMode: PersonaMode, isLightHero: boolean) => {
+    if (isLightHero) {
+      return {
+        "--theme-primary": "#142143",
+        "--theme-secondary": "#b27a4f",
+        "--theme-glow": "rgba(20, 33, 67, 0.28)",
+        "--theme-gradient": "linear-gradient(to right, #101b39, #213c67)",
+        "--theme-glow-border": "rgba(28, 39, 76, 0.24)",
+        "--theme-nav-border": "rgba(112, 93, 67, 0.2)",
+        background: "#060816",
+      } as React.CSSProperties;
+    }
+
     switch (activeMode) {
       case "creative":
         return {
@@ -666,16 +769,59 @@ export default function Home() {
     { label: "Instagram", href: "https://www.instagram.com/trimindesai/", Icon: Instagram },
     { label: "LinkedIn", href: "https://www.linkedin.com/company/triminds-ai/", Icon: Linkedin },
   ];
+  const lightHeroInk = lightHero ? "#10172d" : undefined;
+  const lightHeroMutedInk = lightHero ? "rgba(37, 48, 74, 0.78)" : undefined;
+  const lightHeroSoftInk = lightHero ? "rgba(37, 48, 74, 0.72)" : undefined;
+  const lightHeroWarmInk = lightHero ? "#8a6640" : undefined;
+  const activeShowcaseThemeColor = lightHero ? "#9A6847" : activeShowcase.color;
+  const getContactOptionStyle = (isActive: boolean): CSSProperties => lightHero
+    ? {
+        background: isActive ? "rgba(255, 255, 255, 0.78)" : "rgba(250, 246, 237, 0.62)",
+        borderColor: isActive ? "rgba(154, 104, 71, 0.72)" : "rgba(198, 173, 137, 0.58)",
+        boxShadow: isActive ? "0 14px 30px -22px rgba(61,43,22,0.72)" : "none",
+        color: isActive ? "#10172d" : "rgba(37,48,74,0.78)",
+      }
+    : {
+        background: isActive ? "rgba(228, 76, 255, 0.24)" : "rgba(255, 255, 255, 0.03)",
+        borderColor: isActive ? "rgba(228, 76, 255, 0.7)" : "rgba(255, 255, 255, 0.1)",
+        boxShadow: isActive ? "0 0 18px rgba(228, 76, 255, 0.28)" : "none",
+        color: isActive ? "#FFFFFF" : "rgba(255, 255, 255, 0.78)",
+      };
+  const lightInputClassName = "h-[58px] w-full rounded-[14px] border border-[#c6ad89]/60 bg-[#fbf8f1]/85 px-5 py-4 text-lg leading-none text-[#10172d] outline-none transition-all duration-300 placeholder:text-[#25304a]/45 focus:border-[#9A6847]/75 focus:bg-white/70 focus:ring-2 focus:ring-[#9A6847]/20";
+  const darkInputClassName = "h-[58px] w-full rounded-[14px] border border-[#8B56FF]/30 bg-[#080B22]/75 px-5 py-4 text-lg leading-none text-white outline-none transition-all duration-300 placeholder:text-white/25 focus:border-[#E44CFF]/75 focus:ring-2 focus:ring-[#E44CFF]/25";
+  const lightTextareaClassName = "min-h-[142px] w-full resize-y rounded-[14px] border border-[#c6ad89]/60 bg-[#fbf8f1]/85 px-5 py-4 text-lg leading-relaxed text-[#10172d] outline-none transition-all duration-300 placeholder:text-[#25304a]/45 focus:border-[#9A6847]/75 focus:bg-white/70 focus:ring-2 focus:ring-[#9A6847]/20";
+  const darkTextareaClassName = "min-h-[142px] w-full resize-y rounded-[14px] border border-[#8B56FF]/30 bg-[#080B22]/75 px-5 py-4 text-lg leading-relaxed text-white outline-none transition-all duration-300 placeholder:text-white/25 focus:border-[#E44CFF]/75 focus:ring-2 focus:ring-[#E44CFF]/25";
+  const lightInputStyle: CSSProperties | undefined = lightHero
+    ? {
+        backgroundColor: "rgba(251, 248, 241, 0.85)",
+        color: "#10172d",
+        WebkitTextFillColor: "#10172d",
+        caretColor: "#10172d",
+      }
+    : undefined;
+  const primaryCtaStyle = lightHero
+    ? {
+        background: "linear-gradient(135deg, #101b39, #213c67)",
+        boxShadow: "0 18px 38px -24px rgba(61,43,22,0.78)",
+        color: "#fff",
+      }
+    : {
+        background: "var(--theme-gradient)",
+        boxShadow: "0 0 34px var(--theme-glow-border)",
+        color: "#fff",
+      };
 
   return (
     <div
-      className="min-h-screen text-white relative overflow-hidden transition-all duration-1000"
+      className={`min-h-screen relative overflow-hidden transition-all duration-1000 ${
+        lightHero ? "text-[#10172d]" : "text-white"
+      }`}
       lang={locale}
       dir={locale === "ar" ? "rtl" : "ltr"}
-      style={getGlobalThemeStyles(mode)}
+      style={getGlobalThemeStyles(mode, lightHero)}
     >
       {/* Logo Intro Video Preloader */}
-      <Preloader />
+      {/* <Preloader /> */}
       {/* Persistent star-field background — visible from services section onward */}
       <div
         aria-hidden="true"
@@ -699,7 +845,9 @@ export default function Home() {
         <div
           className={`mx-auto w-full max-w-7xl flex justify-between items-center transition-all duration-500 ${
             scrolled
-              ? "rounded-2xl border bg-slate-900/40 backdrop-blur-xl px-6 py-3.5 shadow-[0_20px_40px_-15px_rgba(0,0,0,0.7),_0_0_20px_rgba(228,76,255,0.15)]"
+              ? lightHero
+                ? "rounded-2xl border bg-[#faf6ed]/82 backdrop-blur-xl px-6 py-3.5 shadow-[0_18px_44px_-24px_rgba(61,43,22,0.38)]"
+                : "rounded-2xl border bg-slate-900/40 backdrop-blur-xl px-6 py-3.5 shadow-[0_20px_40px_-15px_rgba(0,0,0,0.7),_0_0_20px_rgba(228,76,255,0.15)]"
               : "border-b border-transparent py-2"
           }`}
           style={{
@@ -711,7 +859,9 @@ export default function Home() {
               <span 
                 className="bg-clip-text text-transparent transition-all duration-1000 group-hover:drop-shadow-[0_0_8px_var(--theme-glow)]"
                 style={{
-                  backgroundImage: mode === "creative"
+                  backgroundImage: lightHero
+                    ? "linear-gradient(to right, #142143, #9A6847)"
+                    : mode === "creative"
                     ? "linear-gradient(to right, #E44CFF, #9F56FF)"
                     : mode === "precise"
                     ? "linear-gradient(to right, #4EF0FF, #2EDAA2)"
@@ -720,7 +870,15 @@ export default function Home() {
               >
                 TRI
               </span>
-              <span className="text-white group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-white group-hover:to-gray-300 transition-all duration-300">MINDS</span>
+              <span
+                className={`transition-all duration-300 group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r ${
+                  lightHero
+                    ? "text-[#10172d] group-hover:from-[#10172d] group-hover:to-[#9A6847]"
+                    : "text-white group-hover:from-white group-hover:to-gray-300"
+                }`}
+              >
+                MINDS
+              </span>
             </div>
           </Link>
           <div
@@ -728,32 +886,77 @@ export default function Home() {
           >
             <a
               href="#services"
-              className="text-white/80 hover:text-transparent hover:bg-clip-text hover:bg-gradient-to-r hover:from-[#E44CFF] hover:to-[#5861F2] transition-all duration-300"
+              className={`transition-all duration-300 hover:text-transparent hover:bg-clip-text hover:bg-gradient-to-r ${
+                lightHero
+                  ? "text-[#121a31]/80 hover:from-[#142143] hover:to-[#9A6847]"
+                  : "text-white/80 hover:from-[#E44CFF] hover:to-[#5861F2]"
+              }`}
             >
               {t("nav.solutions")}
             </a>
             <Link
               href="/about-us"
-              className="text-white/80 hover:text-transparent hover:bg-clip-text hover:bg-gradient-to-r hover:from-[#E44CFF] hover:to-[#5861F2] transition-all duration-300"
+              className={`transition-all duration-300 hover:text-transparent hover:bg-clip-text hover:bg-gradient-to-r ${
+                lightHero
+                  ? "text-[#121a31]/80 hover:from-[#142143] hover:to-[#9A6847]"
+                  : "text-white/80 hover:from-[#E44CFF] hover:to-[#5861F2]"
+              }`}
             >
               {t("nav.about")}
             </Link>
             <a
               href="#packages"
-              className="text-white/80 hover:text-transparent hover:bg-clip-text hover:bg-gradient-to-r hover:from-[#E44CFF] hover:to-[#5861F2] transition-all duration-300"
+              className={`transition-all duration-300 hover:text-transparent hover:bg-clip-text hover:bg-gradient-to-r ${
+                lightHero
+                  ? "text-[#121a31]/80 hover:from-[#142143] hover:to-[#9A6847]"
+                  : "text-white/80 hover:from-[#E44CFF] hover:to-[#5861F2]"
+              }`}
             >
               {t("nav.pricing")}
             </a>
             <a
               href="#contact"
-              className="text-white/80 hover:text-transparent hover:bg-clip-text hover:bg-gradient-to-r hover:from-[#E44CFF] hover:to-[#5861F2] transition-all duration-300"
+              className={`transition-all duration-300 hover:text-transparent hover:bg-clip-text hover:bg-gradient-to-r ${
+                lightHero
+                  ? "text-[#121a31]/80 hover:from-[#142143] hover:to-[#9A6847]"
+                  : "text-white/80 hover:from-[#E44CFF] hover:to-[#5861F2]"
+              }`}
             >
               {t("nav.contact")}
             </a>
           </div>
           <div className="hidden lg:flex items-center gap-4">
             <button
-              className="flex items-center gap-1.5 px-4 py-2 rounded-xl border border-white/20 text-sm text-white/90 hover:border-[#E44CFF] hover:bg-[#E44CFF]/10 transition-all duration-300"
+              type="button"
+              aria-pressed={lightHero}
+              aria-label={lightHero ? "Switch hero to dark mode" : "Switch hero to light mode"}
+              className={`inline-flex items-center gap-2 rounded-xl border px-3.5 py-2 text-sm font-medium transition-all duration-300 ${
+                lightHero
+                  ? "border-[#c6ad89]/60 bg-white/65 text-[#121a31] shadow-[0_10px_24px_-18px_rgba(61,43,22,0.8)] hover:border-[#9A6847]"
+                  : "border-white/20 text-white/90 hover:border-[#E44CFF] hover:bg-[#E44CFF]/10"
+              }`}
+              onClick={() => setLightHero((isLight) => !isLight)}
+            >
+              {lightHero ? <Moon className="h-4 w-4" /> : <Sun className="h-4 w-4" />}
+              <span>Light</span>
+              <span
+                className={`relative h-4 w-7 rounded-full transition-colors duration-300 ${
+                  lightHero ? "bg-[#142143]" : "bg-white/20"
+                }`}
+              >
+                <span
+                  className={`absolute top-0.5 h-3 w-3 rounded-full bg-white transition-transform duration-300 ${
+                    lightHero ? "translate-x-3.5" : "translate-x-0.5"
+                  }`}
+                />
+              </span>
+            </button>
+            <button
+              className={`flex items-center gap-1.5 px-4 py-2 rounded-xl border text-sm transition-all duration-300 ${
+                lightHero
+                  ? "border-[#c6ad89]/60 bg-white/45 text-[#121a31] hover:border-[#9A6847] hover:bg-white/70"
+                  : "border-white/20 text-white/90 hover:border-[#E44CFF] hover:bg-[#E44CFF]/10"
+              }`}
               onClick={() => setLocale(locale === "en" ? "ar" : "en")}
             >
               <Globe className="w-4 h-4" />
@@ -765,6 +968,7 @@ export default function Home() {
               style={{
                 background: "var(--theme-gradient)",
                 boxShadow: "0 0 15px var(--theme-glow-border)",
+                color: "#fff",
               }}
             >
               {t("nav.cta")}
@@ -772,14 +976,34 @@ export default function Home() {
           </div>
           <div className="flex lg:hidden items-center gap-3">
             <button
-              className="p-2 rounded-xl border border-white/20 text-sm text-white/90 hover:border-[#E44CFF] hover:bg-[#E44CFF]/10 transition-all duration-300"
+              className={`p-2 rounded-xl border transition-all duration-300 ${
+                lightHero
+                  ? "border-[#c6ad89]/60 bg-white/45 text-[#121a31] hover:border-[#9A6847]"
+                  : "border-white/20 text-white/90 hover:border-[#E44CFF] hover:bg-[#E44CFF]/10"
+              }`}
+              onClick={() => setLightHero((isLight) => !isLight)}
+              aria-pressed={lightHero}
+              aria-label={lightHero ? "Switch hero to dark mode" : "Switch hero to light mode"}
+            >
+              {lightHero ? <Moon className="w-4 h-4" /> : <Sun className="w-4 h-4" />}
+            </button>
+            <button
+              className={`p-2 rounded-xl border text-sm transition-all duration-300 ${
+                lightHero
+                  ? "border-[#c6ad89]/60 bg-white/45 text-[#121a31] hover:border-[#9A6847]"
+                  : "border-white/20 text-white/90 hover:border-[#E44CFF] hover:bg-[#E44CFF]/10"
+              }`}
               onClick={() => setLocale(locale === "en" ? "ar" : "en")}
               aria-label="Toggle language"
             >
               <Globe className="w-4 h-4" />
             </button>
             <button
-              className="p-2 rounded-xl border border-white/20 text-white/90 hover:border-[#E44CFF] hover:bg-[#E44CFF]/10 transition-all duration-300"
+              className={`p-2 rounded-xl border transition-all duration-300 ${
+                lightHero
+                  ? "border-[#c6ad89]/60 bg-white/45 text-[#121a31] hover:border-[#9A6847]"
+                  : "border-white/20 text-white/90 hover:border-[#E44CFF] hover:bg-[#E44CFF]/10"
+              }`}
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               aria-label="Toggle menu"
             >
@@ -794,33 +1018,53 @@ export default function Home() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
               transition={{ duration: 0.3 }}
-              className="absolute left-4 right-4 top-full mt-2 rounded-2xl border border-[#E44CFF]/20 bg-slate-900/80 backdrop-blur-xl p-6 shadow-2xl flex flex-col gap-4 lg:hidden z-40"
+              className={`absolute left-4 right-4 top-full mt-2 rounded-2xl border backdrop-blur-xl p-6 shadow-2xl flex flex-col gap-4 lg:hidden z-40 ${
+                lightHero
+                  ? "border-[#c6ad89]/45 bg-[#faf6ed]/92"
+                  : "border-[#E44CFF]/20 bg-slate-900/80"
+              }`}
             >
               <a
                 href="#services"
                 onClick={() => setMobileMenuOpen(false)}
-                className="text-lg py-2 border-b border-white/5 text-white/90 hover:text-[#E44CFF] transition-colors"
+                className={`text-lg py-2 border-b transition-colors ${
+                  lightHero
+                    ? "border-[#c6ad89]/30 text-[#121a31]/90 hover:text-[#9A6847]"
+                    : "border-white/5 text-white/90 hover:text-[#E44CFF]"
+                }`}
               >
                 {t("nav.solutions")}
               </a>
               <Link
                 href="/about-us"
                 onClick={() => setMobileMenuOpen(false)}
-                className="text-lg py-2 border-b border-white/5 text-white/90 hover:text-[#E44CFF] transition-colors"
+                className={`text-lg py-2 border-b transition-colors ${
+                  lightHero
+                    ? "border-[#c6ad89]/30 text-[#121a31]/90 hover:text-[#9A6847]"
+                    : "border-white/5 text-white/90 hover:text-[#E44CFF]"
+                }`}
               >
                 {t("nav.about")}
               </Link>
               <a
                 href="#packages"
                 onClick={() => setMobileMenuOpen(false)}
-                className="text-lg py-2 border-b border-white/5 text-white/90 hover:text-[#E44CFF] transition-colors"
+                className={`text-lg py-2 border-b transition-colors ${
+                  lightHero
+                    ? "border-[#c6ad89]/30 text-[#121a31]/90 hover:text-[#9A6847]"
+                    : "border-white/5 text-white/90 hover:text-[#E44CFF]"
+                }`}
               >
                 {t("nav.pricing")}
               </a>
               <a
                 href="#contact"
                 onClick={() => setMobileMenuOpen(false)}
-                className="text-lg py-2 border-b border-white/5 text-white/90 hover:text-[#E44CFF] transition-colors"
+                className={`text-lg py-2 border-b transition-colors ${
+                  lightHero
+                    ? "border-[#c6ad89]/30 text-[#121a31]/90 hover:text-[#9A6847]"
+                    : "border-white/5 text-white/90 hover:text-[#E44CFF]"
+                }`}
               >
                 {t("nav.contact")}
               </a>
@@ -831,6 +1075,7 @@ export default function Home() {
                 style={{
                   background: "var(--theme-gradient)",
                   boxShadow: "0 0 15px var(--theme-glow-border)",
+                  color: "#fff",
                 }}
               >
                 {t("nav.cta")}
@@ -846,20 +1091,36 @@ export default function Home() {
         className="relative z-10 flex items-center justify-center px-6 overflow-hidden min-h-screen pt-24 pb-12"
       >
         {/* Cinematic cosmic background */}
-        <CosmicBackground mode={mode} />
+        {lightHero ? <LightHeroBackground /> : <CosmicBackground mode={mode} />}
 
         <div className="max-w-7xl mx-auto relative w-full z-10 grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
           
           {/* Left Column: Text content & Action items */}
           <div className="lg:col-span-7 flex flex-col items-center lg:items-start text-center lg:text-left rtl:lg:text-right space-y-6 animate-fade-in order-2 lg:order-1">
             {/* Glowing badge */}
-            <div className="inline-flex items-center gap-2 px-5 py-2 rounded-full border border-white/10 bg-white/5 backdrop-blur-md text-[10px] md:text-xs tracking-widest uppercase text-white/70">
-              <span className="w-2 h-2 rounded-full bg-gradient-to-r from-[#E44CFF] to-[#4EF0FF] animate-pulse" />
+            <div
+              className={`inline-flex items-center gap-2 px-5 py-2 rounded-full border backdrop-blur-md text-[10px] md:text-xs tracking-widest uppercase ${
+                lightHero
+                  ? "border-[#d8cbb8]/80 bg-white/55 text-[#25304a]/72 shadow-[0_10px_26px_-22px_rgba(61,43,22,0.65)]"
+                  : "border-white/10 bg-white/5 text-white/70"
+              }`}
+              style={{ color: lightHeroSoftInk }}
+            >
+              <span
+                className={`w-2 h-2 rounded-full animate-pulse ${
+                  lightHero ? "bg-[#142143]" : "bg-gradient-to-r from-[#E44CFF] to-[#4EF0FF]"
+                }`}
+              />
               {t("hero.badge.first")} · {t("hero.badge.second")} · {t("hero.badge.third")}
             </div>
 
             {/* Headline with rotating words */}
-            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold leading-[1.15] tracking-tight text-white w-full">
+            <h1
+              className={`text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold leading-[1.15] tracking-tight w-full ${
+                lightHero ? "text-[#10172d]" : "text-white"
+              }`}
+              style={{ color: lightHeroInk }}
+            >
               {t("hero.heading")}{" "}
               <span className="relative inline-block min-w-[140px] sm:min-w-[180px] md:min-w-[220px]">
                 <AnimatePresence mode="wait">
@@ -871,7 +1132,9 @@ export default function Home() {
                     transition={{ duration: 0.35, ease: "easeInOut" }}
                     className="absolute left-0 right-0 bg-clip-text text-transparent select-none whitespace-nowrap"
                     style={{
-                      backgroundImage: mode === "creative"
+                      backgroundImage: lightHero
+                        ? "linear-gradient(to right, #10172d, #9A6847, #152143)"
+                        : mode === "creative"
                         ? "linear-gradient(to right, #E44CFF, #9F56FF, #7B4CFF)"
                         : mode === "precise"
                         ? "linear-gradient(to right, #4EF0FF, #2EDAA2, #10B981)"
@@ -889,7 +1152,12 @@ export default function Home() {
             </h1>
 
             {/* Subheading */}
-            <p className="text-sm sm:text-base md:text-lg text-gray-400 max-w-2xl leading-relaxed">
+            <p
+              className={`text-sm sm:text-base md:text-lg max-w-2xl leading-relaxed ${
+                lightHero ? "text-[#25304a]/78" : "text-gray-400"
+              }`}
+              style={{ color: lightHeroMutedInk }}
+            >
               {t("hero.subheading")}
             </p>
 
@@ -898,11 +1166,12 @@ export default function Home() {
             {/* Action Buttons */}
             <div className="flex flex-col sm:flex-row gap-4 items-center w-full sm:w-auto pt-4">
               <a
-                href="#services"
-                className="group relative w-full sm:w-auto text-center px-8 py-3.5 rounded-full font-semibold text-sm overflow-hidden transition-all duration-500 hover:scale-[1.05] hover:shadow-[0_0_40px_var(--theme-glow)]"
+                href="#contact"
+                className="group relative w-full sm:w-auto text-center px-8 py-3.5 rounded-full font-semibold text-sm text-white overflow-hidden transition-all duration-500 hover:scale-[1.05] hover:shadow-[0_0_40px_var(--theme-glow)]"
                 style={{
                   background: "var(--theme-gradient)",
                   boxShadow: `0 0 20px var(--theme-glow-border)`,
+                  color: "#fff",
                 }}
               >
                 <span className="relative z-10 flex items-center justify-center gap-2">
@@ -913,22 +1182,45 @@ export default function Home() {
               </a>
               <a
                 href="#about"
-                className="group w-full sm:w-auto text-center px-8 py-3.5 rounded-full font-semibold text-sm border border-white/10 bg-white/5 backdrop-blur-md text-white hover:border-white/30 hover:bg-white/10 transition-all duration-300 hover:scale-[1.05]"
+                className={`group w-full sm:w-auto text-center px-8 py-3.5 rounded-full font-semibold text-sm border backdrop-blur-md transition-all duration-300 hover:scale-[1.05] ${
+                  lightHero
+                    ? "border-[#17213a]/35 bg-white/45 text-[#10172d] hover:border-[#17213a]/60 hover:bg-white/70"
+                    : "border-white/10 bg-white/5 text-white hover:border-white/30 hover:bg-white/10"
+                }`}
+                style={{ color: lightHeroInk }}
               >
                 {locale === "ar" ? "تعرف على طريقتنا" : "How It Works"}
               </a>
             </div>
 
             {/* Performance Stats */}
-            <div className="pt-6 grid grid-cols-3 gap-4 md:gap-6 border-t border-white/10 w-full text-center lg:text-left rtl:lg:text-right">
+            <div
+              className={`pt-6 grid grid-cols-3 gap-4 md:gap-6 border-t w-full text-center lg:text-left rtl:lg:text-right ${
+                lightHero ? "border-[#c9bba6]/70" : "border-white/10"
+              }`}
+            >
               {[
                 { val: t("hero.stats.clients.value"), label: t("hero.stats.clients.label") },
                 { val: t("hero.stats.revenue.value"), label: t("hero.stats.revenue.label") },
                 { val: t("hero.stats.loyalty.value"), label: t("hero.stats.loyalty.label") },
               ].map((stat, idx) => (
                 <div key={idx} className="flex flex-col items-center lg:items-start">
-                  <span className="text-xl md:text-2.5xl font-extrabold text-white font-mono">{stat.val}</span>
-                  <span className="text-[9px] md:text-[10px] uppercase tracking-wider text-gray-400 mt-1.5">{stat.label}</span>
+                  <span
+                    className={`text-xl md:text-2.5xl font-extrabold font-mono ${
+                      lightHero ? "text-[#8a6640]" : "text-white"
+                    }`}
+                    style={{ color: lightHeroWarmInk }}
+                  >
+                    {stat.val}
+                  </span>
+                  <span
+                    className={`text-[9px] md:text-[10px] uppercase tracking-wider mt-1.5 ${
+                      lightHero ? "text-[#6f604f]" : "text-gray-400"
+                    }`}
+                    style={{ color: lightHero ? "#6f604f" : undefined }}
+                  >
+                    {stat.label}
+                  </span>
                 </div>
               ))}
             </div>
@@ -936,7 +1228,7 @@ export default function Home() {
 
           {/* Right Column: Interactive HUD Canvas */}
           <div className="lg:col-span-5 w-full flex justify-center order-1 lg:order-2">
-            <InteractiveHUD mode={mode} />
+            <InteractiveHUD mode={mode} lightMode={lightHero} />
           </div>
 
         </div>
@@ -945,17 +1237,44 @@ export default function Home() {
       {/* Services Section */}
       <section
         id="services"
-        className="relative z-10 py-20 px-6"
+        className={`relative z-10 overflow-hidden py-20 px-6 ${
+          lightHero ? "bg-[#f7f3ea]" : ""
+        }`}
       >
-        <div className="max-w-7xl mx-auto">
+        {lightHero && (
+          <>
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_22%,rgba(255,255,255,0.78),transparent_32%),radial-gradient(circle_at_76%_38%,rgba(204,174,128,0.16),transparent_36%),linear-gradient(180deg,#f7f3ea_0%,#f5efe3_78%,#f7f3ea_100%)]" />
+            <div className="absolute inset-0 opacity-[0.12] [background-image:radial-gradient(#19223a_0.75px,transparent_0.75px)] [background-size:42px_42px]" />
+            <div className="pointer-events-none absolute -left-28 top-20 h-72 w-72 rounded-full border border-[#c6ad89]/20" />
+            <div className="pointer-events-none absolute -right-24 bottom-28 h-80 w-80 rounded-full border border-[#142143]/10" />
+          </>
+        )}
+        <div className="relative z-10 max-w-7xl mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold mb-6 tracking-tight">
+            <h2
+              className={`text-4xl md:text-5xl font-bold mb-6 tracking-tight ${
+                lightHero ? "text-[#10172d]" : ""
+              }`}
+              style={{ color: lightHeroInk }}
+            >
               {t("services.heading")}{" "}
-              <span className="bg-gradient-to-r from-[#E44CFF] to-[#4EF0FF] bg-clip-text text-transparent">
+              <span
+                className="bg-clip-text text-transparent"
+                style={{
+                  backgroundImage: lightHero
+                    ? "linear-gradient(to right, #10172d, #9A6847)"
+                    : "linear-gradient(to right, #E44CFF, #4EF0FF)",
+                }}
+              >
                 {t("services.headingHighlight")}
               </span>
             </h2>
-            <p className="text-xl text-gray-400 max-w-3xl mx-auto">
+            <p
+              className={`text-xl max-w-3xl mx-auto ${
+                lightHero ? "text-[#25304a]/78" : "text-gray-400"
+              }`}
+              style={{ color: lightHeroMutedInk }}
+            >
               {t("services.subheading")}
             </p>
           </div>
@@ -967,50 +1286,51 @@ export default function Home() {
                 title: t("services.items.automation.title"),
                 description: t("services.items.automation.description"),
                 features: t("services.items.automation.features"),
-                accentColor: "#E44CFF",
-                accentColor2: "#7B4CFF",
+                accentColor: lightHero ? "#142143" : "#E44CFF",
+                accentColor2: lightHero ? "#9A6847" : "#7B4CFF",
               },
               {
                 tempId: 1,
                 title: t("services.items.analytics.title"),
                 description: t("services.items.analytics.description"),
                 features: t("services.items.analytics.features"),
-                accentColor: "#8B56FF",
-                accentColor2: "#5861F2",
+                accentColor: lightHero ? "#9A6847" : "#8B56FF",
+                accentColor2: lightHero ? "#142143" : "#5861F2",
               },
               {
                 tempId: 2,
                 title: t("services.items.industry.title"),
                 description: t("services.items.industry.description"),
                 features: t("services.items.industry.features"),
-                accentColor: "#5861F2",
-                accentColor2: "#5BA8F7",
+                accentColor: lightHero ? "#142143" : "#5861F2",
+                accentColor2: lightHero ? "#8a6640" : "#5BA8F7",
               },
               {
                 tempId: 3,
                 title: t("services.items.llm.title"),
                 description: t("services.items.llm.description"),
                 features: t("services.items.llm.features"),
-                accentColor: "#5BA8F7",
-                accentColor2: "#4ECFFC",
+                accentColor: lightHero ? "#9A6847" : "#5BA8F7",
+                accentColor2: lightHero ? "#213c67" : "#4ECFFC",
               },
               {
                 tempId: 4,
                 title: t("services.items.endToEnd.title"),
                 description: t("services.items.endToEnd.description"),
                 features: t("services.items.endToEnd.features"),
-                accentColor: "#4ECFFC",
-                accentColor2: "#4EF0FF",
+                accentColor: lightHero ? "#213c67" : "#4ECFFC",
+                accentColor2: lightHero ? "#9A6847" : "#4EF0FF",
               },
               {
                 tempId: 5,
                 title: t("services.items.webMobile.title"),
                 description: t("services.items.webMobile.description"),
                 features: t("services.items.webMobile.features"),
-                accentColor: "#4EF0FF",
-                accentColor2: "#ACA0FB",
+                accentColor: lightHero ? "#8a6640" : "#4EF0FF",
+                accentColor2: lightHero ? "#142143" : "#ACA0FB",
               },
             ]}
+            lightMode={lightHero}
           />
         </div>
       </section>
@@ -1018,27 +1338,54 @@ export default function Home() {
       {/* Who We Serve Section */}
       <section
         id="customers"
-        className="relative z-10 py-20 px-6"
+        className={`relative z-10 overflow-hidden py-20 px-6 ${
+          lightHero ? "bg-[#f7f3ea]" : ""
+        }`}
       >
         {/* Subtle background glow */}
         <div
           className="pointer-events-none absolute inset-0"
           style={{
-            background:
-              "radial-gradient(ellipse 55% 40% at 50% 60%, rgba(228,76,255,0.06) 0%, transparent 75%)",
+            background: lightHero
+              ? "radial-gradient(circle at 18% 24%, rgba(255,255,255,0.72), transparent 34%), radial-gradient(circle at 78% 38%, rgba(154,104,71,0.14), transparent 36%), linear-gradient(180deg, #f7f3ea 0%, #f5efe3 78%, #f7f3ea 100%)"
+              : "radial-gradient(ellipse 55% 40% at 50% 60%, rgba(228,76,255,0.06) 0%, transparent 75%)",
           }}
         />
+        {lightHero && (
+          <>
+            <div className="absolute inset-0 opacity-[0.12] [background-image:radial-gradient(#19223a_0.75px,transparent_0.75px)] [background-size:42px_42px]" />
+            <div className="pointer-events-none absolute -left-20 top-24 h-72 w-72 rounded-full border border-[#c6ad89]/22" />
+            <div className="pointer-events-none absolute right-[4%] top-16 hidden h-[440px] w-[440px] rounded-full border border-[#142143]/10 md:block" />
+          </>
+        )}
 
         <div className="relative z-10 max-w-7xl mx-auto">
           {/* Heading */}
           <div className="text-center mb-4">
-            <h2 className="text-4xl md:text-5xl font-bold mb-6 tracking-tight">
+            <h2
+              className={`text-4xl md:text-5xl font-bold mb-6 tracking-tight ${
+                lightHero ? "text-[#10172d]" : ""
+              }`}
+              style={{ color: lightHeroInk }}
+            >
               {t("customers.heading")}{" "}
-              <span className="bg-gradient-to-r from-[#E44CFF] to-[#4EF0FF] bg-clip-text text-transparent">
+              <span
+                className="bg-clip-text text-transparent"
+                style={{
+                  backgroundImage: lightHero
+                    ? "linear-gradient(to right, #10172d, #9A6847)"
+                    : "linear-gradient(to right, #E44CFF, #4EF0FF)",
+                }}
+              >
                 {t("customers.headingHighlight")}
               </span>
             </h2>
-            <p className="text-xl text-gray-400 max-w-3xl mx-auto">
+            <p
+              className={`text-xl max-w-3xl mx-auto ${
+                lightHero ? "text-[#25304a]/78" : "text-gray-400"
+              }`}
+              style={{ color: lightHeroMutedInk }}
+            >
               {t("customers.subheading")}
             </p>
           </div>
@@ -1052,12 +1399,19 @@ export default function Home() {
                 <ShowcaseInterface
                   showcaseKey={activeShowcase.key}
                   label={activeShowcase.label}
-                  color={activeShowcase.color}
+                  color={activeShowcaseThemeColor}
                   stats={activeShowcase.stats}
                   showcaseLabel={t("customers.showcaseLabel")}
+                  lightMode={lightHero}
                 />
               </AnimatePresence>
-              <div className="absolute inset-0 bg-[radial-gradient(circle_at_82%_18%,rgba(255,255,255,0.08),transparent_24%)]" />
+              <div
+                className={`absolute inset-0 ${
+                  lightHero
+                    ? "bg-[radial-gradient(circle_at_82%_18%,rgba(154,104,71,0.08),transparent_24%)]"
+                    : "bg-[radial-gradient(circle_at_82%_18%,rgba(255,255,255,0.08),transparent_24%)]"
+                }`}
+              />
 
             </div>
 
@@ -1075,31 +1429,40 @@ export default function Home() {
                   text={activeShowcase.tag}
                   delay={80}
                   className="mb-4 text-sm font-semibold uppercase tracking-[0.22em]"
-                  style={{ color: activeShowcase.color }}
+                  style={{ color: activeShowcaseThemeColor }}
                 />
                 <WrittenText
                   as="h3"
                   text={activeShowcase.title}
                   delay={220}
                   speed={13}
-                  className="text-3xl font-bold leading-tight text-white md:text-4xl"
+                  className={`text-3xl font-bold leading-tight md:text-4xl ${
+                    lightHero ? "text-[#10172d]" : "text-white"
+                  }`}
+                  style={{ color: lightHeroInk }}
                 />
                 <WrittenText
                   as="p"
                   text={activeShowcase.body}
                   delay={620}
                   speed={7}
-                  className="mt-5 text-base leading-relaxed text-gray-300 md:text-lg"
+                  className={`mt-5 text-base leading-relaxed md:text-lg ${
+                    lightHero ? "text-[#25304a]/78" : "text-gray-300"
+                  }`}
+                  style={{ color: lightHeroMutedInk }}
                 />
                 <div className="mt-8 flex flex-wrap gap-x-6 gap-y-3">
                   {activeShowcase.stats.map((stat) => (
                     <div
                       key={stat}
-                      className="flex items-center gap-2 text-sm font-semibold text-white/85"
+                      className={`flex items-center gap-2 text-sm font-semibold ${
+                        lightHero ? "text-[#25304a]/82" : "text-white/85"
+                      }`}
+                      style={{ color: lightHero ? "rgba(37,48,74,0.82)" : undefined }}
                     >
                       <span
                         className="h-1.5 w-1.5 rounded-full"
-                        style={{ background: activeShowcase.color }}
+                        style={{ background: activeShowcaseThemeColor }}
                       />
                       {stat}
                     </div>
@@ -1111,23 +1474,33 @@ export default function Home() {
 
           {/* Industry pills */}
           <div className="flex flex-wrap items-center justify-center gap-3 mt-8">
-            {customerShowcases.map(({ key, label, color }) => (
+            {customerShowcases.map(({ key, label, color }) => {
+              const pillColor = lightHero ? "#9A6847" : color;
+              const isActive = activeShowcaseKey === key;
+              return (
               <button
                 key={key}
                 type="button"
-                aria-pressed={activeShowcaseKey === key}
+                aria-pressed={isActive}
                 onClick={() => setActiveShowcaseKey(key)}
-                className="px-5 py-2 rounded-full text-sm font-semibold tracking-wide transition-all duration-300 hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-white/40"
+                className={`px-5 py-2 rounded-full text-sm font-semibold tracking-wide transition-all duration-300 hover:-translate-y-0.5 focus:outline-none focus:ring-2 ${
+                  lightHero ? "focus:ring-[#9A6847]/35" : "focus:ring-white/40"
+                }`}
                 style={{
-                  background: activeShowcaseKey === key ? `${color}28` : `${color}12`,
-                  border: `1px solid ${activeShowcaseKey === key ? color : `${color}44`}`,
-                  color: activeShowcaseKey === key ? "#FFFFFF" : color,
-                  boxShadow: activeShowcaseKey === key ? `0 0 18px ${color}44` : `0 0 12px ${color}18`,
+                  background: lightHero
+                    ? isActive ? "rgba(255,255,255,0.72)" : "rgba(250,246,237,0.62)"
+                    : isActive ? `${color}28` : `${color}12`,
+                  border: `1px solid ${isActive ? pillColor : `${pillColor}44`}`,
+                  color: lightHero ? isActive ? "#10172d" : "#6f604f" : isActive ? "#FFFFFF" : color,
+                  boxShadow: lightHero
+                    ? isActive ? "0 12px 28px -20px rgba(61,43,22,0.72)" : "0 0 12px rgba(154,104,71,0.12)"
+                    : isActive ? `0 0 18px ${color}44` : `0 0 12px ${color}18`,
                 }}
               >
                 {label}
               </button>
-            ))}
+              );
+            })}
           </div>
         </div>
       </section>
@@ -1135,16 +1508,26 @@ export default function Home() {
       {/* AI Integration Process — Roadmap */}
       <section
         id="about"
-        className="relative z-10 py-20 px-6"
+        className={`relative z-10 overflow-hidden py-20 px-6 ${
+          lightHero ? "bg-[#f7f3ea]" : ""
+        }`}
       >
         {/* Background glow */}
         <div
           className="pointer-events-none absolute inset-0"
           style={{
-            background:
-              "radial-gradient(ellipse 60% 45% at 50% 50%, rgba(78,240,255,0.05) 0%, transparent 70%)",
+            background: lightHero
+              ? "radial-gradient(circle at 20% 20%, rgba(255,255,255,0.72), transparent 34%), radial-gradient(circle at 78% 42%, rgba(154,104,71,0.14), transparent 36%), linear-gradient(180deg, #f7f3ea 0%, #f5efe3 78%, #f7f3ea 100%)"
+              : "radial-gradient(ellipse 60% 45% at 50% 50%, rgba(78,240,255,0.05) 0%, transparent 70%)",
           }}
         />
+        {lightHero && (
+          <>
+            <div className="absolute inset-0 opacity-[0.12] [background-image:radial-gradient(#19223a_0.75px,transparent_0.75px)] [background-size:42px_42px]" />
+            <div className="pointer-events-none absolute -left-28 top-12 h-80 w-80 rounded-full border border-[#c6ad89]/22" />
+            <div className="pointer-events-none absolute right-[6%] top-28 hidden h-[420px] w-[420px] rounded-full border border-[#142143]/10 md:block" />
+          </>
+        )}
 
         <div className="relative z-10 max-w-7xl mx-auto">
           {/* Heading */}
@@ -1152,23 +1535,40 @@ export default function Home() {
             {/* Kicker */}
             <p
               className="text-xs font-bold tracking-[0.22em] uppercase mb-4"
-              style={{ color: "#4EF0FF" }}
+              style={{ color: lightHero ? "#9A6847" : "#4EF0FF" }}
             >
               Our Methodology
             </p>
-            <h2 className="text-4xl md:text-5xl font-bold mb-6 tracking-tight">
+            <h2
+              className={`text-4xl md:text-5xl font-bold mb-6 tracking-tight ${
+                lightHero ? "text-[#10172d]" : ""
+              }`}
+              style={{ color: lightHeroInk }}
+            >
               {t("about.heading")}{" "}
-              <span className="bg-gradient-to-r from-[#E44CFF] to-[#4EF0FF] bg-clip-text text-transparent">
+              <span
+                className="bg-clip-text text-transparent"
+                style={{
+                  backgroundImage: lightHero
+                    ? "linear-gradient(to right, #10172d, #9A6847)"
+                    : "linear-gradient(to right, #E44CFF, #4EF0FF)",
+                }}
+              >
                 {t("about.headingHighlight")}
               </span>
             </h2>
-            <p className="text-xl text-gray-400 max-w-3xl mx-auto">
+            <p
+              className={`text-xl max-w-3xl mx-auto ${
+                lightHero ? "text-[#25304a]/78" : "text-gray-400"
+              }`}
+              style={{ color: lightHeroMutedInk }}
+            >
               {t("about.subheading")}
             </p>
           </div>
 
           {/* Nodes */}
-          <RoadmapProcess />
+          <RoadmapProcess lightMode={lightHero} />
 
           {/* CTA */}
           <div className="flex justify-center mt-16">
@@ -1176,8 +1576,13 @@ export default function Home() {
               href="#contact"
               className="group inline-flex items-center gap-2 px-8 py-3 rounded-full text-sm font-semibold transition-all duration-300 hover:scale-[1.05]"
               style={{
-                background: "linear-gradient(135deg, #E44CFF, #5861F2)",
-                boxShadow: "0 0 30px rgba(228,76,255,0.35)",
+                background: lightHero
+                  ? "linear-gradient(135deg, #101b39, #213c67)"
+                  : "linear-gradient(135deg, #E44CFF, #5861F2)",
+                boxShadow: lightHero
+                  ? "0 18px 38px -24px rgba(61,43,22,0.78)"
+                  : "0 0 30px rgba(228,76,255,0.35)",
+                color: "#fff",
               }}
             >
               Start Your Integration
@@ -1192,25 +1597,52 @@ export default function Home() {
       {/* Packages Section */}
       <section
         id="packages"
-        className="relative z-10 py-24 px-6"
+        className={`relative z-10 overflow-hidden py-24 px-6 ${
+          lightHero ? "bg-[#f7f3ea]" : ""
+        }`}
       >
         <div
           className="pointer-events-none absolute inset-0"
           style={{
-            background:
-              "radial-gradient(ellipse 60% 40% at 50% 50%, rgba(88,97,242,0.06) 0%, transparent 70%)",
+            background: lightHero
+              ? "radial-gradient(circle at 22% 18%, rgba(255,255,255,0.72), transparent 34%), radial-gradient(circle at 76% 34%, rgba(154,104,71,0.14), transparent 36%), linear-gradient(180deg, #f7f3ea 0%, #f5efe3 76%, #f7f3ea 100%)"
+              : "radial-gradient(ellipse 60% 40% at 50% 50%, rgba(88,97,242,0.06) 0%, transparent 70%)",
           }}
         />
+        {lightHero && (
+          <>
+            <div className="absolute inset-0 opacity-[0.12] [background-image:radial-gradient(#19223a_0.75px,transparent_0.75px)] [background-size:42px_42px]" />
+            <div className="pointer-events-none absolute -left-24 top-24 h-80 w-80 rounded-full border border-[#c6ad89]/22" />
+            <div className="pointer-events-none absolute right-[5%] top-16 hidden h-[440px] w-[440px] rounded-full border border-[#142143]/10 md:block" />
+          </>
+        )}
 
-        <div className="max-w-7xl mx-auto">
+        <div className="relative z-10 max-w-7xl mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold mb-6 tracking-tight">
+            <h2
+              className={`text-4xl md:text-5xl font-bold mb-6 tracking-tight ${
+                lightHero ? "text-[#10172d]" : ""
+              }`}
+              style={{ color: lightHeroInk }}
+            >
               {t("packages.heading")}{" "}
-              <span className="bg-gradient-to-r from-[#E44CFF] via-[#5861F2] to-[#4EF0FF] bg-clip-text text-transparent">
+              <span
+                className="bg-clip-text text-transparent"
+                style={{
+                  backgroundImage: lightHero
+                    ? "linear-gradient(to right, #10172d, #9A6847)"
+                    : "linear-gradient(to right, #E44CFF, #5861F2, #4EF0FF)",
+                }}
+              >
                 {t("packages.headingHighlight")}
               </span>
             </h2>
-            <p className="text-xl text-gray-400 max-w-3xl mx-auto">
+            <p
+              className={`text-xl max-w-3xl mx-auto ${
+                lightHero ? "text-[#25304a]/78" : "text-gray-400"
+              }`}
+              style={{ color: lightHeroMutedInk }}
+            >
               {t("packages.subheading")}
             </p>
           </div>
@@ -1245,52 +1677,124 @@ export default function Home() {
                 popular: false,
                 cta: t("packages.enterprise.cta"),
               },
-            ].map((pkg, index) => (
+            ].map((pkg, index) => {
+              const isPopular = Boolean(pkg.popular);
+              const packageCtaBase = lightHero
+                ? {
+                    border: "1px solid rgba(154, 104, 71, 0.32)",
+                    background: "rgba(255, 255, 255, 0.62)",
+                    color: "#10172d",
+                    boxShadow: "none",
+                  }
+                : {
+                    border: "1px solid rgba(228, 76, 255, 0.3)",
+                    background: "rgba(228, 76, 255, 0.05)",
+                    color: "#fff",
+                    boxShadow: "none",
+                  };
+              const packageCtaActive = lightHero
+                ? {
+                    background: "linear-gradient(135deg, #101b39, #213c67)",
+                    boxShadow: "0 18px 38px -24px rgba(61,43,22,0.78)",
+                    color: "#fff",
+                  }
+                : {
+                    background: "linear-gradient(135deg, #E44CFF, #5861F2)",
+                    boxShadow: "0 0 25px rgba(228, 76, 255, 0.35)",
+                    color: "#fff",
+                  };
+
+              return (
               <div
                 key={index}
                 className="relative p-8 rounded-2xl transition-all duration-500 hover:scale-[1.03] flex flex-col justify-between"
                 style={{
-                  background: pkg.popular
-                    ? "rgba(228, 76, 255, 0.08)"
-                    : "rgba(24, 27, 53, 0.35)",
+                  background: lightHero
+                    ? isPopular ? "rgba(255, 255, 255, 0.86)" : "rgba(250, 246, 237, 0.76)"
+                    : isPopular ? "rgba(228, 76, 255, 0.08)" : "rgba(24, 27, 53, 0.35)",
                   backdropFilter: "blur(20px)",
-                  border: pkg.popular
-                    ? "2px solid rgba(228, 76, 255, 0.45)"
-                    : "1px solid rgba(88, 97, 242, 0.2)",
-                  boxShadow: pkg.popular
-                    ? "0 10px 40px rgba(228, 76, 255, 0.15), 0 0 30px rgba(228, 76, 255, 0.1)"
-                    : "0 10px 30px rgba(0, 0, 0, 0.3)",
+                  border: lightHero
+                    ? isPopular ? "2px solid rgba(154, 104, 71, 0.45)" : "1px solid rgba(198, 173, 137, 0.58)"
+                    : isPopular ? "2px solid rgba(228, 76, 255, 0.45)" : "1px solid rgba(88, 97, 242, 0.2)",
+                  boxShadow: lightHero
+                    ? isPopular
+                      ? "0 24px 58px -34px rgba(61,43,22,0.72), 0 0 0 1px rgba(255,255,255,0.55) inset"
+                      : "0 18px 44px -30px rgba(61,43,22,0.58)"
+                    : isPopular
+                      ? "0 10px 40px rgba(228, 76, 255, 0.15), 0 0 30px rgba(228, 76, 255, 0.1)"
+                      : "0 10px 30px rgba(0, 0, 0, 0.3)",
                 }}
               >
                 <div>
-                  {pkg.popular && (
+                  {isPopular && (
                     <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
                       <span
                         className="px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider text-white"
                         style={{
-                          background: "linear-gradient(135deg, #E44CFF, #5861F2)",
-                          boxShadow: "0 0 15px rgba(228, 76, 255, 0.5)",
+                          background: lightHero
+                            ? "linear-gradient(135deg, #101b39, #9A6847)"
+                            : "linear-gradient(135deg, #E44CFF, #5861F2)",
+                          boxShadow: lightHero
+                            ? "0 14px 28px -18px rgba(61,43,22,0.78)"
+                            : "0 0 15px rgba(228, 76, 255, 0.5)",
                         }}
                       >
                         {pkg.popularText}
                       </span>
                     </div>
                   )}
-                  <h3 className="text-2xl font-bold mb-3 text-white">{pkg.name}</h3>
+                  <h3
+                    className={`text-2xl font-bold mb-3 ${
+                      lightHero ? "text-[#10172d]" : "text-white"
+                    }`}
+                    style={{ color: lightHeroInk }}
+                  >
+                    {pkg.name}
+                  </h3>
                   <div className="mb-5 flex items-baseline">
-                    <span className="text-4xl font-extrabold bg-gradient-to-r from-[#E44CFF] to-[#4EF0FF] bg-clip-text text-transparent">
+                    <span
+                      className="text-4xl font-extrabold bg-clip-text text-transparent"
+                      style={{
+                        backgroundImage: lightHero
+                          ? "linear-gradient(to right, #10172d, #9A6847)"
+                          : "linear-gradient(to right, #E44CFF, #4EF0FF)",
+                      }}
+                    >
                       {pkg.price}
                     </span>
-                    <span className="text-gray-400 ml-2 text-sm">{pkg.period}</span>
+                    <span
+                      className={`ml-2 text-sm ${
+                        lightHero ? "text-[#6f604f]" : "text-gray-400"
+                      }`}
+                      style={{ color: lightHero ? "#6f604f" : undefined }}
+                    >
+                      {pkg.period}
+                    </span>
                   </div>
-                  <p className="text-gray-400 mb-6 text-sm leading-relaxed">{pkg.description}</p>
+                  <p
+                    className={`mb-6 text-sm leading-relaxed ${
+                      lightHero ? "text-[#25304a]/72" : "text-gray-400"
+                    }`}
+                    style={{ color: lightHero ? "rgba(37,48,74,0.72)" : undefined }}
+                  >
+                    {pkg.description}
+                  </p>
                   <ul className="space-y-3.5 mb-8">
                     {Array.isArray(pkg.features) && pkg.features.map((feature: string, featureIndex: number) => (
                       <li
                         key={featureIndex}
-                        className="flex items-start text-sm text-gray-300"
+                        className={`flex items-start text-sm ${
+                          lightHero ? "text-[#25304a]/82" : "text-gray-300"
+                        }`}
+                        style={{ color: lightHero ? "rgba(37,48,74,0.82)" : undefined }}
                       >
-                        <Check className="w-4 h-4 text-[#4EF0FF] mr-2.5 mt-0.5 flex-shrink-0 drop-shadow-[0_0_6px_rgba(78,240,255,0.6)]" />
+                        <Check
+                          className="w-4 h-4 mr-2.5 mt-0.5 flex-shrink-0"
+                          style={{
+                            color: lightHero ? "#9A6847" : "#4EF0FF",
+                            filter: lightHero ? "none" : "drop-shadow(0 0 6px rgba(78,240,255,0.6))",
+                          }}
+                        />
                         <span>{feature}</span>
                       </li>
                     ))}
@@ -1299,53 +1803,73 @@ export default function Home() {
                 <a
                   href="#contact"
                   className="w-full text-center py-3.5 px-6 rounded-xl font-semibold transition-all duration-300 hover:scale-[1.02]"
-                  style={
-                    pkg.popular
-                      ? {
-                          background: "linear-gradient(135deg, #E44CFF, #5861F2)",
-                          boxShadow: "0 0 25px rgba(228, 76, 255, 0.35)",
-                          color: "#fff"
-                        }
-                      : {
-                          border: "1px solid rgba(228, 76, 255, 0.3)",
-                          background: "rgba(228, 76, 255, 0.05)",
-                          color: "#fff"
-                        }
-                  }
+                  style={isPopular ? packageCtaActive : packageCtaBase}
                   onMouseEnter={(e) => {
-                    if (!pkg.popular) {
-                      e.currentTarget.style.background =
-                        "linear-gradient(135deg, #E44CFF, #5861F2)";
-                      e.currentTarget.style.boxShadow =
-                        "0 0 25px rgba(228, 76, 255, 0.35)";
+                    if (!isPopular) {
+                      e.currentTarget.style.background = packageCtaActive.background;
+                      e.currentTarget.style.boxShadow = packageCtaActive.boxShadow;
+                      e.currentTarget.style.color = packageCtaActive.color;
                     }
                   }}
                   onMouseLeave={(e) => {
-                    if (!pkg.popular) {
-                      e.currentTarget.style.background = "rgba(228, 76, 255, 0.05)";
-                      e.currentTarget.style.boxShadow = "none";
+                    if (!isPopular) {
+                      e.currentTarget.style.background = packageCtaBase.background;
+                      e.currentTarget.style.boxShadow = packageCtaBase.boxShadow;
+                      e.currentTarget.style.color = packageCtaBase.color;
                     }
                   }}
                 >
                   {pkg.cta}
                 </a>
               </div>
-            ))}
+              );
+            })}
           </div>
         </div>
       </section>
 
       {/* Community Section */}
-      <section id="community" className="relative z-10 py-24 px-6">
-        <div className="max-w-7xl mx-auto">
+      <section
+        id="community"
+        className={`relative z-10 overflow-hidden py-24 px-6 ${
+          lightHero ? "bg-[#f7f3ea]" : ""
+        }`}
+      >
+        {lightHero && (
+          <>
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_24%_18%,rgba(255,255,255,0.72),transparent_34%),radial-gradient(circle_at_76%_36%,rgba(154,104,71,0.14),transparent_36%),linear-gradient(180deg,#f7f3ea_0%,#f5efe3_76%,#f7f3ea_100%)]" />
+            <div className="absolute inset-0 opacity-[0.12] [background-image:radial-gradient(#19223a_0.75px,transparent_0.75px)] [background-size:42px_42px]" />
+            <div className="pointer-events-none absolute -left-24 top-28 h-80 w-80 rounded-full border border-[#c6ad89]/22" />
+            <div className="pointer-events-none absolute right-[5%] top-16 hidden h-[460px] w-[460px] rounded-full border border-[#142143]/10 md:block" />
+          </>
+        )}
+
+        <div className="relative z-10 max-w-7xl mx-auto">
           {/* Section Heading - Outside the visual container */}
           <div className="text-center mb-16">
-            <p className="text-sm uppercase tracking-[0.35em] text-gray-300 mb-4">
+            <p
+              className={`text-sm uppercase tracking-[0.35em] mb-4 ${
+                lightHero ? "text-[#6f604f]" : "text-gray-300"
+              }`}
+              style={{ color: lightHero ? "#6f604f" : undefined }}
+            >
               {t("community.kicker")}
             </p>
-            <h2 className="text-4xl md:text-5xl font-bold mb-6 tracking-tight">
+            <h2
+              className={`text-4xl md:text-5xl font-bold mb-6 tracking-tight ${
+                lightHero ? "text-[#10172d]" : ""
+              }`}
+              style={{ color: lightHeroInk }}
+            >
               {t("community.title")}{" "}
-              <span className="bg-gradient-to-r from-[#E44CFF] to-[#4EF0FF] bg-clip-text text-transparent">
+              <span
+                className="bg-clip-text text-transparent"
+                style={{
+                  backgroundImage: lightHero
+                    ? "linear-gradient(to right, #10172d, #9A6847)"
+                    : "linear-gradient(to right, #E44CFF, #4EF0FF)",
+                }}
+              >
                 {t("community.highlight")}
               </span>
             </h2>
@@ -1357,35 +1881,38 @@ export default function Home() {
             <div className="absolute inset-0">
               <div
                 className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[1060px] h-[1060px] md:w-[1200px] md:h-[1200px] rounded-full"
-                style={{ border: "1px solid rgba(228, 76, 255, 0.15)" }}
+                style={{ border: lightHero ? "1px solid rgba(154, 104, 71, 0.20)" : "1px solid rgba(228, 76, 255, 0.15)" }}
               />
               <div
                 className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[900px] h-[900px] md:w-[1040px] md:h-[1040px] rounded-full"
-                style={{ border: "1px solid rgba(228, 76, 255, 0.12)" }}
+                style={{ border: lightHero ? "1px solid rgba(20, 33, 67, 0.12)" : "1px solid rgba(228, 76, 255, 0.12)" }}
               />
               <div
                 className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[680px] h-[680px] md:w-[810px] md:h-[810px] rounded-full"
-                style={{ border: "1px solid rgba(228, 76, 255, 0.11)" }}
+                style={{ border: lightHero ? "1px solid rgba(154, 104, 71, 0.16)" : "1px solid rgba(228, 76, 255, 0.11)" }}
               />
               <div
                 className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[450px] h-[450px] md:w-[590px] md:h-[590px] rounded-full"
-                style={{ border: "1px solid rgba(228, 76, 255, 0.1)" }}
+                style={{ border: lightHero ? "1px solid rgba(20, 33, 67, 0.10)" : "1px solid rgba(228, 76, 255, 0.1)" }}
               />
               <div
                 className="absolute inset-0"
                 style={{
-                  background:
-                    "radial-gradient(circle at center, rgba(228, 76, 255, 0.08), transparent 55%)",
+                  background: lightHero
+                    ? "radial-gradient(circle at center, rgba(154, 104, 71, 0.12), transparent 55%)"
+                    : "radial-gradient(circle at center, rgba(228, 76, 255, 0.08), transparent 55%)",
                 }}
               />
               {orbitDots.map((dot, index) => (
                 <div
                   key={index}
-                  className="absolute w-2 h-2 rounded-full bg-white shadow-[0_0_12px_rgba(255,255,255,0.45)]"
+                  className="absolute w-2 h-2 rounded-full"
                   style={{
                     left: dot.left,
                     top: dot.top,
                     opacity: 0.7,
+                    background: lightHero ? "#9A6847" : "#FFFFFF",
+                    boxShadow: lightHero ? "0 0 12px rgba(154,104,71,0.32)" : "0 0 12px rgba(255,255,255,0.45)",
                   }}
                 />
               ))}
@@ -1396,8 +1923,13 @@ export default function Home() {
                 <button
                   className="px-7 py-3 rounded-full font-semibold transition-all duration-300 hover:scale-[1.05]"
                   style={{
-                    background: "linear-gradient(135deg, #E44CFF, #5861F2)",
-                    boxShadow: "0 0 30px rgba(228, 76, 255, 0.4)",
+                    background: lightHero
+                      ? "linear-gradient(135deg, #101b39, #213c67)"
+                      : "linear-gradient(135deg, #E44CFF, #5861F2)",
+                    boxShadow: lightHero
+                      ? "0 18px 38px -24px rgba(61,43,22,0.78)"
+                      : "0 0 30px rgba(228, 76, 255, 0.4)",
+                    color: "#fff",
                   }}
                 >
                   {t("community.cta")}
@@ -1425,10 +1957,12 @@ export default function Home() {
                       animationDelay: `${-(member.initialAngle / 360) * member.duration
                         }s`,
                       transform: "translate(-50%, -50%)",
-                      background: "rgba(24, 27, 53, 0.8)",
+                      background: lightHero ? "rgba(255, 255, 255, 0.76)" : "rgba(24, 27, 53, 0.8)",
                       backdropFilter: "blur(16px)",
-                      border: "1px solid rgba(228, 76, 255, 0.3)",
-                      boxShadow: "0 0 20px rgba(228, 76, 255, 0.2)",
+                      border: lightHero ? "1px solid rgba(198, 173, 137, 0.62)" : "1px solid rgba(228, 76, 255, 0.3)",
+                      boxShadow: lightHero
+                        ? "0 18px 38px -24px rgba(61,43,22,0.72)"
+                        : "0 0 20px rgba(228, 76, 255, 0.2)",
                     }}
                   >
                     <div className="relative">
@@ -1436,20 +1970,29 @@ export default function Home() {
                         src={member.image}
                         alt={member.name}
                         className="w-10 h-10 rounded-full object-cover"
-                        style={{ border: "2px solid rgba(228, 76, 255, 0.5)" }}
+                        style={{ border: lightHero ? "2px solid rgba(154, 104, 71, 0.45)" : "2px solid rgba(228, 76, 255, 0.5)" }}
                       />
                       <span
-                        className="absolute -right-1 -bottom-1 w-2 h-2 rounded-full bg-[#4EF0FF]"
+                        className="absolute -right-1 -bottom-1 w-2 h-2 rounded-full"
                         style={{
-                          boxShadow: "0 0 10px rgba(78, 240, 255, 0.8)",
+                          background: lightHero ? "#9A6847" : "#4EF0FF",
+                          boxShadow: lightHero ? "0 0 10px rgba(154,104,71,0.45)" : "0 0 10px rgba(78, 240, 255, 0.8)",
                         }}
                       />
                     </div>
                     <div className="leading-tight text-left">
-                      <div className="text-sm font-semibold text-white">
+                      <div
+                        className={`text-sm font-semibold ${
+                          lightHero ? "text-[#10172d]" : "text-white"
+                        }`}
+                        style={{ color: lightHeroInk }}
+                      >
                         {member.name}
                       </div>
-                      <div className="text-[11px] text-[#E44CFF]">
+                      <div
+                        className="text-[11px]"
+                        style={{ color: lightHero ? "#9A6847" : "#E44CFF" }}
+                      >
                         {member.role}
                       </div>
                     </div>
@@ -1477,10 +2020,12 @@ export default function Home() {
                       animationDelay: `${-(avatar.initialAngle / 360) * avatar.duration
                         }s`,
                       transform: "translate(-50%, -50%)",
-                      border: "1px solid rgba(228, 76, 255, 0.3)",
-                      background: "rgba(24, 27, 53, 0.6)",
+                      border: lightHero ? "1px solid rgba(198, 173, 137, 0.62)" : "1px solid rgba(228, 76, 255, 0.3)",
+                      background: lightHero ? "rgba(255, 255, 255, 0.70)" : "rgba(24, 27, 53, 0.6)",
                       backdropFilter: "blur(12px)",
-                      boxShadow: "0 0 20px rgba(228, 76, 255, 0.15)",
+                      boxShadow: lightHero
+                        ? "0 14px 30px -22px rgba(61,43,22,0.72)"
+                        : "0 0 20px rgba(228, 76, 255, 0.15)",
                     }}
                   >
                     <img
@@ -1500,35 +2045,60 @@ export default function Home() {
       {/* Contact Section */}
       <section
         id="contact"
-        className="relative z-10 px-6 py-24"
+        className={`relative z-10 overflow-hidden px-6 py-24 ${
+          lightHero ? "bg-[#f7f3ea]" : ""
+        }`}
       >
         <div
-          className="pointer-events-none absolute inset-x-0 top-1/2 h-[70%] -translate-y-1/2"
+          className="pointer-events-none absolute inset-0"
           style={{
-            background:
-              "radial-gradient(ellipse 65% 45% at 50% 50%, rgba(228,76,255,0.08) 0%, transparent 72%)",
+            background: lightHero
+              ? "radial-gradient(circle at 22% 18%, rgba(255,255,255,0.72), transparent 34%), radial-gradient(circle at 76% 38%, rgba(154,104,71,0.14), transparent 36%), linear-gradient(180deg, #f7f3ea 0%, #f5efe3 72%, #f7f3ea 100%)"
+              : "radial-gradient(ellipse 65% 45% at 50% 50%, rgba(228,76,255,0.08) 0%, transparent 72%)",
           }}
         />
+        {lightHero && (
+          <>
+            <div className="absolute inset-0 opacity-[0.12] [background-image:radial-gradient(#19223a_0.75px,transparent_0.75px)] [background-size:42px_42px]" />
+            <div className="pointer-events-none absolute -left-24 top-20 h-80 w-80 rounded-full border border-[#c6ad89]/22" />
+            <div className="pointer-events-none absolute right-[6%] top-24 hidden h-[440px] w-[440px] rounded-full border border-[#142143]/10 md:block" />
+          </>
+        )}
 
         <div className="relative mx-auto max-w-7xl">
           <form
             className="space-y-10"
-            onSubmit={(event) => event.preventDefault()}
+            onSubmit={handleContactSubmit}
           >
             <div className="grid items-center gap-10 lg:grid-cols-[0.95fr_1.05fr]">
               <div className="space-y-8">
                 <div>
-                  <p className="mb-4 text-sm font-bold uppercase tracking-[0.22em] text-[#ACA0FB]">
+                  <p
+                    className={`mb-4 text-sm font-bold uppercase tracking-[0.22em] ${
+                      lightHero ? "text-[#9A6847]" : "text-[#ACA0FB]"
+                    }`}
+                    style={{ color: lightHero ? "#9A6847" : undefined }}
+                  >
                     {t("contact.configurator.kicker")}
                   </p>
-                  <h2 className="text-4xl font-semibold leading-tight tracking-tight text-white md:text-5xl">
+                  <h2
+                    className={`text-4xl font-semibold leading-tight tracking-tight md:text-5xl ${
+                      lightHero ? "text-[#10172d]" : "text-white"
+                    }`}
+                    style={{ color: lightHeroInk }}
+                  >
                     {t("contact.configurator.title")}
                   </h2>
                 </div>
 
                 <div className="space-y-7">
                   <div>
-                    <h3 className="mb-3 text-xl font-semibold text-white">
+                    <h3
+                      className={`mb-3 text-xl font-semibold ${
+                        lightHero ? "text-[#10172d]" : "text-white"
+                      }`}
+                      style={{ color: lightHeroInk }}
+                    >
                       {t("contact.configurator.industryLabel")}
                     </h3>
                     <div className="flex flex-wrap gap-3">
@@ -1538,22 +2108,10 @@ export default function Home() {
                           type="button"
                           aria-pressed={contactIndustry === option.key}
                           onClick={() => setContactIndustry(option.key)}
-                          className="min-h-11 rounded-full border px-5 text-base font-semibold transition-all duration-300 hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-[#E44CFF]/40"
-                          style={{
-                            background:
-                              contactIndustry === option.key
-                                ? "rgba(228, 76, 255, 0.24)"
-                                : "rgba(255, 255, 255, 0.03)",
-                            borderColor:
-                              contactIndustry === option.key
-                                ? "rgba(228, 76, 255, 0.7)"
-                                : "rgba(255, 255, 255, 0.1)",
-                            boxShadow:
-                              contactIndustry === option.key
-                                ? "0 0 18px rgba(228, 76, 255, 0.28)"
-                                : "none",
-                            color: contactIndustry === option.key ? "#FFFFFF" : "rgba(255, 255, 255, 0.78)",
-                          }}
+                          className={`min-h-11 rounded-full border px-5 text-base font-semibold transition-all duration-300 hover:-translate-y-0.5 focus:outline-none focus:ring-2 ${
+                            lightHero ? "focus:ring-[#9A6847]/35" : "focus:ring-[#E44CFF]/40"
+                          }`}
+                          style={getContactOptionStyle(contactIndustry === option.key)}
                         >
                           {option.label}
                         </button>
@@ -1562,7 +2120,12 @@ export default function Home() {
                   </div>
 
                   <div>
-                    <h3 className="mb-3 text-xl font-semibold text-white">
+                    <h3
+                      className={`mb-3 text-xl font-semibold ${
+                        lightHero ? "text-[#10172d]" : "text-white"
+                      }`}
+                      style={{ color: lightHeroInk }}
+                    >
                       {t("contact.configurator.goalLabel")}
                     </h3>
                     <div className="flex flex-wrap gap-3">
@@ -1572,22 +2135,10 @@ export default function Home() {
                           type="button"
                           aria-pressed={contactGoal === option.key}
                           onClick={() => setContactGoal(option.key)}
-                          className="min-h-11 rounded-full border px-5 text-base font-semibold transition-all duration-300 hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-[#E44CFF]/40"
-                          style={{
-                            background:
-                              contactGoal === option.key
-                                ? "rgba(228, 76, 255, 0.24)"
-                                : "rgba(255, 255, 255, 0.03)",
-                            borderColor:
-                              contactGoal === option.key
-                                ? "rgba(228, 76, 255, 0.7)"
-                                : "rgba(255, 255, 255, 0.1)",
-                            boxShadow:
-                              contactGoal === option.key
-                                ? "0 0 18px rgba(228, 76, 255, 0.28)"
-                                : "none",
-                            color: contactGoal === option.key ? "#FFFFFF" : "rgba(255, 255, 255, 0.78)",
-                          }}
+                          className={`min-h-11 rounded-full border px-5 text-base font-semibold transition-all duration-300 hover:-translate-y-0.5 focus:outline-none focus:ring-2 ${
+                            lightHero ? "focus:ring-[#9A6847]/35" : "focus:ring-[#E44CFF]/40"
+                          }`}
+                          style={getContactOptionStyle(contactGoal === option.key)}
                         >
                           {option.label}
                         </button>
@@ -1596,7 +2147,12 @@ export default function Home() {
                   </div>
 
                   <div>
-                    <h3 className="mb-3 text-xl font-semibold text-white">
+                    <h3
+                      className={`mb-3 text-xl font-semibold ${
+                        lightHero ? "text-[#10172d]" : "text-white"
+                      }`}
+                      style={{ color: lightHeroInk }}
+                    >
                       {t("contact.configurator.scaleLabel")}
                     </h3>
                     <div className="flex flex-wrap gap-3">
@@ -1606,22 +2162,10 @@ export default function Home() {
                           type="button"
                           aria-pressed={contactScale === option.key}
                           onClick={() => setContactScale(option.key)}
-                          className="min-h-11 rounded-full border px-5 text-base font-semibold transition-all duration-300 hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-[#E44CFF]/40"
-                          style={{
-                            background:
-                              contactScale === option.key
-                                ? "rgba(228, 76, 255, 0.24)"
-                                : "rgba(255, 255, 255, 0.03)",
-                            borderColor:
-                              contactScale === option.key
-                                ? "rgba(228, 76, 255, 0.7)"
-                                : "rgba(255, 255, 255, 0.1)",
-                            boxShadow:
-                              contactScale === option.key
-                                ? "0 0 18px rgba(228, 76, 255, 0.28)"
-                                : "none",
-                            color: contactScale === option.key ? "#FFFFFF" : "rgba(255, 255, 255, 0.78)",
-                          }}
+                          className={`min-h-11 rounded-full border px-5 text-base font-semibold transition-all duration-300 hover:-translate-y-0.5 focus:outline-none focus:ring-2 ${
+                            lightHero ? "focus:ring-[#9A6847]/35" : "focus:ring-[#E44CFF]/40"
+                          }`}
+                          style={getContactOptionStyle(contactScale === option.key)}
                         >
                           {option.label}
                         </button>
@@ -1632,24 +2176,61 @@ export default function Home() {
 
                 <div className="grid gap-5">
                   <div>
-                    <label className="mb-2 block text-base font-bold text-[#E44CFF]">
+                    <label
+                      className={`mb-2 block text-base font-bold ${
+                        lightHero ? "text-[#9A6847]" : "text-[#E44CFF]"
+                      }`}
+                      style={{ color: lightHero ? "#9A6847" : undefined }}
+                    >
                       {t("contact.configurator.nameLabel")}
                     </label>
                     <input
                       type="text"
-                      className="h-[58px] w-full rounded-[14px] border border-[#8B56FF]/30 bg-[#080B22]/75 px-5 py-4 text-lg leading-none text-white outline-none transition-all duration-300 placeholder:text-white/25 focus:border-[#E44CFF]/75 focus:ring-2 focus:ring-[#E44CFF]/25"
+                      value={contactName}
+                      onChange={(event) => setContactName(event.target.value)}
+                      className={lightHero ? lightInputClassName : darkInputClassName}
+                      style={lightInputStyle}
                       placeholder={t("contact.configurator.namePlaceholder")}
+                      required
                     />
                   </div>
 
                   <div>
-                    <label className="mb-2 block text-base font-bold text-[#E44CFF]">
+                    <label
+                      className={`mb-2 block text-base font-bold ${
+                        lightHero ? "text-[#9A6847]" : "text-[#E44CFF]"
+                      }`}
+                      style={{ color: lightHero ? "#9A6847" : undefined }}
+                    >
                       {t("contact.configurator.emailLabel")}
                     </label>
                     <input
                       type="email"
-                      className="h-[58px] w-full rounded-[14px] border border-[#8B56FF]/30 bg-[#080B22]/75 px-5 py-4 text-lg leading-none text-white outline-none transition-all duration-300 placeholder:text-white/25 focus:border-[#E44CFF]/75 focus:ring-2 focus:ring-[#E44CFF]/25"
+                      value={contactEmailAddress}
+                      onChange={(event) => setContactEmailAddress(event.target.value)}
+                      className={lightHero ? lightInputClassName : darkInputClassName}
+                      style={lightInputStyle}
                       placeholder={t("contact.configurator.emailPlaceholder")}
+                      required
+                    />
+                  </div>
+
+                  <div>
+                    <label
+                      className={`mb-2 block text-base font-bold ${
+                        lightHero ? "text-[#9A6847]" : "text-[#E44CFF]"
+                      }`}
+                      style={{ color: lightHero ? "#9A6847" : undefined }}
+                    >
+                      {t("contact.configurator.messageLabel")}
+                    </label>
+                    <textarea
+                      value={contactMessage}
+                      onChange={(event) => setContactMessage(event.target.value)}
+                      className={lightHero ? lightTextareaClassName : darkTextareaClassName}
+                      style={lightInputStyle}
+                      placeholder={t("contact.configurator.messagePlaceholder")}
+                      required
                     />
                   </div>
                 </div>
@@ -1657,33 +2238,56 @@ export default function Home() {
 
               <div className="relative min-h-[560px] overflow-visible py-8 pr-8 sm:pr-12">
                 <motion.div
-                  className="absolute right-10 top-16 z-0 h-[500px] w-[calc(100%-3rem)] max-w-xl -rotate-[8deg] rounded-[2rem] border border-white/[0.12] bg-[#4EF0FF]/[0.06] shadow-[0_0_35px_rgba(228,76,255,0.10)] backdrop-blur-md"
+                  className={`absolute right-10 top-16 z-0 h-[500px] w-[calc(100%-3rem)] max-w-xl -rotate-[8deg] rounded-[2rem] border backdrop-blur-md ${
+                    lightHero
+                      ? "border-[#d8c7aa]/55 bg-white/46 shadow-[0_18px_44px_-30px_rgba(61,43,22,0.45)]"
+                      : "border-white/[0.12] bg-[#4EF0FF]/[0.06] shadow-[0_0_35px_rgba(228,76,255,0.10)]"
+                  }`}
                   animate={{ y: [0, 10, 0], rotate: [-8, -6, -8] }}
                   transition={{ duration: 9, repeat: Infinity, ease: "easeInOut" }}
                 />
                 <motion.div
-                  className="absolute right-0 top-0 z-[1] h-[500px] w-[calc(100%-3rem)] max-w-xl rotate-[6deg] rounded-[2rem] border border-[#4EF0FF]/30 bg-white/[0.08] shadow-[0_0_35px_rgba(78,240,255,0.12)] backdrop-blur-md"
+                  className={`absolute right-0 top-0 z-[1] h-[500px] w-[calc(100%-3rem)] max-w-xl rotate-[6deg] rounded-[2rem] border backdrop-blur-md ${
+                    lightHero
+                      ? "border-[#c6ad89]/58 bg-[#fbf8f1]/62 shadow-[0_18px_44px_-30px_rgba(61,43,22,0.52)]"
+                      : "border-[#4EF0FF]/30 bg-white/[0.08] shadow-[0_0_35px_rgba(78,240,255,0.12)]"
+                  }`}
                   animate={{ y: [0, -8, 0], rotate: [6, 4, 6] }}
                   transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
                 />
 
                 <motion.div
-                  className="relative z-10 ml-auto mr-5 mt-7 min-h-[500px] max-w-xl rounded-[2rem] border border-white/[0.18] bg-white/[0.08] p-6 shadow-[0_0_55px_rgba(78,240,255,0.12)] backdrop-blur-2xl md:mr-8 md:p-8"
+                  className={`relative z-10 ml-auto mr-5 mt-7 min-h-[500px] max-w-xl rounded-[2rem] border p-6 backdrop-blur-2xl md:mr-8 md:p-8 ${
+                    lightHero
+                      ? "border-[#d8c7aa]/70 bg-white/78 shadow-[0_24px_58px_-34px_rgba(61,43,22,0.72)]"
+                      : "border-white/[0.18] bg-white/[0.08] shadow-[0_0_55px_rgba(78,240,255,0.12)]"
+                  }`}
                   animate={{
                     y: [0, -6, 0],
-                    boxShadow: [
-                      "0 0 45px rgba(78,240,255,0.10)",
-                      "0 0 70px rgba(228,76,255,0.16)",
-                      "0 0 45px rgba(78,240,255,0.10)",
-                    ],
+                    boxShadow: lightHero
+                      ? [
+                          "0 24px 58px -34px rgba(61,43,22,0.62)",
+                          "0 28px 66px -34px rgba(61,43,22,0.78)",
+                          "0 24px 58px -34px rgba(61,43,22,0.62)",
+                        ]
+                      : [
+                          "0 0 45px rgba(78,240,255,0.10)",
+                          "0 0 70px rgba(228,76,255,0.16)",
+                          "0 0 45px rgba(78,240,255,0.10)",
+                        ],
                   }}
                   transition={{ duration: 7, repeat: Infinity, ease: "easeInOut" }}
                 >
-                  <h3 className="text-3xl font-semibold tracking-tight text-white">
+                  <h3
+                    className={`text-3xl font-semibold tracking-tight ${
+                      lightHero ? "text-[#10172d]" : "text-white"
+                    }`}
+                    style={{ color: lightHeroInk }}
+                  >
                     {t("contact.configurator.blueprintTitle")}
                   </h3>
 
-                  <div className="relative mt-12 h-64 overflow-hidden rounded-2xl">
+                  <div className={`relative mt-12 h-64 overflow-hidden rounded-2xl ${lightHero ? "bg-[#f5efe3]/45" : ""}`}>
                     <svg
                       viewBox="0 0 520 250"
                       className="absolute inset-0 h-full w-full"
@@ -1697,7 +2301,7 @@ export default function Home() {
                         <motion.path
                           key={`input-path-${index}`}
                           d={path}
-                          stroke="rgba(172,160,251,0.5)"
+                          stroke={lightHero ? "rgba(154,104,71,0.46)" : "rgba(172,160,251,0.5)"}
                           strokeWidth="3"
                           fill="none"
                           strokeDasharray="8 10"
@@ -1713,7 +2317,7 @@ export default function Home() {
                         <motion.path
                           key={`output-path-${index}`}
                           d={path}
-                          stroke="rgba(78,240,255,0.58)"
+                          stroke={lightHero ? "rgba(20,33,67,0.48)" : "rgba(78,240,255,0.58)"}
                           strokeWidth="3"
                           fill="none"
                           strokeDasharray="10 12"
@@ -1724,87 +2328,136 @@ export default function Home() {
                     </svg>
 
                     <motion.div
-                      className="absolute left-8 top-5 flex h-14 w-14 items-center justify-center rounded-xl border border-[#E44CFF]/30 bg-[#E44CFF]/15 shadow-[0_0_20px_rgba(228,76,255,0.22)]"
+                      className={`absolute left-8 top-5 flex h-14 w-14 items-center justify-center rounded-xl border ${
+                        lightHero
+                          ? "border-[#9A6847]/35 bg-white/68 shadow-[0_14px_28px_-20px_rgba(61,43,22,0.58)]"
+                          : "border-[#E44CFF]/30 bg-[#E44CFF]/15 shadow-[0_0_20px_rgba(228,76,255,0.22)]"
+                      }`}
                       animate={{ scale: [1, 1.06, 1], y: [0, -4, 0] }}
                       transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
                     >
-                      <span className="h-6 w-6 rounded-full border-4 border-[#E44CFF]/70" />
+                      <span
+                        className="h-6 w-6 rounded-full border-4"
+                        style={{ borderColor: lightHero ? "rgba(154,104,71,0.70)" : "rgba(228,76,255,0.70)" }}
+                      />
                     </motion.div>
                     <motion.div
-                      className="absolute left-4 top-[98px] h-16 w-20 rounded-xl border border-[#ACA0FB]/25 bg-[#5861F2]/15 p-4"
+                      className={`absolute left-4 top-[98px] h-16 w-20 rounded-xl border p-4 ${
+                        lightHero ? "border-[#c6ad89]/50 bg-white/58" : "border-[#ACA0FB]/25 bg-[#5861F2]/15"
+                      }`}
                       animate={{ x: [0, 5, 0] }}
                       transition={{ duration: 4.2, repeat: Infinity, ease: "easeInOut" }}
                     >
                       {[40, 48, 32].map((width, index) => (
                         <motion.span
                           key={`blueprint-left-line-${index}`}
-                          className="mb-2 block h-1.5 rounded-full bg-[#ACA0FB]/60 last:mb-0"
+                          className="mb-2 block h-1.5 rounded-full last:mb-0"
+                          style={{ background: lightHero ? "rgba(20,33,67,0.42)" : "rgba(172,160,251,0.60)" }}
                           animate={{ width: [`${Math.max(20, width - 14)}px`, `${width}px`, `${Math.max(18, width - 5)}px`] }}
                           transition={{ duration: 2.2, repeat: Infinity, delay: index * 0.22 }}
                         />
                       ))}
                     </motion.div>
                     <motion.div
-                      className="absolute left-8 bottom-5 flex h-14 w-14 items-center justify-center rounded-xl border border-[#ACA0FB]/25 bg-[#5861F2]/15"
+                      className={`absolute left-8 bottom-5 flex h-14 w-14 items-center justify-center rounded-xl border ${
+                        lightHero ? "border-[#c6ad89]/50 bg-white/58" : "border-[#ACA0FB]/25 bg-[#5861F2]/15"
+                      }`}
                       animate={{ scale: [1, 1.05, 1], y: [0, 4, 0] }}
                       transition={{ duration: 3.7, repeat: Infinity, ease: "easeInOut" }}
                     >
-                      <span className="h-7 w-7 rounded-full border-2 border-[#ACA0FB]/55" />
+                      <span
+                        className="h-7 w-7 rounded-full border-2"
+                        style={{ borderColor: lightHero ? "rgba(20,33,67,0.45)" : "rgba(172,160,251,0.55)" }}
+                      />
                     </motion.div>
 
                     <motion.div
-                      className="absolute left-1/2 top-1/2 flex h-20 w-20 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-2xl border border-[#4EF0FF]/50 bg-[linear-gradient(135deg,rgba(78,240,255,0.22),rgba(228,76,255,0.22))] shadow-[0_0_35px_rgba(78,240,255,0.22)]"
+                      className={`absolute left-1/2 top-1/2 flex h-20 w-20 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-2xl border ${
+                        lightHero
+                          ? "border-[#142143]/35 bg-[linear-gradient(135deg,rgba(20,33,67,0.12),rgba(154,104,71,0.18))] shadow-[0_18px_34px_-24px_rgba(61,43,22,0.72)]"
+                          : "border-[#4EF0FF]/50 bg-[linear-gradient(135deg,rgba(78,240,255,0.22),rgba(228,76,255,0.22))] shadow-[0_0_35px_rgba(78,240,255,0.22)]"
+                      }`}
                       animate={{
                         scale: [1, 1.08, 1],
                         boxShadow: [
-                          "0 0 25px rgba(78,240,255,0.18)",
-                          "0 0 48px rgba(78,240,255,0.34)",
-                          "0 0 25px rgba(78,240,255,0.18)",
+                          lightHero ? "0 18px 34px -24px rgba(61,43,22,0.58)" : "0 0 25px rgba(78,240,255,0.18)",
+                          lightHero ? "0 24px 44px -24px rgba(61,43,22,0.74)" : "0 0 48px rgba(78,240,255,0.34)",
+                          lightHero ? "0 18px 34px -24px rgba(61,43,22,0.58)" : "0 0 25px rgba(78,240,255,0.18)",
                         ],
                       }}
                       transition={{ duration: 2.8, repeat: Infinity, ease: "easeInOut" }}
                     >
                       <div className="relative h-10 w-10">
-                        <span className="absolute left-1 top-3 h-3 w-3 rounded-full border-2 border-white/80" />
-                        <span className="absolute right-1 top-1 h-3 w-3 rounded-full border-2 border-white/80" />
-                        <span className="absolute right-1 bottom-1 h-3 w-3 rounded-full border-2 border-white/80" />
-                        <span className="absolute left-4 top-5 h-px w-5 rotate-[-35deg] bg-white/70" />
-                        <span className="absolute left-4 top-5 h-px w-5 rotate-[35deg] bg-white/70" />
+                        <span className={`absolute left-1 top-3 h-3 w-3 rounded-full border-2 ${lightHero ? "border-[#10172d]/80" : "border-white/80"}`} />
+                        <span className={`absolute right-1 top-1 h-3 w-3 rounded-full border-2 ${lightHero ? "border-[#10172d]/80" : "border-white/80"}`} />
+                        <span className={`absolute right-1 bottom-1 h-3 w-3 rounded-full border-2 ${lightHero ? "border-[#10172d]/80" : "border-white/80"}`} />
+                        <span className={`absolute left-4 top-5 h-px w-5 rotate-[-35deg] ${lightHero ? "bg-[#10172d]/70" : "bg-white/70"}`} />
+                        <span className={`absolute left-4 top-5 h-px w-5 rotate-[35deg] ${lightHero ? "bg-[#10172d]/70" : "bg-white/70"}`} />
                       </div>
                     </motion.div>
 
                     <motion.div
-                      className="absolute right-4 top-3 h-16 w-16 rounded-xl border border-white/15 bg-white/[0.08]"
+                      className={`absolute right-4 top-3 h-16 w-16 rounded-xl border ${
+                        lightHero ? "border-[#d8c7aa]/55 bg-white/58" : "border-white/15 bg-white/[0.08]"
+                      }`}
                       animate={{ opacity: [0.5, 0.95, 0.5], y: [0, -5, 0] }}
                       transition={{ duration: 3.4, repeat: Infinity, ease: "easeInOut" }}
                     />
                     <motion.div
-                      className="absolute right-4 top-[100px] flex h-16 w-16 items-center justify-center rounded-xl border border-[#4EF0FF]/25 bg-[#4EF0FF]/10"
+                      className={`absolute right-4 top-[100px] flex h-16 w-16 items-center justify-center rounded-xl border ${
+                        lightHero ? "border-[#142143]/28 bg-white/58" : "border-[#4EF0FF]/25 bg-[#4EF0FF]/10"
+                      }`}
                       animate={{ scale: [1, 1.06, 1] }}
                       transition={{ duration: 2.8, repeat: Infinity, ease: "easeInOut" }}
                     >
-                      <span className="h-7 w-7 rounded-full border-2 border-[#4EF0FF]/60" />
+                      <span
+                        className="h-7 w-7 rounded-full border-2"
+                        style={{ borderColor: lightHero ? "rgba(20,33,67,0.52)" : "rgba(78,240,255,0.60)" }}
+                      />
                     </motion.div>
                     <motion.div
-                      className="absolute bottom-3 right-4 h-16 w-16 rounded-xl border border-white/15 bg-white/[0.08]"
+                      className={`absolute bottom-3 right-4 h-16 w-16 rounded-xl border ${
+                        lightHero ? "border-[#d8c7aa]/55 bg-white/58" : "border-white/15 bg-white/[0.08]"
+                      }`}
                       animate={{ opacity: [0.45, 0.9, 0.45], y: [0, 5, 0] }}
                       transition={{ duration: 3.8, repeat: Infinity, ease: "easeInOut" }}
                     />
                   </div>
 
-                  <div className="mt-10 text-base leading-relaxed text-white/72">
+                  <div
+                    className={`mt-10 text-base leading-relaxed ${
+                      lightHero ? "text-[#25304a]/78" : "text-white/72"
+                    }`}
+                    style={{ color: lightHeroMutedInk }}
+                  >
                     <motion.div
                       key={`next-step-${contactScale}`}
                       initial={{ opacity: 0, y: 8 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.35, delay: 0.08 }}
-                      className="rounded-2xl border border-white/10 bg-black/20 px-5 py-4"
+                      className={`rounded-2xl border px-5 py-4 ${
+                        lightHero
+                          ? "border-[#d8c7aa]/60 bg-white/62"
+                          : "border-white/10 bg-black/20"
+                      }`}
                     >
-                      <p className="mb-1 text-xs font-bold uppercase tracking-[0.18em] text-[#E44CFF]">
+                      <p
+                        className={`mb-1 text-xs font-bold uppercase tracking-[0.18em] ${
+                          lightHero ? "text-[#9A6847]" : "text-[#E44CFF]"
+                        }`}
+                        style={{ color: lightHero ? "#9A6847" : undefined }}
+                      >
                         {t("contact.configurator.nextStepLabel")}
                       </p>
                       <p>
-                        <span className="font-semibold text-white">{selectedScaleLabel}:</span>{" "}
+                        <span
+                          className={`font-semibold ${
+                            lightHero ? "text-[#10172d]" : "text-white"
+                          }`}
+                          style={{ color: lightHeroInk }}
+                        >
+                          {selectedScaleLabel}:
+                        </span>{" "}
                         {t("contact.configurator.nextStepText")}
                       </p>
                     </motion.div>
@@ -1816,49 +2469,81 @@ export default function Home() {
             <div className="flex justify-center">
               <button
                 type="submit"
-                className="group relative inline-flex min-h-16 items-center justify-center gap-3 overflow-hidden rounded-2xl px-10 text-lg font-semibold text-white transition-all duration-500 hover:scale-[1.05] hover:shadow-[0_0_45px_var(--theme-glow)]"
-                style={{
-                  background: "var(--theme-gradient)",
-                  boxShadow: "0 0 34px var(--theme-glow-border)",
-                }}
+                disabled={contactSubmitStatus === "sending"}
+                className="group relative inline-flex min-h-16 items-center justify-center gap-3 overflow-hidden rounded-2xl px-10 text-lg font-semibold text-white transition-all duration-500 hover:scale-[1.05] hover:shadow-[0_0_45px_var(--theme-glow)] disabled:cursor-wait disabled:opacity-70 disabled:hover:scale-100"
+                style={primaryCtaStyle}
               >
                 <span className="relative z-10 flex items-center gap-3">
-                  {t("contact.configurator.submit")}
+                  {contactSubmitStatus === "sending"
+                    ? t("contact.configurator.status.sending")
+                    : t("contact.configurator.submit")}
                   <ArrowRight className="h-6 w-6 -rotate-45 transition-transform duration-300 group-hover:translate-x-1 group-hover:-translate-y-1 rtl:rotate-[225deg]" />
                 </span>
                 <div className="absolute inset-0 bg-white/10 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
               </button>
             </div>
+            {contactSubmitStatus !== "idle" && contactSubmitStatus !== "sending" && (
+              <p
+                aria-live="polite"
+                className={`text-center text-sm font-semibold ${
+                  lightHero ? "text-[#25304a]/78" : "text-white/72"
+                }`}
+                style={{ color: lightHeroMutedInk }}
+              >
+                {contactSubmitStatus === "sent"
+                  ? t("contact.configurator.status.sent")
+                  : t("contact.configurator.status.fallback")}
+              </p>
+            )}
           </form>
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="relative z-10 px-6 pb-12 pt-20 md:pt-24">
+      <footer
+        className={`relative z-10 overflow-hidden px-6 pb-12 pt-20 md:pt-24 ${
+          lightHero ? "bg-[#f7f3ea]" : ""
+        }`}
+      >
+        {lightHero && (
+          <>
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_18%_10%,rgba(255,255,255,0.68),transparent_34%),radial-gradient(circle_at_78%_22%,rgba(154,104,71,0.12),transparent_34%),linear-gradient(180deg,#f7f3ea_0%,#f5efe3_100%)]" />
+            <div className="absolute inset-0 opacity-[0.10] [background-image:radial-gradient(#19223a_0.75px,transparent_0.75px)] [background-size:42px_42px]" />
+          </>
+        )}
         <div
           className="pointer-events-none absolute inset-x-0 top-0 h-px"
           style={{
-            background: "linear-gradient(90deg, transparent, rgba(228,76,255,0.28), rgba(78,240,255,0.2), transparent)",
+            background: lightHero
+              ? "linear-gradient(90deg, transparent, rgba(154,104,71,0.32), rgba(20,33,67,0.20), transparent)"
+              : "linear-gradient(90deg, transparent, rgba(228,76,255,0.28), rgba(78,240,255,0.2), transparent)",
           }}
         />
 
-        <div className="mx-auto max-w-7xl">
+        <div className="relative z-10 mx-auto max-w-7xl">
           <div className="grid gap-14 lg:grid-cols-[1.3fr_0.9fr_0.8fr]">
             <div>
-              <p className="mb-6 text-sm font-bold uppercase tracking-[0.18em] text-[#ACA0FB]">
+              <p
+                className={`mb-6 text-sm font-bold uppercase tracking-[0.18em] ${
+                  lightHero ? "text-[#9A6847]" : "text-[#ACA0FB]"
+                }`}
+                style={{ color: lightHero ? "#9A6847" : undefined }}
+              >
                 {t("footer.kicker")}
               </p>
-              <h2 className="max-w-xl text-4xl font-semibold leading-tight tracking-tight text-white md:text-6xl">
+              <h2
+                className={`max-w-xl text-4xl font-semibold leading-tight tracking-tight md:text-6xl ${
+                  lightHero ? "text-[#10172d]" : "text-white"
+                }`}
+                style={{ color: lightHeroInk }}
+              >
                 {t("footer.headline")}
               </h2>
 
               <a
                 href="#contact"
                 className="group relative mt-10 inline-flex min-h-14 items-center justify-center gap-3 overflow-hidden rounded-full px-8 text-base font-semibold text-white transition-all duration-500 hover:scale-[1.05] hover:shadow-[0_0_40px_var(--theme-glow)]"
-                style={{
-                  background: "var(--theme-gradient)",
-                  boxShadow: "0 0 20px var(--theme-glow-border)",
-                }}
+                style={primaryCtaStyle}
               >
                 <span className="relative z-10 flex items-center justify-center gap-3">
                   {t("footer.cta")}
@@ -1868,10 +2553,22 @@ export default function Home() {
               </a>
 
               <div className="mt-12">
-                <p className="mb-4 text-sm font-bold uppercase tracking-[0.18em] text-[#ACA0FB]">
+                <p
+                  className={`mb-4 text-sm font-bold uppercase tracking-[0.18em] ${
+                    lightHero ? "text-[#9A6847]" : "text-[#ACA0FB]"
+                  }`}
+                  style={{ color: lightHero ? "#9A6847" : undefined }}
+                >
                   {t("footer.emailLabel")}
                 </p>
-                <div className="inline-flex min-h-14 max-w-full items-center gap-3 rounded-full border border-white/10 bg-white/[0.06] px-5 text-white shadow-[inset_0_0_18px_rgba(255,255,255,0.03)] backdrop-blur-md">
+                <div
+                  className={`inline-flex min-h-14 max-w-full items-center gap-3 rounded-full border px-5 backdrop-blur-md ${
+                    lightHero
+                      ? "border-[#d8c7aa]/60 bg-white/68 text-[#10172d] shadow-[0_14px_30px_-22px_rgba(61,43,22,0.62)]"
+                      : "border-white/10 bg-white/[0.06] text-white shadow-[inset_0_0_18px_rgba(255,255,255,0.03)]"
+                  }`}
+                  style={{ color: lightHeroInk }}
+                >
                   <a
                     href={`mailto:${footerEmail}`}
                     className="truncate text-sm font-semibold md:text-base"
@@ -1882,7 +2579,11 @@ export default function Home() {
                     type="button"
                     aria-label="Copy email address"
                     onClick={() => navigator.clipboard?.writeText(footerEmail)}
-                    className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-white/10 bg-white/[0.04] text-white/85 transition-colors duration-200 hover:bg-white/10 hover:text-white"
+                    className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full border transition-colors duration-200 ${
+                      lightHero
+                        ? "border-[#c6ad89]/55 bg-[#f5efe3]/72 text-[#10172d] hover:bg-white"
+                        : "border-white/10 bg-white/[0.04] text-white/85 hover:bg-white/10 hover:text-white"
+                    }`}
                   >
                     <Copy className="h-4 w-4" />
                   </button>
@@ -1891,7 +2592,12 @@ export default function Home() {
             </div>
 
             <nav aria-label="Footer quick links" className="lg:pt-2">
-              <h3 className="mb-6 text-sm font-bold uppercase tracking-[0.18em] text-[#ACA0FB]">
+              <h3
+                className={`mb-6 text-sm font-bold uppercase tracking-[0.18em] ${
+                  lightHero ? "text-[#9A6847]" : "text-[#ACA0FB]"
+                }`}
+                style={{ color: lightHero ? "#9A6847" : undefined }}
+              >
                 {t("footer.quickLinks")}
               </h3>
               <ul className="space-y-5">
@@ -1899,7 +2605,9 @@ export default function Home() {
                   <li key={link.label}>
                     <a
                       href={link.href}
-                      className="text-lg font-medium text-white/[0.82] transition-colors duration-200 hover:text-[#4EF0FF]"
+                      className={`text-lg font-medium transition-colors duration-200 ${
+                        lightHero ? "text-[#25304a]/78 hover:text-[#9A6847]" : "text-white/[0.82] hover:text-[#4EF0FF]"
+                      }`}
                     >
                       {link.label}
                     </a>
@@ -1909,7 +2617,12 @@ export default function Home() {
             </nav>
 
             <nav aria-label="Footer information links" className="lg:pt-2">
-              <h3 className="mb-6 text-sm font-bold uppercase tracking-[0.18em] text-[#ACA0FB]">
+              <h3
+                className={`mb-6 text-sm font-bold uppercase tracking-[0.18em] ${
+                  lightHero ? "text-[#9A6847]" : "text-[#ACA0FB]"
+                }`}
+                style={{ color: lightHero ? "#9A6847" : undefined }}
+              >
                 {t("footer.information")}
               </h3>
               <ul className="space-y-5">
@@ -1917,7 +2630,9 @@ export default function Home() {
                   <li key={link.label}>
                     <a
                       href={link.href}
-                      className="text-lg font-medium text-white/[0.82] transition-colors duration-200 hover:text-[#4EF0FF]"
+                      className={`text-lg font-medium transition-colors duration-200 ${
+                        lightHero ? "text-[#25304a]/78 hover:text-[#9A6847]" : "text-white/[0.82] hover:text-[#4EF0FF]"
+                      }`}
                     >
                       {link.label}
                     </a>
@@ -1927,9 +2642,14 @@ export default function Home() {
             </nav>
           </div>
 
-          <div className="mt-24 border-t border-white/10 pt-12">
+          <div className={`mt-24 border-t pt-12 ${lightHero ? "border-[#c6ad89]/40" : "border-white/10"}`}>
             <div className="flex flex-col gap-8 md:flex-row md:items-center md:justify-between">
-              <p className="text-sm font-semibold uppercase tracking-[0.12em] text-[#ACA0FB]">
+              <p
+                className={`text-sm font-semibold uppercase tracking-[0.12em] ${
+                  lightHero ? "text-[#6f604f]" : "text-[#ACA0FB]"
+                }`}
+                style={{ color: lightHero ? "#6f604f" : undefined }}
+              >
                 {t("footer.copyright")}
               </p>
 
@@ -1939,7 +2659,9 @@ export default function Home() {
                     key={label}
                     href={href}
                     aria-label={label}
-                    className="text-white/88 transition-colors duration-200 hover:text-[#4EF0FF]"
+                    className={`transition-colors duration-200 ${
+                      lightHero ? "text-[#25304a]/78 hover:text-[#9A6847]" : "text-white/88 hover:text-[#4EF0FF]"
+                    }`}
                   >
                     <Icon className="h-5 w-5" />
                   </a>
@@ -1951,7 +2673,7 @@ export default function Home() {
       </footer>
 
       {/* Floating Interactive Chatbot */}
-      <Chatbot activeMode={mode} onModeChange={setMode} />
+      <Chatbot activeMode={mode} onModeChange={setMode} lightMode={lightHero} />
 
       {/* Scroll to Top Button */}
       <AnimatePresence>

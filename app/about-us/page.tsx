@@ -173,7 +173,7 @@ export default function AboutUs() {
       style={getGlobalThemeStyles(mode)}
     >
       {/* Preloader */}
-      <Preloader />
+      {/* <Preloader /> */}
 
       {/* Persistent star-field background */}
       <div

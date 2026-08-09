@@ -346,12 +346,19 @@
       "namePlaceholder": "Your full name",
       "emailLabel": "Your Work Email",
       "emailPlaceholder": "you@company.com",
+      "messageLabel": "Message Body",
+      "messagePlaceholder": "Tell us what you want to build, the workflow you want to improve, or any timeline notes.",
       "blueprintTitle": "Project Start Blueprint",
       "nextStepLabel": "Recommended Start",
       "nextStepText": "map the workflow, prototype the highest-value path, and define the first rollout.",
       "projectedLabel": "Projected Modules:",
       "complexityLabel": "Engineering Complexity:",
       "submit": "Initiate Project Discussion",
+      "status": {
+        "sending": "Sending...",
+        "sent": "Project discussion sent. We'll contact you soon.",
+        "fallback": "Your email app is open with the full message ready to send."
+      },
       "industries": {
         "education": "Education",
         "realEstate": "Real Estate",
