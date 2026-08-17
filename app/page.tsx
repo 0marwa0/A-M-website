@@ -1048,23 +1048,22 @@ export default function Home() {
       {/* Hero Section */}
       <section
         id="home"
-        className="relative z-10 flex items-center justify-center px-6 overflow-hidden min-h-screen pt-24 pb-12"
+        className="relative z-10 flex items-center justify-center px-4 sm:px-6 md:px-8 overflow-hidden min-h-screen pt-32 pb-16"
       >
         {/* Cinematic cosmic background */}
         <LightHeroBackground />
 
-        <div className="max-w-7xl mx-auto relative w-full z-10 grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
+        <div className="max-w-5xl mx-auto relative w-full z-10 flex flex-col items-center justify-center">
           
-          {/* Left Column: Text content & Action items */}
-          <div className="lg:col-span-7 flex flex-col items-center lg:items-start text-center lg:text-left rtl:lg:text-right space-y-6 animate-fade-in order-2 lg:order-1">
+          {/* Main Column: Text content & Action items */}
+          <div className="flex flex-col items-center text-center space-y-8 animate-fade-in">
             {/* Glowing badge */}
             <div
-              className={`inline-flex items-center gap-2 px-5 py-2 rounded-full border backdrop-blur-md text-[10px] md:text-xs tracking-widest uppercase ${
+              className={`inline-flex items-center gap-2 px-5 py-2.5 rounded-full border backdrop-blur-md text-[10px] md:text-xs font-bold tracking-widest uppercase ${
                 lightHero
-                  ? "border-[#d8cbb8]/80 bg-white/55 text-[#25304a]/72 shadow-[0_10px_26px_-22px_rgba(61,43,22,0.65)]"
-                  : "border-white/10 bg-white/5 text-white/70"
+                  ? "border-[#c6ad89]/90 bg-white/90 text-[#10172d] shadow-[0_8px_20px_-12px_rgba(61,43,22,0.6)]"
+                  : "border-white/30 bg-white/15 text-white"
               }`}
-              style={{ color: lightHeroSoftInk }}
             >
               <span
                 className={`w-2 h-2 rounded-full animate-pulse ${
@@ -1076,13 +1075,13 @@ export default function Home() {
 
             {/* Headline with rotating words */}
             <h1
-              className={`text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold leading-[1.15] tracking-tight w-full ${
+              className={`text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold leading-[1.15] tracking-tight w-full ${
                 lightHero ? "text-[#10172d]" : "text-white"
               }`}
               style={{ color: lightHeroInk }}
             >
               {t("hero.heading")}{" "}
-              <span className="relative inline-block min-w-[140px] sm:min-w-[180px] md:min-w-[220px]">
+              <span className="relative inline-block min-w-[140px] sm:min-w-[180px] md:min-w-[260px]">
                 <AnimatePresence mode="wait">
                   <motion.span
                     key={wordIndex}
@@ -1113,7 +1112,7 @@ export default function Home() {
 
             {/* Subheading */}
             <p
-              className={`text-sm sm:text-base md:text-lg max-w-2xl leading-relaxed ${
+              className={`text-sm sm:text-base md:text-xl max-w-3xl leading-relaxed ${
                 lightHero ? "text-[#25304a]/78" : "text-gray-400"
               }`}
               style={{ color: lightHeroMutedInk }}
@@ -1121,13 +1120,11 @@ export default function Home() {
               {t("hero.subheading")}
             </p>
 
-
-
             {/* Action Buttons */}
-            <div className="flex flex-col sm:flex-row gap-4 items-center w-full sm:w-auto pt-4">
+            <div className="flex flex-col sm:flex-row gap-4 items-center justify-center w-full pt-4">
               <a
                 href="#contact"
-                className="group relative w-full sm:w-auto text-center px-8 py-3.5 rounded-full font-semibold text-sm text-white overflow-hidden transition-all duration-500 hover:scale-[1.05] hover:shadow-[0_0_40px_var(--theme-glow)]"
+                className="group relative w-full sm:w-auto text-center px-10 py-4 rounded-full font-semibold text-sm text-white overflow-hidden transition-all duration-500 hover:scale-[1.05] hover:shadow-[0_0_40px_var(--theme-glow)]"
                 style={{
                   background: "var(--theme-gradient)",
                   boxShadow: `0 0 20px var(--theme-glow-border)`,
@@ -1142,7 +1139,7 @@ export default function Home() {
               </a>
               <a
                 href="#about"
-                className={`group w-full sm:w-auto text-center px-8 py-3.5 rounded-full font-semibold text-sm border backdrop-blur-md transition-all duration-300 hover:scale-[1.05] ${
+                className={`group w-full sm:w-auto text-center px-10 py-4 rounded-full font-semibold text-sm border backdrop-blur-md transition-all duration-300 hover:scale-[1.05] ${
                   lightHero
                     ? "border-[#17213a]/35 bg-white/45 text-[#10172d] hover:border-[#17213a]/60 hover:bg-white/70"
                     : "border-white/10 bg-white/5 text-white hover:border-white/30 hover:bg-white/10"
@@ -1155,7 +1152,7 @@ export default function Home() {
 
             {/* Performance Stats */}
             <div
-              className={`pt-6 grid grid-cols-3 gap-4 md:gap-6 border-t w-full text-center lg:text-left rtl:lg:text-right ${
+              className={`pt-8 mt-6 grid grid-cols-3 gap-6 md:gap-12 border-t w-full max-w-3xl text-center ${
                 lightHero ? "border-[#c9bba6]/70" : "border-white/10"
               }`}
             >
@@ -1164,9 +1161,9 @@ export default function Home() {
                 { val: t("hero.stats.revenue.value"), label: t("hero.stats.revenue.label") },
                 { val: t("hero.stats.loyalty.value"), label: t("hero.stats.loyalty.label") },
               ].map((stat, idx) => (
-                <div key={idx} className="flex flex-col items-center lg:items-start">
+                <div key={idx} className="flex flex-col items-center">
                   <span
-                    className={`text-xl md:text-2.5xl font-extrabold font-mono ${
+                    className={`text-2xl md:text-3xl font-extrabold font-mono ${
                       lightHero ? "text-[#8a6640]" : "text-white"
                     }`}
                     style={{ color: lightHeroWarmInk }}
@@ -1174,7 +1171,7 @@ export default function Home() {
                     {stat.val}
                   </span>
                   <span
-                    className={`text-[9px] md:text-[10px] uppercase tracking-wider mt-1.5 ${
+                    className={`text-[10px] md:text-xs uppercase tracking-wider mt-2 ${
                       lightHero ? "text-[#6f604f]" : "text-gray-400"
                     }`}
                     style={{ color: lightHero ? "#6f604f" : undefined }}
@@ -1184,11 +1181,6 @@ export default function Home() {
                 </div>
               ))}
             </div>
-          </div>
-
-          {/* Right Column: Interactive HUD Canvas */}
-          <div className="lg:col-span-5 w-full flex justify-center order-1 lg:order-2">
-            <InteractiveHUD mode={mode} lightMode={lightHero} />
           </div>
 
         </div>
