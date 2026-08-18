@@ -771,7 +771,7 @@ export default function Home() {
   const lightHeroInk = lightHero ? "#10172d" : undefined;
   const lightHeroMutedInk = lightHero ? "rgba(37, 48, 74, 0.78)" : undefined;
   const lightHeroSoftInk = lightHero ? "rgba(37, 48, 74, 0.72)" : undefined;
-  const lightHeroWarmInk = lightHero ? "#8a6640" : undefined;
+  const lightHeroWarmInk = lightHero ? "#5c4329" : undefined;
   const activeShowcaseThemeColor = lightHero ? "#9A6847" : activeShowcase.color;
   const getContactOptionStyle = (isActive: boolean): CSSProperties => lightHero
     ? {
@@ -836,23 +836,30 @@ export default function Home() {
         className={`fixed left-0 right-0 z-50 transition-all duration-500 ${
           scrolled
             ? "top-4 px-4 sm:px-6 md:px-8"
-            : "top-0 px-6 py-5"
+            : `top-4 border-b border-white/5 ${
+                lightHero 
+                  ? "bg-black/40 backdrop-blur-md" 
+                  : "bg-black/70 backdrop-blur-md"
+              }`
         }`}
       >
         <div
-          className={`mx-auto w-full max-w-7xl flex justify-between items-center transition-all duration-500 ${
+          className={`mx-auto w-full max-w-6xl flex justify-between items-center transition-all duration-500 ${
             scrolled
               ? lightHero
-                ? "rounded-2xl border bg-[#faf6ed]/82 backdrop-blur-xl px-6 py-3.5 shadow-[0_18px_44px_-24px_rgba(61,43,22,0.38)]"
-                : "rounded-2xl border bg-slate-900/40 backdrop-blur-xl px-6 py-3.5 shadow-[0_20px_40px_-15px_rgba(0,0,0,0.7),_0_0_20px_rgba(228,76,255,0.15)]"
-              : "border-b border-transparent py-2"
+                ? "rounded-full border bg-[#faf6ed]/82 backdrop-blur-xl px-6 py-2.5 shadow-[0_18px_44px_-24px_rgba(61,43,22,0.38)]"
+                : "rounded-full border bg-slate-900/40 backdrop-blur-xl px-6 py-2.5 shadow-[0_20px_40px_-15px_rgba(0,0,0,0.7),_0_0_20px_rgba(228,76,255,0.15)]"
+              : "px-6 py-2.5"
           }`}
           style={{
             borderColor: scrolled ? "var(--theme-nav-border)" : "transparent",
           }}
         >
           <Link href="/" className="flex items-center hover:opacity-90 transition-opacity">
-            <div className="text-2xl sm:text-3xl font-bold tracking-tight flex items-center gap-1 group">
+            <div 
+              className="text-3xl sm:text-4xl font-bold tracking-tight flex items-center gap-1 group"
+              style={{ WebkitTextStroke: "0.4px white" }}
+            >
               <span 
                 className="bg-clip-text text-transparent transition-all duration-1000 group-hover:drop-shadow-[0_0_8px_var(--theme-glow)]"
                 style={{
@@ -883,40 +890,32 @@ export default function Home() {
           >
             <a
               href="#services"
-              className={`transition-all duration-300 hover:text-transparent hover:bg-clip-text hover:bg-gradient-to-r ${
-                lightHero
-                  ? "text-[#121a31]/80 hover:from-[#142143] hover:to-[#9A6847]"
-                  : "text-white/80 hover:from-[#E44CFF] hover:to-[#5861F2]"
+              className={`transition-all duration-300 ${
+                scrolled && lightHero ? "text-[#121a31]/80 hover:text-[#121a31]" : "text-white/90 hover:text-white"
               }`}
             >
               {t("nav.solutions")}
             </a>
             <Link
               href="/about-us"
-              className={`transition-all duration-300 hover:text-transparent hover:bg-clip-text hover:bg-gradient-to-r ${
-                lightHero
-                  ? "text-[#121a31]/80 hover:from-[#142143] hover:to-[#9A6847]"
-                  : "text-white/80 hover:from-[#E44CFF] hover:to-[#5861F2]"
+              className={`transition-all duration-300 ${
+                scrolled && lightHero ? "text-[#121a31]/80 hover:text-[#121a31]" : "text-white/90 hover:text-white"
               }`}
             >
               {t("nav.about")}
             </Link>
             <a
               href="#packages"
-              className={`transition-all duration-300 hover:text-transparent hover:bg-clip-text hover:bg-gradient-to-r ${
-                lightHero
-                  ? "text-[#121a31]/80 hover:from-[#142143] hover:to-[#9A6847]"
-                  : "text-white/80 hover:from-[#E44CFF] hover:to-[#5861F2]"
+              className={`transition-all duration-300 ${
+                scrolled && lightHero ? "text-[#121a31]/80 hover:text-[#121a31]" : "text-white/90 hover:text-white"
               }`}
             >
               {t("nav.pricing")}
             </a>
             <a
               href="#contact"
-              className={`transition-all duration-300 hover:text-transparent hover:bg-clip-text hover:bg-gradient-to-r ${
-                lightHero
-                  ? "text-[#121a31]/80 hover:from-[#142143] hover:to-[#9A6847]"
-                  : "text-white/80 hover:from-[#E44CFF] hover:to-[#5861F2]"
+              className={`transition-all duration-300 ${
+                scrolled && lightHero ? "text-[#121a31]/80 hover:text-[#121a31]" : "text-white/90 hover:text-white"
               }`}
             >
               {t("nav.contact")}
@@ -925,9 +924,9 @@ export default function Home() {
           <div className="hidden lg:flex items-center gap-4">
             <button
               className={`flex items-center gap-1.5 px-4 py-2 rounded-xl border text-sm transition-all duration-300 ${
-                lightHero
-                  ? "border-[#c6ad89]/60 bg-white/45 text-[#121a31] hover:border-[#9A6847] hover:bg-white/70"
-                  : "border-white/20 text-white/90 hover:border-[#E44CFF] hover:bg-[#E44CFF]/10"
+                scrolled && lightHero
+                  ? "border-[#c6ad89] bg-white/80 text-[#121a31] hover:bg-white"
+                  : "border-white/40 bg-white/10 text-white hover:bg-white/20 hover:border-white/60"
               }`}
               onClick={() => setLocale(locale === "en" ? "ar" : "en")}
             >
@@ -949,9 +948,9 @@ export default function Home() {
           <div className="flex lg:hidden items-center gap-3">
             <button
               className={`p-2 rounded-xl border text-sm transition-all duration-300 ${
-                lightHero
-                  ? "border-[#c6ad89]/60 bg-white/45 text-[#121a31] hover:border-[#9A6847]"
-                  : "border-white/20 text-white/90 hover:border-[#E44CFF] hover:bg-[#E44CFF]/10"
+                scrolled && lightHero
+                  ? "border-[#c6ad89] bg-white/80 text-[#121a31] hover:bg-white"
+                  : "border-white/40 bg-white/10 text-white hover:bg-white/20 hover:border-white/60"
               }`}
               onClick={() => setLocale(locale === "en" ? "ar" : "en")}
               aria-label="Toggle language"
@@ -960,9 +959,9 @@ export default function Home() {
             </button>
             <button
               className={`p-2 rounded-xl border transition-all duration-300 ${
-                lightHero
-                  ? "border-[#c6ad89]/60 bg-white/45 text-[#121a31] hover:border-[#9A6847]"
-                  : "border-white/20 text-white/90 hover:border-[#E44CFF] hover:bg-[#E44CFF]/10"
+                scrolled && lightHero
+                  ? "border-[#c6ad89] bg-white/80 text-[#121a31] hover:bg-white"
+                  : "border-white/40 bg-white/10 text-white hover:bg-white/20 hover:border-white/60"
               }`}
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               aria-label="Toggle menu"
@@ -988,10 +987,8 @@ export default function Home() {
                 href="#services"
                 onClick={() => setMobileMenuOpen(false)}
                 className={`text-lg py-2 border-b transition-colors ${
-                  lightHero
-                    ? "border-[#c6ad89]/30 text-[#121a31]/90 hover:text-[#9A6847]"
-                    : "border-white/5 text-white/90 hover:text-[#E44CFF]"
-                }`}
+                  lightHero ? "border-[#c6ad89]/30" : "border-white/5"
+                } ${scrolled && lightHero ? "text-[#121a31]/90 hover:text-[#121a31]" : "text-white/90 hover:text-white"}`}
               >
                 {t("nav.solutions")}
               </a>
@@ -999,10 +996,8 @@ export default function Home() {
                 href="/about-us"
                 onClick={() => setMobileMenuOpen(false)}
                 className={`text-lg py-2 border-b transition-colors ${
-                  lightHero
-                    ? "border-[#c6ad89]/30 text-[#121a31]/90 hover:text-[#9A6847]"
-                    : "border-white/5 text-white/90 hover:text-[#E44CFF]"
-                }`}
+                  lightHero ? "border-[#c6ad89]/30" : "border-white/5"
+                } ${scrolled && lightHero ? "text-[#121a31]/90 hover:text-[#121a31]" : "text-white/90 hover:text-white"}`}
               >
                 {t("nav.about")}
               </Link>
@@ -1010,10 +1005,8 @@ export default function Home() {
                 href="#packages"
                 onClick={() => setMobileMenuOpen(false)}
                 className={`text-lg py-2 border-b transition-colors ${
-                  lightHero
-                    ? "border-[#c6ad89]/30 text-[#121a31]/90 hover:text-[#9A6847]"
-                    : "border-white/5 text-white/90 hover:text-[#E44CFF]"
-                }`}
+                  lightHero ? "border-[#c6ad89]/30" : "border-white/5"
+                } ${scrolled && lightHero ? "text-[#121a31]/90 hover:text-[#121a31]" : "text-white/90 hover:text-white"}`}
               >
                 {t("nav.pricing")}
               </a>
@@ -1021,10 +1014,8 @@ export default function Home() {
                 href="#contact"
                 onClick={() => setMobileMenuOpen(false)}
                 className={`text-lg py-2 border-b transition-colors ${
-                  lightHero
-                    ? "border-[#c6ad89]/30 text-[#121a31]/90 hover:text-[#9A6847]"
-                    : "border-white/5 text-white/90 hover:text-[#E44CFF]"
-                }`}
+                  lightHero ? "border-[#c6ad89]/30" : "border-white/5"
+                } ${scrolled && lightHero ? "text-[#121a31]/90 hover:text-[#121a31]" : "text-white/90 hover:text-white"}`}
               >
                 {t("nav.contact")}
               </a>
@@ -1059,10 +1050,10 @@ export default function Home() {
           <div className="flex flex-col items-center text-center space-y-8 animate-fade-in">
             {/* Glowing badge */}
             <div
-              className={`inline-flex items-center gap-2 px-5 py-2.5 rounded-full border backdrop-blur-md text-[10px] md:text-xs font-bold tracking-widest uppercase ${
+              className={`inline-flex items-center gap-2 px-12 py-2.5 backdrop-blur-[2px] text-[10px] md:text-xs font-bold tracking-widest uppercase ${
                 lightHero
-                  ? "border-[#c6ad89]/90 bg-white/90 text-[#10172d] shadow-[0_8px_20px_-12px_rgba(61,43,22,0.6)]"
-                  : "border-white/30 bg-white/15 text-white"
+                  ? "bg-gradient-to-r from-transparent via-white/90 to-transparent text-[#10172d]"
+                  : "bg-gradient-to-r from-transparent via-white/15 to-transparent text-white"
               }`}
             >
               <span
@@ -1112,10 +1103,10 @@ export default function Home() {
 
             {/* Subheading */}
             <p
-              className={`text-sm sm:text-base md:text-xl max-w-3xl leading-relaxed ${
-                lightHero ? "text-[#25304a]/78" : "text-gray-400"
+              className={`text-sm sm:text-base md:text-xl max-w-3xl leading-relaxed font-medium ${
+                lightHero ? "text-[#10172d]" : "text-gray-300"
               }`}
-              style={{ color: lightHeroMutedInk }}
+              style={{ color: lightHero ? "#10172d" : undefined }}
             >
               {t("hero.subheading")}
             </p>
@@ -1153,7 +1144,7 @@ export default function Home() {
             {/* Performance Stats */}
             <div
               className={`pt-8 mt-6 grid grid-cols-3 gap-6 md:gap-12 border-t w-full max-w-3xl text-center ${
-                lightHero ? "border-[#c9bba6]/70" : "border-white/10"
+                lightHero ? "border-[#8a6640]/80" : "border-white/10"
               }`}
             >
               {[
@@ -1164,17 +1155,17 @@ export default function Home() {
                 <div key={idx} className="flex flex-col items-center">
                   <span
                     className={`text-2xl md:text-3xl font-extrabold font-mono ${
-                      lightHero ? "text-[#8a6640]" : "text-white"
+                      lightHero ? "text-[#5c4329]" : "text-white"
                     }`}
                     style={{ color: lightHeroWarmInk }}
                   >
                     {stat.val}
                   </span>
                   <span
-                    className={`text-[10px] md:text-xs uppercase tracking-wider mt-2 ${
-                      lightHero ? "text-[#6f604f]" : "text-gray-400"
+                    className={`text-[10px] md:text-xs uppercase tracking-wider mt-2 font-semibold ${
+                      lightHero ? "text-[#4a3f33]" : "text-gray-400"
                     }`}
-                    style={{ color: lightHero ? "#6f604f" : undefined }}
+                    style={{ color: lightHero ? "#4a3f33" : undefined }}
                   >
                     {stat.label}
                   </span>

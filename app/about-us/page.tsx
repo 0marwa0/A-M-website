@@ -108,8 +108,7 @@ export default function AboutUs() {
       ? t(activeMilestoneData.descKey)
       : activeMilestoneData.defaultDesc;
 
-  const navLinkClass =
-    "text-[#25304a]/78 transition-colors duration-300 hover:text-[#9A6847]";
+
   const cardClass = "rounded-[28px] border border-[#d8cbb8] bg-[#fffdf8]";
 
   return (
@@ -121,18 +120,21 @@ export default function AboutUs() {
     >
       <nav
         className={`fixed left-0 right-0 z-50 transition-all duration-500 ${
-          scrolled ? "top-4 px-4 sm:px-6 md:px-8" : "top-0 px-6 py-5"
+          scrolled ? "top-4 px-4 sm:px-6 md:px-8" : "top-4 border-b border-black/5 bg-black/40 backdrop-blur-md"
         }`}
       >
         <div
-          className={`mx-auto flex w-full max-w-7xl items-center justify-between transition-all duration-500 ${
+          className={`mx-auto flex w-full max-w-6xl items-center justify-between transition-all duration-500 ${
             scrolled
-              ? "rounded-2xl border border-[#d8cbb8] bg-[#faf6ed]/86 px-6 py-3.5 shadow-[0_18px_44px_-28px_rgba(61,43,22,0.55)] backdrop-blur-xl"
-              : "border-b border-transparent py-2"
+              ? "rounded-full border border-[#d8cbb8] bg-[#faf6ed]/86 px-6 py-2.5 shadow-[0_18px_44px_-28px_rgba(61,43,22,0.55)] backdrop-blur-xl"
+              : "px-6 py-2.5"
           }`}
         >
           <Link href="/" className="flex items-center transition-opacity hover:opacity-90">
-            <div className="flex items-center gap-1 text-2xl font-bold tracking-tight sm:text-3xl">
+            <div 
+              className="group flex items-center gap-1 text-3xl font-bold tracking-tight sm:text-4xl"
+              style={{ WebkitTextStroke: "0.4px white" }}
+            >
               <span
                 className="bg-clip-text text-transparent"
                 style={{ backgroundImage: "var(--theme-gradient)" }}
@@ -144,23 +146,27 @@ export default function AboutUs() {
           </Link>
 
           <div className="hidden items-center gap-8 text-[16px] font-medium lg:flex">
-            <Link href="/#services" className={navLinkClass}>
+            <Link href="/#services" className={`transition-colors duration-300 ${scrolled ? "text-[#25304a]/78 hover:text-[#9A6847]" : "text-white/90 hover:text-white"}`}>
               {t("nav.solutions")}
             </Link>
-            <Link href="/about-us" className="font-semibold text-[#9A6847]">
+            <Link href="/about-us" className={`transition-colors duration-300 ${scrolled ? "font-semibold text-[#9A6847]" : "font-semibold text-white"}`}>
               {t("nav.about")}
             </Link>
-            <Link href="/#packages" className={navLinkClass}>
+            <Link href="/#packages" className={`transition-colors duration-300 ${scrolled ? "text-[#25304a]/78 hover:text-[#9A6847]" : "text-white/90 hover:text-white"}`}>
               {t("nav.pricing")}
             </Link>
-            <Link href="/#contact" className={navLinkClass}>
+            <Link href="/#contact" className={`transition-colors duration-300 ${scrolled ? "text-[#25304a]/78 hover:text-[#9A6847]" : "text-white/90 hover:text-white"}`}>
               {t("nav.contact")}
             </Link>
           </div>
 
           <div className="hidden items-center gap-4 lg:flex">
             <button
-              className="flex items-center gap-1.5 rounded-xl border border-[#d8cbb8] bg-[#fbf8f1]/72 px-4 py-2 text-sm text-[#25304a] transition-all duration-300 hover:border-[#9A6847]/40 hover:text-[#9A6847]"
+              className={`flex items-center gap-1.5 rounded-xl border px-4 py-2 text-sm transition-all duration-300 ${
+                scrolled
+                  ? "border-[#d8cbb8] bg-[#fbf8f1]/72 text-[#25304a] hover:border-[#9A6847]/40 hover:text-[#9A6847]"
+                  : "border-white/40 bg-white/10 text-white hover:border-white/60 hover:bg-white/20"
+              }`}
               onClick={() => setLocale(isArabic ? "en" : "ar")}
             >
               <Globe className="h-4 w-4" />
@@ -216,7 +222,13 @@ export default function AboutUs() {
                   href={item.href}
                   onClick={() => setMobileMenuOpen(false)}
                   className={`border-b border-[#d8cbb8] py-2 text-lg transition-colors ${
-                    item.active ? "font-semibold text-[#9A6847]" : "text-[#25304a]/88 hover:text-[#9A6847]"
+                    item.active
+                      ? scrolled
+                        ? "font-semibold text-[#9A6847]"
+                        : "font-semibold text-white"
+                      : scrolled
+                      ? "text-[#25304a]/88 hover:text-[#9A6847]"
+                      : "text-white/90 hover:text-white"
                   }`}
                 >
                   {item.label}

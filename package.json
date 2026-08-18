@@ -11,6 +11,7 @@
     "test:chatbot": "tsc -p tsconfig.chatbot-tests.json && node .tmp/chatbot-tests/scripts/test-chatbot-conversations.js"
   },
   "dependencies": {
+    "@distube/ytdl-core": "^4.16.12",
     "@hookform/resolvers": "^3.9.0",
     "@radix-ui/react-accordion": "^1.2.0",
     "@radix-ui/react-alert-dialog": "^1.1.1",
