@@ -55,37 +55,45 @@
     }
   },
   "about": {
+    "kicker": "Our Methodology",
     "heading": "Our",
     "headingHighlight": "AI Integration Process",
     "subheading": "We follow a proven methodology to seamlessly integrate AI into your business operations",
+    "cta": "Start Your Integration",
     "steps": {
       "discovery": {
         "title": "Discovery",
+        "desc": "Deep dive into your business needs & AI potential.",
         "line1": "Initial meetings to understand",
         "line2": "client needs in detail"
       },
       "planning": {
         "title": "Planning",
+        "desc": "Crafting your custom strategic AI roadmap.",
         "line1": "Solution architecture, wireframes",
         "line2": "and technical planning"
       },
       "development": {
         "title": "Development",
+        "desc": "Engineering high-performance custom AI models.",
         "line1": "Build custom AI solutions",
         "line2": "tailored to your needs"
       },
       "testing": {
-        "title": "Testing/QA",
+        "title": "Testing / QA",
+        "desc": "Rigorous validation for safety, speed & accuracy.",
         "line1": "Quality assurance before",
         "line2": "deployment"
       },
       "training": {
         "title": "Training",
+        "desc": "Empowering your team to lead with AI confidently.",
         "line1": "User onboarding and",
         "line2": "training sessions"
       },
       "support": {
         "title": "Support",
+        "desc": "Continuous monitoring & 24/7 optimization.",
         "line1": "Ongoing support after",
         "line2": "deployment"
       }

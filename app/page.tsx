@@ -1480,7 +1480,7 @@ export default function Home() {
               className="text-xs font-bold tracking-[0.22em] uppercase mb-4"
               style={{ color: lightHero ? "#9A6847" : "#4EF0FF" }}
             >
-              Our Methodology
+              {t("about.kicker")}
             </p>
             <h2
               className={`text-4xl md:text-5xl font-bold mb-6 tracking-tight ${
@@ -1528,8 +1528,8 @@ export default function Home() {
                 color: "#fff",
               }}
             >
-              Start Your Integration
-              <svg className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+              {t("about.cta")}
+              <svg className={`w-4 h-4 transition-transform duration-300 ${locale === "ar" ? "rotate-180 group-hover:-translate-x-1" : "group-hover:translate-x-1"}`} fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3" />
               </svg>
             </a>

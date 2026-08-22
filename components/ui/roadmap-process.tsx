@@ -1,11 +1,13 @@
 "use client";
 
 import React from "react";
+import { useI18n } from "@/lib/i18n";
 
 // ─── Step data ────────────────────────────────────────────────────────────────
 const STEPS = [
     {
         num: "01",
+        key: "discovery",
         name: "Discovery",
         desc: "Deep dive into your business needs & AI potential.",
         accentColor: "#E44CFF",
@@ -17,6 +19,7 @@ const STEPS = [
     },
     {
         num: "02",
+        key: "planning",
         name: "Planning",
         desc: "Crafting your custom strategic AI roadmap.",
         accentColor: "#A855F7",
@@ -28,6 +31,7 @@ const STEPS = [
     },
     {
         num: "03",
+        key: "development",
         name: "Development",
         desc: "Engineering high-performance custom AI models.",
         accentColor: "#5861F2",
@@ -39,6 +43,7 @@ const STEPS = [
     },
     {
         num: "04",
+        key: "testing",
         name: "Testing / QA",
         desc: "Rigorous validation for safety, speed & accuracy.",
         accentColor: "#5BA8F7",
@@ -50,6 +55,7 @@ const STEPS = [
     },
     {
         num: "05",
+        key: "training",
         name: "Training",
         desc: "Empowering your team to lead with AI confidently.",
         accentColor: "#4ECFFC",
@@ -61,6 +67,7 @@ const STEPS = [
     },
     {
         num: "06",
+        key: "support",
         name: "Support",
         desc: "Continuous monitoring & 24/7 optimization.",
         accentColor: "#4EF0FF",
@@ -80,6 +87,8 @@ type RoadmapProcessProps = {
 const LIGHT_ACCENTS = ["#142143", "#9A6847", "#213c67", "#8a6640", "#142143", "#9A6847"];
 
 export function RoadmapProcess({ lightMode = false }: RoadmapProcessProps) {
+    const { t } = useI18n();
+
     return (
         <div className={`relative w-full ${lightMode ? "roadmap-light-rm" : ""}`}>
             {/* Animated connecting line — only meaningful once all 6 nodes share a single row */}
@@ -116,6 +125,10 @@ export function RoadmapProcess({ lightMode = false }: RoadmapProcessProps) {
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-x-4 sm:gap-x-6 gap-y-10 sm:gap-y-12 lg:gap-x-0 relative z-10">
                 {STEPS.map((step, i) => {
                     const accentColor = lightMode ? LIGHT_ACCENTS[i] : step.accentColor;
+                    const stepTitleKey = `about.steps.${step.key}.title`;
+                    const stepDescKey = `about.steps.${step.key}.desc`;
+                    const stepName = t(stepTitleKey) !== stepTitleKey ? t(stepTitleKey) : step.name;
+                    const stepDesc = t(stepDescKey) !== stepDescKey ? t(stepDescKey) : step.desc;
 
                     return (
                     <div
@@ -147,11 +160,11 @@ export function RoadmapProcess({ lightMode = false }: RoadmapProcessProps) {
                                 {step.num}
                             </span>
                             <h3 className={`text-sm sm:text-base font-semibold tracking-tight ${lightMode ? "text-[#10172d]" : "text-white"}`}>
-                                {step.name}
+                                {stepName}
                             </h3>
                             {/* Always visible on mobile/tablet (stacked); collapses to hover-expand on lg+ (single row) */}
                             <p className={`node-desc-rm text-xs leading-snug ${lightMode ? "text-[#25304a]/72" : "text-slate-400"}`}>
-                                {step.desc}
+                                {stepDesc}
                             </p>
                         </div>
 
