@@ -249,7 +249,9 @@
   "customers": {
     "heading": "Projects We",
     "headingHighlight": "Delivered",
-    "subheading": "A look at practical AI systems we have designed across industries.",
+    "subheading": "We provide innovative digital solutions that help institutions achieve their goals efficiently and effectively",
+    "all": "All",
+    "viewProject": "View Project Details",
     "types": {
       "small": {
         "title": "Small Businesses",
@@ -266,67 +268,103 @@
     },
     "industries": {
       "heading": "Industries We Specialize In",
+      "all": "All",
+      "healthcare": "Healthcare",
       "education": "Education",
       "realEstate": "Real Estate",
-      "healthcare": "Healthcare",
       "logistics": "Logistics",
       "finance": "Finance"
     },
     "showcaseLabel": "Showcase Project",
     "showcases": {
-      "education": {
-        "title": "Intelligent Student Assessment & Curriculum Engine",
-        "body": "An AI-driven assessment platform that evaluates student performance in real time, identifies learning gaps, and generates personalized lesson plans. The system combines multi-tenant LLM orchestration with vector search across curriculum frameworks to map weak points to precise educational resources with low-latency delivery.",
-        "tag": "Education AI — Personalized Learning Infrastructure",
-        "meta": "Curriculum mapping, student analytics, adaptive lesson planning",
+      "healthcare": {
+        "title": "Smart Healthcare Management System",
+        "body": "An integrated platform engineered for patient data management, clinical appointments, and health indicators analysis, helping hospitals and medical centers optimize service quality and data-driven decisions.",
+        "tag": "Healthcare",
+        "meta": "Medical records management, health risk scoring, critical alerts, interactive clinical dashboards",
+        "features": [
+          "Comprehensive management of patient data and medical records",
+          "Intelligent analysis of health indicators and clinical risk",
+          "Smart real-time alert system for critical cases",
+          "Detailed reporting and interactive dashboards",
+          "Seamless and responsive user experience"
+        ],
         "stats": [
-          "Real-time scoring",
-          "Vector curriculum search",
-          "Personalized tracks"
+          "3,842 Total Patients",
+          "78.4% Bed Occupancy Rate",
+          "12.7% Readmission Rate"
+        ]
+      },
+      "education": {
+        "title": "Adaptive Assessment & Learning Analytics Platform",
+        "body": "An integrated educational AI platform designed to analyze student performance, detect knowledge gaps, and streamline classroom operations in real time.",
+        "tag": "Education",
+        "meta": "Interactive data tables, performance graphs, adaptive learning, automated grading",
+        "features": [
+          "Live and comprehensive tracking of student grades and growth",
+          "Adaptive AI analytics to detect knowledge gaps early",
+          "Instant automated grading for tests and assignments",
+          "Interactive academic reporting and multi-metric charts",
+          "Personalized revision and remedial pathways per student"
+        ],
+        "stats": [
+          "1,420 Active Students",
+          "96.4% Academic Mastery",
+          "4,850+ Auto-graded Tasks"
         ]
       },
       "realEstate": {
-        "title": "Automated Property Syndication & Broker Training Platform",
-        "body": "A B2B real estate utility that connects with local CRMs, cleans listing data, and syndicates properties to regional portals through optimized XML streaming. A conversational AI simulator trains new brokers on complex off-plan projects through scenario-based mock client calls and certification flows.",
-        "tag": "Real Estate Automation — CRM to Portal Deployment",
-        "meta": "XML feeds, listing normalization, AI broker enablement",
+        "title": "Enterprise Real Estate Asset & Yield Management Platform",
+        "body": "An enterprise AI platform engineered for real estate investment and development firms to manage portfolio assets and analyze multi-sector deal pipelines in real time.",
+        "tag": "Real Estate",
+        "meta": "Asset portfolio matrix, net yield charts, occupancy analytics, smart sqm valuation",
+        "features": [
+          "Comprehensive property matrix with occupancy tracking",
+          "Predictive AI valuation for square meter pricing",
+          "Net yield (Cap Rate) and cumulative cashflow charts",
+          "Automated investor matching and deal velocity acceleration",
+          "Real-time market trend intelligence and opportunity alerts"
+        ],
         "stats": [
-          "CRM integrations",
-          "Portal syndication",
-          "AI sales training"
-        ]
-      },
-      "healthcare": {
-        "title": "Patient Health Scoring & Propensity Modeling Engine",
-        "body": "A predictive scoring engine built into existing large-scale databases to analyze health signals, retention trends, and behavioral data. Custom machine learning models run across distributed pipelines to surface renewal propensity scores so teams can proactively support at-risk clients.",
-        "tag": "Healthcare Intelligence — Predictive Operations",
-        "meta": "XGBoost models, health scoring, retention analytics",
-        "stats": [
-          "Risk detection",
-          "Propensity scores",
-          "Distributed pipelines"
+          "96.2% Portfolio Occupancy",
+          "11.4% Avg Net Yield",
+          "-42% Deal Cycle Time"
         ]
       },
       "logistics": {
-        "title": "Omni-Channel WhatsApp Business Automation Dashboard",
-        "body": "A unified customer operations dashboard that connects WhatsApp Business Cloud API conversations with core service workflows. Agents can use a live Status & Actions panel to renew subscriptions, trigger course updates, and execute business tasks through background workers without leaving the chat.",
-        "tag": "Operations Automation — WhatsApp Workflow Hub",
-        "meta": "Cloud API messaging, background jobs, agent actions",
+        "title": "Logistics Operations & Fleet Intelligence Dashboard",
+        "body": "A unified platform connecting shipping, fleet tracking, dynamic route optimization, and automated customer updates into an intelligent operational hub.",
+        "tag": "Logistics",
+        "meta": "Fleet tracking, route optimization, shipment automation, operational reports",
+        "features": [
+          "Real-time GPS fleet tracking and shipment status",
+          "Dynamic delivery route optimization saving fuel costs",
+          "Multi-channel automated delivery notifications",
+          "Intelligent automated dispatch and driver task allocation",
+          "Centralized KPI cockpit and SLA performance metrics"
+        ],
         "stats": [
-          "Live chat context",
-          "Workflow actions",
-          "Task automation"
+          "98.8% On-Time Delivery",
+          "-28% Fuel Cost Savings",
+          "15K+ Automated Shipments/mo"
         ]
       },
       "finance": {
-        "title": "Real-Time AI Credit Metering & Guardrails",
-        "body": "A high-throughput consumption infrastructure for enterprise platforms using AI at scale. The system tracks token usage, manages credit balances, applies budget limits, and routes complex LLM requests through caching and semantic optimization layers in real time.",
-        "tag": "Infrastructure & Automation — Production Deployment",
-        "meta": "Credit ledgers, semantic routing, streaming cost analytics",
+        "title": "Smart Financial Analytics & Risk Scoring Engine",
+        "body": "An advanced infrastructure for cashflow management, automated ledger reconciliation, and real-time fraud detection with predictive earnings forecasting.",
+        "tag": "Finance",
+        "meta": "Credit ledgers, fraud detection, liquidity analytics, financial compliance",
+        "features": [
+          "Real-time cashflow analytics and transaction monitoring",
+          "Proactive machine-learning fraud detection",
+          "Accurate predictive forecasts for revenue and expenses",
+          "Automated financial reconciliation and reporting",
+          "Full compliance with enterprise security and banking standards"
+        ],
         "stats": [
-          "Token metering",
-          "Budget guardrails",
-          "Usage analytics"
+          "99.9% Risk Detection Accuracy",
+          "Instant Settlement Latency",
+          "100% Regulatory Compliance"
         ]
       }
     }

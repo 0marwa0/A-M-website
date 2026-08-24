@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef, type CSSProperties, type FormEvent } from "react";
 import Link from "next/link";
-import { Check, Star, ArrowRight, ArrowLeft, Sparkles, Cpu, Activity, Menu, X, Globe, ArrowUp, Copy, Facebook, Instagram, Linkedin, BarChart3, Folder, Settings } from "lucide-react";
+import { Check, Star, ArrowRight, ArrowLeft, Sparkles, Cpu, Activity, Menu, X, Globe, ArrowUp, Copy, Facebook, Instagram, Linkedin, BarChart3, Folder, Settings, HeartPulse, GraduationCap, Building2, Truck, Landmark, ChevronLeft, ChevronRight, Layers } from "lucide-react";
 import { useI18n } from "@/lib/i18n";
 import LightHeroBackground from "@/components/LightHeroBackground";
 import Chatbot, { PersonaMode } from "@/components/Chatbot";
@@ -14,7 +14,7 @@ import InteractiveHUD from "@/components/InteractiveHUD";
 import Preloader from "@/components/Preloader";
 import { motion, AnimatePresence } from "framer-motion";
 
-const showcaseKeys = ["education", "realEstate", "healthcare", "logistics", "finance"] as const;
+const showcaseKeys = ["healthcare", "education", "realEstate", "logistics", "finance"] as const;
 type ShowcaseKey = (typeof showcaseKeys)[number];
 const contactIndustryKeys = ["education", "realEstate", "finance", "logistics"] as const;
 type ContactIndustryKey = (typeof contactIndustryKeys)[number];
@@ -122,30 +122,190 @@ type ShowcaseInterfaceProps = {
   stats: string[];
   showcaseLabel: string;
   lightMode?: boolean;
+  locale?: string;
 };
 
-function ShowcaseInterface({ showcaseKey, label, color, stats, showcaseLabel, lightMode = false }: ShowcaseInterfaceProps) {
+function ShowcaseInterface({ showcaseKey, label, color, stats, showcaseLabel, lightMode = false, locale = "en" }: ShowcaseInterfaceProps) {
+  const isArabic = locale === "ar";
   const fallbackStats = stats.length > 0 ? stats : ["Telemetry", "Automation", "Guardrails"];
   const waveform = [36, 58, 44, 72, 63, 86, 48, 78, 54, 91, 68, 74, 47, 82, 61, 88];
-  const workflowNodes = [
-    { left: "14%", top: "24%", label: "Input" },
-    { left: "48%", top: "18%", label: "Cache" },
-    { left: "76%", top: "34%", label: "LLM" },
-    { left: "34%", top: "62%", label: "Rules" },
-    { left: "68%", top: "70%", label: "API" },
+
+  let liveHeader = isArabic ? "لوحة العمليات الحية" : "Live operations surface";
+  let liveStatus = isArabic ? "مباشر" : "Streaming";
+  let metricItems = fallbackStats.slice(0, 3).map((stat, index) => ({
+    label: stat,
+    val: index === 0 ? "3.75k" : index === 1 ? "92%" : "4.05",
+  }));
+  let workflowHeader = isArabic ? "مخطط سير العمل" : "Workflow map";
+  let workflowNodes = [
+    { left: "14%", top: "24%", label: isArabic ? "المدخلات" : "Input" },
+    { left: "48%", top: "18%", label: isArabic ? "التخزين" : "Cache" },
+    { left: "76%", top: "34%", label: isArabic ? "النموذج" : "LLM" },
+    { left: "34%", top: "62%", label: isArabic ? "القواعد" : "Rules" },
+    { left: "68%", top: "70%", label: isArabic ? "الربط" : "API" },
   ];
-  const screenshotLabels = ["Ops", "Risk", "Spend"];
+  let decisionTitle = isArabic ? "سجل القرارات" : "Decision log";
+  let decisionLatency = isArabic ? "١٣ مللي/ث" : "13ms";
+  let decisionLogs = isArabic
+    ? ["تطابق ذاكرة التخزين الدلالية", "اجتياز سياسة الميزانية", "إدراج الإجراء في قائمة التنفيذ"]
+    : ["Semantic cache hit", "Budget policy passed", "Worker action queued"];
+  let screenshotLabels = isArabic ? ["العمليات", "المخاطر", "الميزانية"] : ["Ops", "Risk", "Spend"];
+  let guardrailTitle = isArabic ? "مؤشر الأمان والضوابط" : "Guardrail cockpit";
+
+  if (showcaseKey === "education") {
+    liveHeader = isArabic ? "متابعة أداء الطلاب والتقييم اللحظي" : "Live Student Analytics & Adaptive Grading";
+    liveStatus = isArabic ? "نشط ومباشر" : "Streaming";
+    metricItems = isArabic
+      ? [
+          { label: "الطلاب النشطون", val: "1,420" },
+          { label: "معدل الإتقان", val: "96.4%" },
+          { label: "اختبارات مصححة", val: "4,850+" },
+        ]
+      : [
+          { label: "Active Students", val: "1,420" },
+          { label: "Academic Mastery", val: "96.4%" },
+          { label: "Auto-graded Tasks", val: "4,850+" },
+        ];
+    workflowHeader = isArabic ? "مسار التقييم والتعلم التكيفي" : "Adaptive Learning Workflow";
+    workflowNodes = isArabic
+      ? [
+          { left: "10%", top: "24%", label: "الواجبات" },
+          { left: "44%", top: "18%", label: "تحليل الفهم" },
+          { left: "74%", top: "34%", label: "خطة مخصصة" },
+          { left: "30%", top: "62%", label: "تقرير المعلم" },
+          { left: "66%", top: "70%", label: "بوابة ولي الأمر" },
+        ]
+      : [
+          { left: "10%", top: "24%", label: "Student Work" },
+          { left: "44%", top: "18%", label: "AI Diagnosis" },
+          { left: "74%", top: "34%", label: "Custom Track" },
+          { left: "30%", top: "62%", label: "Teacher View" },
+          { left: "66%", top: "70%", label: "Parent Sync" },
+        ];
+    decisionTitle = isArabic ? "سجل التصحيح والتنبيهات الذكية" : "Live AI Grading & Alert Feed";
+    decisionLatency = isArabic ? "فوري" : "Live";
+    decisionLogs = isArabic
+      ? [
+          "تم تصحيح اختبار منتصف الفصل: أحمد المنصوري (96%)",
+          "توليد خطة مراجعة مخصصة: سارة خالد",
+          "تنبيه المعلم: ارتفاع فهم وحدة الجبر بنسبة 18%",
+        ]
+      : [
+          "Auto-graded Midterm Quiz: Ahmed Al-Mansoor (96%)",
+          "Generated Adaptive Revision Plan: Sarah Khalid",
+          "Teacher Alert: +18% Algebra Unit Comprehension",
+        ];
+    screenshotLabels = isArabic
+      ? ["جدول الدرجات", "كراف التقدم", "تحليل الفجوات"]
+      : ["Grade Sheet", "Growth Chart", "Gap Matrix"];
+    guardrailTitle = isArabic ? "مؤشرات دقة وموثوقية النظام" : "AI Accuracy & Standards Index";
+  } else if (showcaseKey === "realEstate") {
+    liveHeader = isArabic ? "مصفوفة إدارة الأصول وتحليل العوائد العقارية" : "Real Estate Asset Matrix & Yield Analytics";
+    liveStatus = isArabic ? "نشط ومباشر" : "Streaming";
+    metricItems = isArabic
+      ? [
+          { label: "نسبة الإشغال", val: "96.2%" },
+          { label: "متوسط العائد الصافي", val: "11.4%" },
+          { label: "اختصار زمن الصفقات", val: "-42%" },
+        ]
+      : [
+          { label: "Occupancy Rate", val: "96.2%" },
+          { label: "Avg Net Yield", val: "11.4%" },
+          { label: "Closing Velocity", val: "-42%" },
+        ];
+    workflowHeader = isArabic ? "مخطط التقييم ومطابقة المستثمرين" : "Appraisal & Deal Pipeline";
+    workflowNodes = isArabic
+      ? [
+          { left: "10%", top: "24%", label: "حصر الأصول" },
+          { left: "44%", top: "18%", label: "تسعير المتر الذكي" },
+          { left: "74%", top: "34%", label: "توليد الفرص" },
+          { left: "30%", top: "62%", label: "إغلاق الصفقات" },
+          { left: "66%", top: "70%", label: "بوابة المستثمر" },
+        ]
+      : [
+          { left: "10%", top: "24%", label: "Asset Intake" },
+          { left: "44%", top: "18%", label: "Smart /SqM" },
+          { left: "74%", top: "34%", label: "Deal Match" },
+          { left: "30%", top: "62%", label: "Closing" },
+          { left: "66%", top: "70%", label: "Investor Hub" },
+        ];
+    decisionTitle = isArabic ? "سجل إغلاق الصفقات والتقييم اللحظي" : "Live Deal Execution & Valuation Feed";
+    decisionLatency = isArabic ? "فوري" : "Live";
+    decisionLogs = isArabic
+      ? [
+          "إتمام صفقة تمويل استثماري: المركز اللوجستي (24.5M ر.س)",
+          "تحديث التقييم الآلي: برج الواجهة (+6.4% نمو رأسمالي)",
+          "تنبيه ذكي: فرصة استحواذ ذات عائد يتجاوز 12% في شمال الرياض",
+        ]
+      : [
+          "Executed Deal: Logistics Hub ($6.5M)",
+          "Appraisal Updated: Commercial Tower (+6.4% Cap Growth)",
+          "Yield Alert: Prime Acquisition Opportunity >12% Net",
+        ];
+    screenshotLabels = isArabic
+      ? ["مصفوفة الصفقات", "توزيع العوائد", "خريطة الأسعار"]
+      : ["Deal Pipeline", "Yield Curve", "Valuation Heatmap"];
+    guardrailTitle = isArabic ? "مؤشرات جودة التقييم والسيولة" : "Valuation & Liquidity Index";
+  } else if (showcaseKey === "healthcare") {
+    liveHeader = isArabic ? "نظرة عامة — مرحباً د. أحمد | ملخص أداء المنشأة" : "Overview — Welcome Dr. Ahmed | Facility Performance";
+    liveStatus = isArabic ? "نشط ومباشر" : "Streaming";
+    metricItems = isArabic
+      ? [
+          { label: "إجمالي المرضى", val: "3,842" },
+          { label: "المنومين", val: "128" },
+          { label: "المواعيد", val: "56" },
+        ]
+      : [
+          { label: "Total Patients", val: "3,842" },
+          { label: "Inpatients", val: "128" },
+          { label: "Appointments", val: "56" },
+        ];
+    workflowHeader = isArabic ? "مسار الفرز والرعاية الذكية" : "AI Clinical Triage & Care Track";
+    workflowNodes = isArabic
+      ? [
+          { left: "10%", top: "24%", label: "استقبال المريض" },
+          { left: "44%", top: "18%", label: "الفرز والتشخيص" },
+          { left: "74%", top: "34%", label: "خطة العلاج" },
+          { left: "30%", top: "62%", label: "متابعة المنومين" },
+          { left: "66%", top: "70%", label: "الملف الطبي" },
+        ]
+      : [
+          { left: "10%", top: "24%", label: "Admission" },
+          { left: "44%", top: "18%", label: "AI Diagnosis" },
+          { left: "74%", top: "34%", label: "Care Track" },
+          { left: "30%", top: "62%", label: "Inpatient View" },
+          { left: "66%", top: "70%", label: "EMR Portal" },
+        ];
+    decisionTitle = isArabic ? "تنبيهات النظام والمتابعة السريرية" : "Live Clinical Alerts & Monitoring Feed";
+    decisionLatency = isArabic ? "فوري" : "Live";
+    decisionLogs = isArabic
+      ? [
+          "5 حالات تحتاج متابعة سريرية عاجلة (قسم الطوارئ)",
+          "12 موعد استشارة اقترب موعده اليوم",
+          "3 نتائج مخبرية جديدة جاهزة للمعاينة الفورية",
+        ]
+      : [
+          "5 Urgent critical cases requiring follow-up (ER)",
+          "12 Approaching consultations today",
+          "3 New lab test results ready for clinical review",
+        ];
+    screenshotLabels = isArabic
+      ? ["سجلات المرضى", "توزيع الحالات", "المؤشرات الحيوية"]
+      : ["Patient Records", "Case Distribution", "Clinical Vitals"];
+    guardrailTitle = isArabic ? "مؤشرات جودة الرعاية والأمان الطبي" : "Clinical Quality & Safety Index";
+  }
+
   const panelClass = lightMode
-    ? "border-[#d8c7aa]/70 bg-white/82 shadow-[0_24px_70px_-36px_rgba(61,43,22,0.62)]"
-    : "border-white/10 bg-[#050816]/88 shadow-[0_24px_70px_rgba(0,0,0,0.38)]";
+    ? "border-[#d8cbb8]/80 bg-[#fffdf8]/90 shadow-[0_28px_80px_-24px_rgba(61,43,22,0.42)] backdrop-blur-xl"
+    : "border-white/12 bg-[#060a1c]/90 shadow-[0_30px_90px_rgba(0,0,0,0.55)] backdrop-blur-xl";
   const smallPanelClass = lightMode
-    ? "border-[#d8c7aa]/70 bg-white/82 shadow-[0_18px_44px_-28px_rgba(61,43,22,0.58)]"
-    : "border-white/[0.12] bg-[#050711]/95 shadow-2xl";
+    ? "border-[#d8cbb8]/80 bg-[#faf6ed]/92 shadow-[0_20px_50px_-22px_rgba(61,43,22,0.45)] backdrop-blur-xl"
+    : "border-white/[0.14] bg-[#070d24]/95 shadow-2xl backdrop-blur-xl";
   const modulePanelClass = lightMode
-    ? "border-[#d8c7aa]/60 bg-[#fbf8f1]/78"
-    : "border-white/10 bg-black/20";
-  const mutedTextClass = lightMode ? "text-[#25304a]/62" : "text-white/45";
-  const softTextClass = lightMode ? "text-[#25304a]/72" : "text-white/62";
+    ? "border-[#d8cbb8]/70 bg-[#faf6ed]/85 shadow-sm"
+    : "border-white/10 bg-white/[0.035] shadow-inner";
+  const mutedTextClass = lightMode ? "text-[#25304a]/68" : "text-white/45";
+  const softTextClass = lightMode ? "text-[#25304a]/75" : "text-white/65";
   const strongTextClass = lightMode ? "text-[#10172d]" : "text-white";
 
   return (
@@ -165,16 +325,16 @@ function ShowcaseInterface({ showcaseKey, label, color, stats, showcaseLabel, li
       />
 
       <motion.div
-        className={`absolute left-[3%] top-[4%] h-[58%] w-[76%] rounded-2xl border p-3 backdrop-blur-md sm:left-[5%] sm:h-[62%] ${panelClass}`}
+        className={`absolute left-[2%] top-[3%] h-[60%] w-[78%] rounded-[30px] sm:rounded-[36px] border p-3.5 sm:p-4.5 backdrop-blur-xl sm:left-[4%] sm:h-[64%] ${panelClass}`}
         animate={{ y: [0, -8, 0] }}
         transition={{ duration: 7, repeat: Infinity, ease: "easeInOut" }}
       >
         <div className="flex h-full gap-3">
-          <div className={`hidden w-8 shrink-0 flex-col items-center gap-2 rounded-xl py-2 sm:flex ${lightMode ? "bg-[#f1e6d7]/70" : "bg-white/[0.04]"}`}>
+          <div className={`hidden w-8 shrink-0 flex-col items-center gap-2 rounded-2xl py-2.5 sm:flex ${lightMode ? "bg-[#f1e6d7]/70 border border-[#d8cbb8]/40" : "bg-white/[0.04] border border-white/5"}`}>
             {[0, 1, 2, 3, 4].map((item) => (
               <span
                 key={`${showcaseKey}-rail-${item}`}
-                className="h-2.5 w-2.5 rounded-full"
+                className="h-2.5 w-2.5 rounded-full transition-all duration-300"
                 style={{ background: item === 1 ? color : lightMode ? "rgba(20,33,67,0.18)" : "rgba(255,255,255,0.16)" }}
               />
             ))}
@@ -183,10 +343,10 @@ function ShowcaseInterface({ showcaseKey, label, color, stats, showcaseLabel, li
           <div className="flex min-w-0 flex-1 flex-col">
             <div className="mb-3 flex items-center justify-between gap-3">
               <span
-                className="rounded-full px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.18em]"
+                className="rounded-full px-3.5 py-1.5 text-[10px] font-extrabold uppercase tracking-[0.2em] shadow-sm"
                 style={{
-                  background: `${color}1f`,
-                  border: `1px solid ${color}55`,
+                  background: lightMode ? `${color}18` : `${color}22`,
+                  border: `1px solid ${color}66`,
                   color,
                 }}
               >
@@ -198,103 +358,698 @@ function ShowcaseInterface({ showcaseKey, label, color, stats, showcaseLabel, li
             </div>
 
             <div className="grid min-h-0 flex-1 grid-cols-1 gap-3 sm:grid-cols-[1.35fr_0.85fr]">
-              <div className={`flex min-h-0 flex-col rounded-xl border p-3 ${modulePanelClass}`}>
-                <div className={`mb-3 flex items-center justify-between text-[10px] font-semibold uppercase ${lightMode ? "text-[#25304a]/62" : "text-white/50"}`}>
-                  <span>Live operations surface</span>
-                  <motion.span
-                    style={{ color }}
-                    animate={{ opacity: [0.45, 1, 0.45] }}
-                    transition={{ duration: 1.4, repeat: Infinity }}
-                  >
-                    Streaming
-                  </motion.span>
+              {showcaseKey === "education" ? (
+                /* ─── Education Dedicated Data Table & Graphs ─── */
+                <div className={`flex min-h-0 flex-col rounded-[24px] border p-3 ${modulePanelClass}`}>
+                  <div className={`mb-2.5 flex items-center justify-between text-[10px] font-bold uppercase ${lightMode ? "text-[#25304a]/80" : "text-white/70"}`}>
+                    <span className="flex items-center gap-1.5">
+                      <span className="h-2 w-2 rounded-full animate-pulse" style={{ background: color }} />
+                      {isArabic ? "جدول بيانات وتقييم الطلاب" : "Live Student Assessment Table"}
+                    </span>
+                    <span className="text-[8.5px] px-2.5 py-0.5 rounded-full font-bold uppercase tracking-wider" style={{ background: `${color}20`, color }}>
+                      {isArabic ? "مباشر" : "Live Sync"}
+                    </span>
+                  </div>
+
+                  {/* Student Table */}
+                  <div className="flex-1 overflow-hidden rounded-2xl border border-[#d8cbb8]/40 dark:border-white/10">
+                    <table className="w-full text-left text-[10px] border-collapse" dir={isArabic ? "rtl" : "ltr"}>
+                      <thead>
+                        <tr className={`${lightMode ? "bg-[#efe5d5]/80 text-[#25304a]/90" : "bg-white/[0.07] text-white/80"} border-b border-[#d8cbb8]/40 dark:border-white/10 font-bold text-[9px]`}>
+                          <th className="py-1.5 px-2.5">{isArabic ? "الطالب" : "Student"}</th>
+                          <th className="py-1.5 px-2">{isArabic ? "المادة" : "Subject"}</th>
+                          <th className="py-1.5 px-2 text-center">{isArabic ? "الدرجة" : "Score"}</th>
+                          <th className="py-1.5 px-2.5">{isArabic ? "التقييم الذكي" : "AI Status"}</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-[#d8cbb8]/30 dark:divide-white/5">
+                        {[
+                          {
+                            name: isArabic ? "أحمد المنصوري" : "Ahmed Al-Mansoor",
+                            subject: isArabic ? "رياضيات متقدمة" : "Adv. Math",
+                            score: "96%",
+                            status: isArabic ? "إتقان تام" : "Mastery",
+                            badge: "⭐",
+                            scoreColor: "#10B981",
+                          },
+                          {
+                            name: isArabic ? "سارة خالد" : "Sarah Khalid",
+                            subject: isArabic ? "فيزياء حديثة" : "Physics",
+                            score: "88%",
+                            status: isArabic ? "تقدم ملحوظ" : "+14% Growth",
+                            badge: "📈",
+                            scoreColor: color,
+                          },
+                          {
+                            name: isArabic ? "عمر الحربي" : "Omar Al-Harbi",
+                            subject: isArabic ? "لغة إنجليزية" : "English",
+                            score: "92%",
+                            status: isArabic ? "اجتاز الاختبار" : "Passed Test",
+                            badge: "🎯",
+                            scoreColor: "#10B981",
+                          },
+                          {
+                            name: isArabic ? "مريم الدوسري" : "Mariam Al-Dawsari",
+                            subject: isArabic ? "كيمياء عامة" : "Chemistry",
+                            score: "95%",
+                            status: isArabic ? "مستوى متقدم" : "Advanced Track",
+                            badge: "🚀",
+                            scoreColor: "#10B981",
+                          },
+                        ].map((student, idx) => (
+                          <motion.tr
+                            key={student.name}
+                            initial={{ opacity: 0, x: isArabic ? 10 : -10 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            transition={{ duration: 0.35, delay: idx * 0.08 }}
+                            className={`${lightMode ? "hover:bg-white/80" : "hover:bg-white/[0.04]"} transition-colors`}
+                          >
+                            <td className="py-1.5 px-2.5 font-bold whitespace-nowrap">
+                              <span className={strongTextClass}>{student.name}</span>
+                            </td>
+                            <td className="py-1.5 px-2 whitespace-nowrap">
+                              <span className={softTextClass}>{student.subject}</span>
+                            </td>
+                            <td className="py-1.5 px-2 text-center font-mono font-black whitespace-nowrap" style={{ color: student.scoreColor }}>
+                              {student.score}
+                            </td>
+                            <td className="py-1.5 px-2.5 whitespace-nowrap">
+                              <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[8.5px] font-bold ${lightMode ? "bg-[#f3eadc] text-[#25304a]" : "bg-white/[0.08] text-white/85"}`}>
+                                <span>{student.badge}</span>
+                                <span>{student.status}</span>
+                              </span>
+                            </td>
+                          </motion.tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+
+                  {/* Summary Metric Strip */}
+                  <div className="mt-2.5 grid grid-cols-3 gap-2">
+                    {metricItems.map((metric, index) => (
+                      <div key={`${showcaseKey}-metric-${index}`} className={`rounded-xl px-2.5 py-1.5 border border-[#d8cbb8]/40 dark:border-white/10 ${lightMode ? "bg-white/80 shadow-sm" : "bg-white/[0.04]"}`}>
+                        <p className={`truncate text-[8.5px] font-bold uppercase tracking-wider ${lightMode ? "text-[#25304a]/70" : "text-white/50"}`}>{metric.label}</p>
+                        <motion.p
+                          className={`mt-0.5 text-sm font-black ${strongTextClass}`}
+                          animate={{ opacity: [0.75, 1, 0.75] }}
+                          transition={{ duration: 2.5, repeat: Infinity, delay: index * 0.35 }}
+                        >
+                          {metric.val}
+                        </motion.p>
+                      </div>
+                    ))}
+                  </div>
                 </div>
-                <div className={`relative flex min-h-0 flex-1 items-end gap-1.5 overflow-hidden rounded-lg px-2 pb-2 ${lightMode ? "bg-[#f1e6d7]/45" : "bg-white/[0.03]"}`}>
-                  {waveform.map((height, index) => (
+              ) : showcaseKey === "realEstate" ? (
+                /* ─── Real Estate Dedicated Asset Matrix & Deal Pipeline ─── */
+                <div className={`flex min-h-0 flex-col rounded-[24px] border p-3 ${modulePanelClass}`}>
+                  <div className={`mb-2.5 flex items-center justify-between text-[10px] font-bold uppercase ${lightMode ? "text-[#25304a]/80" : "text-white/70"}`}>
+                    <span className="flex items-center gap-1.5 font-extrabold">
+                      <span className="h-2 w-2 rounded-full animate-pulse" style={{ background: color }} />
+                      {isArabic ? "مصفوفة الأصول العقارية ونسب الإشغال" : "Asset Portfolio & Occupancy Matrix"}
+                    </span>
+                    <span className="text-[8.5px] px-2.5 py-0.5 rounded-full font-bold uppercase tracking-wider" style={{ background: `${color}20`, color }}>
+                      {isArabic ? "تحديث مباشر" : "Live Deal Sync"}
+                    </span>
+                  </div>
+
+                  {/* Real Estate Property Matrix Table */}
+                  <div className="flex-1 overflow-hidden rounded-2xl border border-[#d8cbb8]/40 dark:border-white/10">
+                    <table className="w-full text-left text-[10px] border-collapse" dir={isArabic ? "rtl" : "ltr"}>
+                      <thead>
+                        <tr className={`${lightMode ? "bg-[#efe5d5]/80 text-[#25304a]/90" : "bg-white/[0.07] text-white/80"} border-b border-[#d8cbb8]/40 dark:border-white/10 font-bold text-[8.5px]`}>
+                          <th className="py-1.5 px-2">{isArabic ? "الأصل العقاري" : "Asset / Sector"}</th>
+                          <th className="py-1.5 px-1.5 text-center">{isArabic ? "المساحة" : "Area"}</th>
+                          <th className="py-1.5 px-1.5 text-center">{isArabic ? "سعر المتر" : "Price/m²"}</th>
+                          <th className="py-1.5 px-2 text-center">{isArabic ? "نسبة الإشغال" : "Occupancy"}</th>
+                          <th className="py-1.5 px-2 text-center">{isArabic ? "العائد الصافي" : "Net Yield"}</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-[#d8cbb8]/30 dark:divide-white/5">
+                        {[
+                          {
+                            name: isArabic ? "برج الواجهة" : "Al-Wajiha Tower",
+                            type: isArabic ? "تجاري" : "Commercial",
+                            area: "4,200 م²",
+                            areaEn: "4.2k m²",
+                            sqmPrice: "18.5k",
+                            occ: 98.5,
+                            roi: "11.8%",
+                            badge: "⭐",
+                            status: isArabic ? "إشغال ممتاز" : "Prime",
+                            roiColor: "#10B981",
+                          },
+                          {
+                            name: isArabic ? "مجمع الفلل الذكية" : "Smart Villas",
+                            type: isArabic ? "سكني" : "Residential",
+                            area: "8,600 م²",
+                            areaEn: "8.6k m²",
+                            sqmPrice: "7.2k",
+                            occ: 94.0,
+                            roi: "9.2%",
+                            badge: "📈",
+                            status: isArabic ? "طلب متزايد" : "Growth",
+                            roiColor: color,
+                          },
+                          {
+                            name: isArabic ? "المركز اللوجستي" : "Logistics Hub",
+                            type: isArabic ? "صناعي" : "Industrial",
+                            area: "12,000 م²",
+                            areaEn: "12k m²",
+                            sqmPrice: "4.8k",
+                            occ: 100,
+                            roi: "12.6%",
+                            badge: "🚀",
+                            status: isArabic ? "إشغال كامل" : "Full",
+                            roiColor: "#10B981",
+                          },
+                          {
+                            name: isArabic ? "مكاتب الابتكار" : "Tech Offices",
+                            type: isArabic ? "إداري" : "Offices",
+                            area: "3,100 م²",
+                            areaEn: "3.1k m²",
+                            sqmPrice: "14.2k",
+                            occ: 92.5,
+                            roi: "10.4%",
+                            badge: "💡",
+                            status: isArabic ? "إشغال مستقر" : "Stable",
+                            roiColor: "#38BDF8",
+                          },
+                        ].map((prop, idx) => (
+                          <motion.tr
+                            key={prop.name}
+                            initial={{ opacity: 0, x: isArabic ? 10 : -10 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            transition={{ duration: 0.35, delay: idx * 0.08 }}
+                            className={`${lightMode ? "hover:bg-white/80" : "hover:bg-white/[0.04]"} transition-colors`}
+                          >
+                            <td className="py-1.5 px-2 whitespace-nowrap">
+                              <div className="font-bold">
+                                <span className={strongTextClass}>{prop.name}</span>
+                              </div>
+                              <span className={`text-[8px] font-medium ${mutedTextClass}`}>{prop.type}</span>
+                            </td>
+                            <td className="py-1.5 px-1.5 text-center font-mono text-[9px] font-semibold whitespace-nowrap">
+                              <span className={softTextClass}>{isArabic ? prop.area : prop.areaEn}</span>
+                            </td>
+                            <td className="py-1.5 px-1.5 text-center font-mono text-[9px] font-bold whitespace-nowrap">
+                              <span className={strongTextClass}>{prop.sqmPrice} {isArabic ? "ر.س" : "SAR"}</span>
+                            </td>
+                            <td className="py-1.5 px-2 text-center whitespace-nowrap">
+                              <div className="inline-flex flex-col items-center">
+                                <span className="font-mono text-[9px] font-bold text-[#10B981]">{prop.occ}%</span>
+                                <div className={`w-10 h-1 rounded-full overflow-hidden ${lightMode ? "bg-[#d8cbb8]/40" : "bg-white/10"} mt-0.5`}>
+                                  <div className="h-full bg-[#10B981] rounded-full" style={{ width: `${prop.occ}%` }} />
+                                </div>
+                              </div>
+                            </td>
+                            <td className="py-1.5 px-2 text-center whitespace-nowrap">
+                              <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[8.5px] font-black ${lightMode ? "bg-[#f3eadc] text-[#25304a]" : "bg-white/[0.08] text-white/85"}`}>
+                                <span>{prop.badge}</span>
+                                <span className="font-mono" style={{ color: prop.roiColor }}>{prop.roi}</span>
+                              </span>
+                            </td>
+                          </motion.tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+
+                  {/* Real Estate KPI Strip */}
+                  <div className="mt-2.5 grid grid-cols-3 gap-2">
+                    {metricItems.map((metric, index) => (
+                      <div key={`${showcaseKey}-metric-${index}`} className={`rounded-xl px-2.5 py-1.5 border border-[#d8cbb8]/40 dark:border-white/10 ${lightMode ? "bg-white/80 shadow-sm" : "bg-white/[0.04]"}`}>
+                        <p className={`truncate text-[8.5px] font-bold uppercase tracking-wider ${lightMode ? "text-[#25304a]/70" : "text-white/50"}`}>{metric.label}</p>
+                        <motion.p
+                          className={`mt-0.5 text-sm font-black ${strongTextClass}`}
+                          animate={{ opacity: [0.75, 1, 0.75] }}
+                          transition={{ duration: 2.5, repeat: Infinity, delay: index * 0.35 }}
+                        >
+                          {metric.val}
+                        </motion.p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ) : showcaseKey === "healthcare" ? (
+                /* ─── Healthcare Dedicated Patient Roster & Triage Table ─── */
+                <div className={`flex min-h-0 flex-col rounded-[24px] border p-3 ${modulePanelClass}`}>
+                  <div className={`mb-2.5 flex items-center justify-between text-[10px] font-bold uppercase ${lightMode ? "text-[#25304a]/80" : "text-white/70"}`}>
+                    <span className="flex items-center gap-1.5 font-extrabold">
+                      <span className="h-2 w-2 rounded-full animate-pulse bg-[#00D2FF]" />
+                      {isArabic ? "قائمة المرضى والمتابعة السريرية" : "Live Patients Roster & Triage"}
+                    </span>
+                    <span className="text-[8.5px] px-2.5 py-0.5 rounded-full font-bold uppercase tracking-wider bg-[#00D2FF]/15 text-[#00D2FF]">
+                      {isArabic ? "مباشر" : "Live Sync"}
+                    </span>
+                  </div>
+
+                  {/* Patient Table */}
+                  <div className="flex-1 overflow-hidden rounded-2xl border border-[#d8cbb8]/40 dark:border-white/10">
+                    <table className="w-full text-left text-[10px] border-collapse" dir={isArabic ? "rtl" : "ltr"}>
+                      <thead>
+                        <tr className={`${lightMode ? "bg-[#efe5d5]/80 text-[#25304a]/90" : "bg-white/[0.07] text-white/80"} border-b border-[#d8cbb8]/40 dark:border-white/10 font-bold text-[8.5px]`}>
+                          <th className="py-1.5 px-2">{isArabic ? "المريض" : "Patient"}</th>
+                          <th className="py-1.5 px-1.5 text-center">{isArabic ? "العمر" : "Age"}</th>
+                          <th className="py-1.5 px-1.5 text-center">{isArabic ? "الجنس" : "Gender"}</th>
+                          <th className="py-1.5 px-2 text-center">{isArabic ? "الحالة" : "Risk"}</th>
+                          <th className="py-1.5 px-2 text-center">{isArabic ? "آخر زيارة" : "Last Visit"}</th>
+                          <th className="py-1.5 px-1.5 text-center">{isArabic ? "الإجراء" : "Action"}</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-[#d8cbb8]/30 dark:divide-white/5">
+                        {[
+                          {
+                            name: isArabic ? "فاطمة علي" : "Fatima Ali",
+                            gender: isArabic ? "أنثى" : "Female",
+                            avatar: "👩‍💼",
+                            age: "67",
+                            status: isArabic ? "عالية" : "High",
+                            statusColor: "#EF4444",
+                            statusBg: "#EF444418",
+                            date: "2025-08-21",
+                          },
+                          {
+                            name: isArabic ? "محمد حسن" : "Mohamed Hassan",
+                            gender: isArabic ? "ذكر" : "Male",
+                            avatar: "👨‍💼",
+                            age: "45",
+                            status: isArabic ? "متوسطة" : "Medium",
+                            statusColor: "#F59E0B",
+                            statusBg: "#F59E0B18",
+                            date: "2025-08-20",
+                          },
+                          {
+                            name: isArabic ? "سارة أحمد" : "Sarah Ahmed",
+                            gender: isArabic ? "أنثى" : "Female",
+                            avatar: "👩",
+                            age: "29",
+                            status: isArabic ? "منخفضة" : "Low",
+                            statusColor: "#10B981",
+                            statusBg: "#10B98118",
+                            date: "2025-08-19",
+                          },
+                          {
+                            name: isArabic ? "عبدالله يوسف" : "Abdullah Yousef",
+                            gender: isArabic ? "ذكر" : "Male",
+                            avatar: "👨",
+                            age: "72",
+                            status: isArabic ? "عالية" : "High",
+                            statusColor: "#EF4444",
+                            statusBg: "#EF444418",
+                            date: "2025-08-18",
+                          },
+                          {
+                            name: isArabic ? "نورة خالد" : "Noura Khalid",
+                            gender: isArabic ? "أنثى" : "Female",
+                            avatar: "👩‍🦰",
+                            age: "53",
+                            status: isArabic ? "متوسطة" : "Medium",
+                            statusColor: "#F59E0B",
+                            statusBg: "#F59E0B18",
+                            date: "2025-08-17",
+                          },
+                        ].map((patient, idx) => (
+                          <motion.tr
+                            key={patient.name}
+                            initial={{ opacity: 0, x: isArabic ? 10 : -10 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            transition={{ duration: 0.35, delay: idx * 0.08 }}
+                            className={`${lightMode ? "hover:bg-white/80" : "hover:bg-white/[0.04]"} transition-colors`}
+                          >
+                            <td className="py-1 px-2 whitespace-nowrap">
+                              <div className="flex items-center gap-1.5">
+                                <span className="text-[11px]">{patient.avatar}</span>
+                                <span className={`font-bold text-[9.5px] ${strongTextClass}`}>{patient.name}</span>
+                              </div>
+                            </td>
+                            <td className="py-1 px-1.5 text-center font-mono text-[9px] font-semibold whitespace-nowrap">
+                              <span className={softTextClass}>{patient.age}</span>
+                            </td>
+                            <td className="py-1 px-1.5 text-center text-[8.5px] whitespace-nowrap">
+                              <span className={mutedTextClass}>{patient.gender}</span>
+                            </td>
+                            <td className="py-1 px-2 text-center whitespace-nowrap">
+                              <span
+                                className="inline-block px-2 py-0.5 rounded-full text-[8px] font-bold"
+                                style={{ background: patient.statusBg, color: patient.statusColor }}
+                              >
+                                {patient.status}
+                              </span>
+                            </td>
+                            <td className="py-1 px-2 text-center font-mono text-[8px] whitespace-nowrap">
+                              <span className={softTextClass}>{patient.date}</span>
+                            </td>
+                            <td className="py-1 px-1.5 text-center whitespace-nowrap">
+                              <button
+                                type="button"
+                                className={`px-2 py-0.5 rounded text-[8px] font-semibold transition-colors ${
+                                  lightMode ? "bg-[#efe5d5] hover:bg-[#e4d7c3] text-[#25304a]" : "bg-white/10 hover:bg-white/20 text-white"
+                                }`}
+                              >
+                                {isArabic ? "عرض" : "View"}
+                              </button>
+                            </td>
+                          </motion.tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+
+                  {/* Healthcare Top Stats Strip */}
+                  <div className="mt-2.5 grid grid-cols-3 gap-2">
+                    {[
+                      { label: isArabic ? "إجمالي المرضى" : "Total Patients", val: "3,842", change: "+12.5%" },
+                      { label: isArabic ? "المنومين" : "Inpatients", val: "128", change: "+8.3%" },
+                      { label: isArabic ? "المواعيد" : "Appointments", val: "56", change: "-3.2%" },
+                    ].map((metric, index) => (
+                      <div key={`health-kpi-${index}`} className={`rounded-xl px-2.5 py-1.5 border border-[#d8cbb8]/40 dark:border-white/10 ${lightMode ? "bg-white/80 shadow-sm" : "bg-white/[0.04]"}`}>
+                        <div className="flex items-center justify-between">
+                          <p className={`truncate text-[8px] font-bold uppercase tracking-wider ${lightMode ? "text-[#25304a]/70" : "text-white/50"}`}>{metric.label}</p>
+                          <span className={`text-[7.5px] font-mono font-bold ${metric.change.startsWith("+") ? "text-[#10B981]" : "text-[#EF4444]"}`}>{metric.change}</span>
+                        </div>
+                        <motion.p
+                          className={`mt-0.5 text-sm font-black ${strongTextClass}`}
+                          animate={{ opacity: [0.75, 1, 0.75] }}
+                          transition={{ duration: 2.5, repeat: Infinity, delay: index * 0.35 }}
+                        >
+                          {metric.val}
+                        </motion.p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ) : (
+                /* ─── Default Generic Surface ─── */
+                <div className={`flex min-h-0 flex-col rounded-[24px] border p-3 ${modulePanelClass}`}>
+                  <div className={`mb-3 flex items-center justify-between text-[10px] font-semibold uppercase ${lightMode ? "text-[#25304a]/62" : "text-white/50"}`}>
+                    <span className="truncate">{liveHeader}</span>
                     <motion.span
-                      key={`${showcaseKey}-wave-${index}`}
-                      className="flex-1 rounded-t-sm"
-                      style={{
-                        background: `linear-gradient(180deg, ${color}, rgba(255,255,255,0.08))`,
-                      }}
-                      animate={{ height: [`${Math.max(22, height - 22)}%`, `${height}%`, `${Math.max(18, height - 14)}%`] }}
-                      transition={{
-                        duration: 2.2 + index * 0.08,
-                        repeat: Infinity,
-                        ease: "easeInOut",
-                        delay: index * 0.04,
-                      }}
-                    />
-                  ))}
-                  <motion.div
-                    className="absolute inset-y-2 w-12 rounded-full"
-                    style={{ background: `linear-gradient(90deg, transparent, ${color}20, transparent)` }}
-                    animate={{ left: ["-18%", "108%"] }}
-                    transition={{ duration: 3.4, repeat: Infinity, ease: "linear" }}
-                  />
-                </div>
-                <div className="mt-3 grid grid-cols-3 gap-2">
-                  {fallbackStats.slice(0, 3).map((stat, index) => (
-                    <div key={`${showcaseKey}-metric-${stat}`} className={`rounded-lg px-2 py-2 ${lightMode ? "bg-white/68" : "bg-white/[0.04]"}`}>
-                      <p className={`truncate text-[9px] uppercase ${lightMode ? "text-[#25304a]/55" : "text-white/40"}`}>{stat}</p>
-                      <motion.p
-                        className={`mt-1 text-sm font-bold ${strongTextClass}`}
-                        animate={{ opacity: [0.66, 1, 0.66] }}
-                        transition={{ duration: 2.5, repeat: Infinity, delay: index * 0.35 }}
-                      >
-                        {index === 0 ? "3.75k" : index === 1 ? "92%" : "4.05"}
-                      </motion.p>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              <div className="hidden min-h-0 flex-col gap-3 sm:flex">
-                <div className={`relative flex-1 overflow-hidden rounded-xl border p-3 ${lightMode ? "border-[#d8c7aa]/60 bg-white/58" : "border-white/10 bg-white/[0.045]"}`}>
-                  <p className={`text-[10px] font-semibold uppercase tracking-[0.16em] ${mutedTextClass}`}>
-                    Workflow map
-                  </p>
-                  <svg className="absolute inset-0 h-full w-full" viewBox="0 0 220 160" aria-hidden="true">
-                    <motion.path
-                      d="M32 48 C78 22 112 36 154 54 S184 92 150 116 S78 122 58 94"
-                      fill="none"
-                      stroke={color}
-                      strokeWidth="1.4"
-                      strokeDasharray="5 6"
-                      animate={{ strokeDashoffset: [0, -44] }}
-                      transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
-                      opacity="0.68"
-                    />
-                  </svg>
-                  {workflowNodes.map((node, index) => (
-                    <motion.div
-                      key={`${showcaseKey}-node-${node.label}`}
-                      className={`absolute grid h-9 w-9 place-items-center rounded-lg border text-[8px] font-semibold ${
-                        lightMode
-                          ? "border-[#d8c7aa]/70 bg-[#fbf8f1]/95 text-[#25304a]/78"
-                          : "border-white/10 bg-[#07101D]/95 text-white/65"
-                      }`}
-                      style={{ left: node.left, top: node.top }}
-                      animate={{ scale: [1, 1.08, 1], boxShadow: [`0 0 0 ${color}00`, `0 0 18px ${color}44`, `0 0 0 ${color}00`] }}
-                      transition={{ duration: 2.8, repeat: Infinity, delay: index * 0.35 }}
+                      style={{ color }}
+                      animate={{ opacity: [0.45, 1, 0.45] }}
+                      transition={{ duration: 1.4, repeat: Infinity }}
                     >
-                      {node.label}
-                    </motion.div>
-                  ))}
-                </div>
-
-                <div className="grid h-20 grid-cols-3 gap-2">
-                  {[82, 64, 91].map((height, index) => (
-                    <div key={`${showcaseKey}-module-${index}`} className={`flex items-end rounded-lg border p-1.5 ${modulePanelClass}`}>
+                      {liveStatus}
+                    </motion.span>
+                  </div>
+                  <div className={`relative flex min-h-0 flex-1 items-end gap-1.5 overflow-hidden rounded-2xl px-2 pb-2 ${lightMode ? "bg-[#f1e6d7]/45" : "bg-white/[0.03]"}`}>
+                    {waveform.map((height, index) => (
                       <motion.span
-                        className="block w-full rounded-md"
-                        style={{ background: `${color}${index % 2 === 0 ? "88" : "55"}` }}
-                        animate={{ height: [`${Math.max(32, height - 24)}%`, `${height}%`, `${Math.max(28, height - 10)}%`] }}
-                        transition={{ duration: 2.5, repeat: Infinity, delay: index * 0.25 }}
+                        key={`${showcaseKey}-wave-${index}`}
+                        className="flex-1 rounded-full"
+                        style={{
+                          background: `linear-gradient(180deg, ${color}, rgba(255,255,255,0.08))`,
+                        }}
+                        animate={{ height: [`${Math.max(22, height - 22)}%`, `${height}%`, `${Math.max(18, height - 14)}%`] }}
+                        transition={{
+                          duration: 2.2 + index * 0.08,
+                          repeat: Infinity,
+                          ease: "easeInOut",
+                          delay: index * 0.04,
+                        }}
                       />
-                    </div>
-                  ))}
+                    ))}
+                    <motion.div
+                      className="absolute inset-y-2 w-12 rounded-full"
+                      style={{ background: `linear-gradient(90deg, transparent, ${color}20, transparent)` }}
+                      animate={{ left: ["-18%", "108%"] }}
+                      transition={{ duration: 3.4, repeat: Infinity, ease: "linear" }}
+                    />
+                  </div>
+                  <div className="mt-3 grid grid-cols-3 gap-2">
+                    {metricItems.map((metric, index) => (
+                      <div key={`${showcaseKey}-metric-${index}`} className={`rounded-xl px-2 py-2 ${lightMode ? "bg-white/75 shadow-sm" : "bg-white/[0.04]"}`}>
+                        <p className={`truncate text-[9px] uppercase ${lightMode ? "text-[#25304a]/55" : "text-white/40"}`}>{metric.label}</p>
+                        <motion.p
+                          className={`mt-1 text-sm font-bold ${strongTextClass}`}
+                          animate={{ opacity: [0.66, 1, 0.66] }}
+                          transition={{ duration: 2.5, repeat: Infinity, delay: index * 0.35 }}
+                        >
+                          {metric.val}
+                        </motion.p>
+                      </div>
+                    ))}
+                  </div>
                 </div>
+              )}
+
+              {/* ─── Right Column: Interactive Graphs / Charts ─── */}
+              <div className="hidden min-h-0 flex-col gap-2.5 sm:flex">
+                {showcaseKey === "education" ? (
+                  <>
+                    {/* Subject Mastery Bar Chart */}
+                    <div className={`relative flex-1 overflow-hidden rounded-[22px] border p-3 ${lightMode ? "border-[#d8cbb8]/70 bg-white/75 shadow-sm" : "border-white/10 bg-white/[0.045]"}`}>
+                      <div className="mb-2 flex items-center justify-between">
+                        <p className={`text-[9.5px] font-extrabold uppercase tracking-[0.14em] ${mutedTextClass}`}>
+                          {isArabic ? "كراف استيعاب المواد" : "Subject Mastery Graph"}
+                        </p>
+                        <span className="text-[9px] font-mono font-black" style={{ color }}>96.4% avg</span>
+                      </div>
+                      <div className="space-y-1.5" dir={isArabic ? "rtl" : "ltr"}>
+                        {[
+                          { name: isArabic ? "الرياضيات" : "Math", pct: 96, color: "#10B981" },
+                          { name: isArabic ? "الفيزياء" : "Physics", pct: 88, color },
+                          { name: isArabic ? "الكيمياء" : "Chemistry", pct: 95, color: "#38BDF8" },
+                          { name: isArabic ? "اللغات" : "Languages", pct: 92, color: "#F59E0B" },
+                        ].map((item) => (
+                          <div key={item.name} className="text-[9px]">
+                            <div className="flex justify-between items-center mb-0.5">
+                              <span className={`font-semibold ${softTextClass}`}>{item.name}</span>
+                              <span className="font-mono font-bold" style={{ color: item.color }}>{item.pct}%</span>
+                            </div>
+                            <div className={`h-1.5 w-full rounded-full overflow-hidden ${lightMode ? "bg-[#d8cbb8]/35" : "bg-white/10"}`}>
+                              <motion.div
+                                className="h-full rounded-full"
+                                style={{ background: `linear-gradient(90deg, ${item.color}bb, ${item.color})` }}
+                                initial={{ width: "0%" }}
+                                animate={{ width: `${item.pct}%` }}
+                                transition={{ duration: 1.2, ease: "easeOut" }}
+                              />
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Weekly Learning Curve Sparkline */}
+                    <div className={`flex flex-col justify-between rounded-[20px] border p-2.5 ${modulePanelClass}`}>
+                      <div className="flex items-center justify-between text-[9px] font-bold">
+                        <span className={mutedTextClass}>{isArabic ? "منحنى التطور الأكاديمي" : "Academic Growth Curve"}</span>
+                        <span className="font-mono font-black text-[#10B981] px-1.5 py-0.5 rounded-full bg-[#10B981]/10">+24.4% ↑</span>
+                      </div>
+                      <svg className="w-full h-8 mt-1" viewBox="0 0 160 36" fill="none">
+                        <defs>
+                          <linearGradient id={`grad-edu-${showcaseKey}`} x1="0" y1="0" x2="0" y2="1">
+                            <stop offset="0%" stopColor={color} stopOpacity="0.4" />
+                            <stop offset="100%" stopColor={color} stopOpacity="0.0" />
+                          </linearGradient>
+                        </defs>
+                        <path
+                          d="M0 30 Q 30 26, 60 18 T 110 12 T 160 4 L 160 36 L 0 36 Z"
+                          fill={`url(#grad-edu-${showcaseKey})`}
+                        />
+                        <path
+                          d="M0 30 Q 30 26, 60 18 T 110 12 T 160 4"
+                          stroke={color}
+                          strokeWidth="2.2"
+                          strokeLinecap="round"
+                        />
+                        <circle cx="160" cy="4" r="3" fill={color} />
+                      </svg>
+                    </div>
+                  </>
+                ) : showcaseKey === "realEstate" ? (
+                  <>
+                    {/* Multi-Sector Portfolio Allocation & Yield Graph */}
+                    <div className={`relative flex-1 overflow-hidden rounded-[22px] border p-3 ${lightMode ? "border-[#d8cbb8]/70 bg-white/75 shadow-sm" : "border-white/10 bg-white/[0.045]"}`}>
+                      <div className="mb-2 flex items-center justify-between">
+                        <p className={`text-[9.5px] font-extrabold uppercase tracking-[0.14em] ${mutedTextClass}`}>
+                          {isArabic ? "توزيع المحفظة والعوائد الصافية" : "Sector Allocation & Net Yields"}
+                        </p>
+                        <span className="text-[9px] font-mono font-black" style={{ color }}>11.4% avg</span>
+                      </div>
+
+                      {/* Multi-Segment Allocation Bar */}
+                      <div className="mb-2">
+                        <div className="flex h-2 w-full overflow-hidden rounded-full gap-0.5 bg-black/10 dark:bg-white/10 p-0.5">
+                          <div className="h-full rounded-l-full bg-[#10B981]" style={{ width: "42%" }} title="Commercial: 42%" />
+                          <div className="h-full bg-[#8B56FF]" style={{ width: "28%" }} title="Residential: 28%" />
+                          <div className="h-full bg-[#38BDF8]" style={{ width: "20%" }} title="Industrial: 20%" />
+                          <div className="h-full rounded-r-full bg-[#F59E0B]" style={{ width: "10%" }} title="Offices: 10%" />
+                        </div>
+                      </div>
+
+                      {/* Sector Rows */}
+                      <div className="space-y-1.5" dir={isArabic ? "rtl" : "ltr"}>
+                        {[
+                          { name: isArabic ? "عقارات تجارية" : "Commercial", share: "42%", yield: "11.8%", color: "#10B981" },
+                          { name: isArabic ? "مجمعات سكنية" : "Residential", share: "28%", yield: "9.2%", color: "#8B56FF" },
+                          { name: isArabic ? "مرافق لوجستية" : "Industrial", share: "20%", yield: "12.6%", color: "#38BDF8" },
+                          { name: isArabic ? "أبراج إدارية" : "Offices", share: "10%", yield: "10.4%", color: "#F59E0B" },
+                        ].map((item) => (
+                          <div key={item.name} className="flex items-center justify-between text-[8.5px] py-0.5 px-1.5 rounded-lg hover:bg-black/5 dark:hover:bg-white/5 transition-colors">
+                            <div className="flex items-center gap-1.5">
+                              <span className="h-1.5 w-1.5 rounded-full" style={{ background: item.color }} />
+                              <span className={`font-semibold ${softTextClass}`}>{item.name}</span>
+                              <span className={`font-mono text-[8px] ${mutedTextClass}`}>({item.share})</span>
+                            </div>
+                            <span className="font-mono font-black" style={{ color: item.color }}>
+                              {item.yield} {isArabic ? "صافي" : "Net"}
+                            </span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Cumulative Net Rental Income Yield Curve */}
+                    <div className={`flex flex-col justify-between rounded-[20px] border p-2.5 ${modulePanelClass}`}>
+                      <div className="flex items-center justify-between text-[9px] font-bold">
+                        <span className={mutedTextClass}>{isArabic ? "نمو التدفقات الإيجارية الصافية" : "Net Cashflow Growth"}</span>
+                        <span className="font-mono font-black text-[#10B981] px-1.5 py-0.5 rounded-full bg-[#10B981]/10">+28.6% ↑</span>
+                      </div>
+                      <svg className="w-full h-8 mt-1" viewBox="0 0 160 36" fill="none">
+                        <defs>
+                          <linearGradient id={`grad-real-${showcaseKey}`} x1="0" y1="0" x2="0" y2="1">
+                            <stop offset="0%" stopColor="#8B56FF" stopOpacity="0.45" />
+                            <stop offset="100%" stopColor="#8B56FF" stopOpacity="0.0" />
+                          </linearGradient>
+                        </defs>
+                        <path
+                          d="M0 32 Q 35 28, 70 20 T 115 10 T 160 3 L 160 36 L 0 36 Z"
+                          fill={`url(#grad-real-${showcaseKey})`}
+                        />
+                        <path
+                          d="M0 32 Q 35 28, 70 20 T 115 10 T 160 3"
+                          stroke="#8B56FF"
+                          strokeWidth="2.2"
+                          strokeLinecap="round"
+                        />
+                        <circle cx="160" cy="3" r="3" fill="#8B56FF" />
+                      </svg>
+                    </div>
+                  </>
+                ) : showcaseKey === "healthcare" ? (
+                  <>
+                    {/* Case Distribution & 6-Month Trend */}
+                    <div className={`relative flex-1 overflow-hidden rounded-[22px] border p-3 ${lightMode ? "border-[#d8cbb8]/70 bg-white/75 shadow-sm" : "border-white/10 bg-white/[0.045]"}`}>
+                      <div className="mb-1.5 flex items-center justify-between">
+                        <p className={`text-[9.5px] font-extrabold uppercase tracking-[0.14em] ${mutedTextClass}`}>
+                          {isArabic ? "توزيع الحالات والاتجاه الشهري" : "Case Distribution & 6M Trend"}
+                        </p>
+                        <span className="text-[9px] font-mono font-bold text-[#00D2FF]">3,842 {isArabic ? "حالة" : "total"}</span>
+                      </div>
+
+                      {/* 4 Status Pills */}
+                      <div className="grid grid-cols-2 gap-1 mb-2" dir={isArabic ? "rtl" : "ltr"}>
+                        {[
+                          { name: isArabic ? "مستقرة" : "Stable", pct: "45%", color: "#10B981" },
+                          { name: isArabic ? "مراقبة" : "Monitor", pct: "30%", color: "#F59E0B" },
+                          { name: isArabic ? "حرجة" : "Critical", pct: "15%", color: "#EF4444" },
+                          { name: isArabic ? "متعافية" : "Recovered", pct: "10%", color: "#38BDF8" },
+                        ].map((item) => (
+                          <div key={item.name} className="flex items-center justify-between px-1.5 py-0.5 rounded-lg bg-black/[0.03] dark:bg-white/[0.04] text-[8px]">
+                            <div className="flex items-center gap-1">
+                              <span className="h-1.5 w-1.5 rounded-full" style={{ background: item.color }} />
+                              <span className={softTextClass}>{item.name}</span>
+                            </div>
+                            <span className="font-mono font-bold" style={{ color: item.color }}>{item.pct}</span>
+                          </div>
+                        ))}
+                      </div>
+
+                      {/* 6-Month Trend Chart */}
+                      <div className="mt-1">
+                        <div className="flex items-center justify-between text-[7.5px] mb-0.5">
+                          <span className={mutedTextClass}>{isArabic ? "اتجاه الحالات (مارس - أغسطس)" : "6-Month Trend (Mar - Aug)"}</span>
+                          <span className="font-mono font-bold text-[#10B981]">+12.5% ↑</span>
+                        </div>
+                        <svg className="w-full h-7" viewBox="0 0 160 30" fill="none">
+                          <defs>
+                            <linearGradient id={`grad-health-${showcaseKey}`} x1="0" y1="0" x2="0" y2="1">
+                              <stop offset="0%" stopColor="#00D2FF" stopOpacity="0.4" />
+                              <stop offset="100%" stopColor="#00D2FF" stopOpacity="0.0" />
+                            </linearGradient>
+                          </defs>
+                          <path
+                            d="M0 26 Q 30 22, 60 16 T 110 8 T 160 2 L 160 30 L 0 30 Z"
+                            fill={`url(#grad-health-${showcaseKey})`}
+                          />
+                          <path
+                            d="M0 26 Q 30 22, 60 16 T 110 8 T 160 2"
+                            stroke="#00D2FF"
+                            strokeWidth="2"
+                            strokeLinecap="round"
+                          />
+                          <circle cx="160" cy="2" r="2.5" fill="#00D2FF" />
+                        </svg>
+                      </div>
+                    </div>
+
+                    {/* Bottom 3 Clinical Metrics */}
+                    <div className={`grid grid-cols-3 gap-1 rounded-[20px] border p-2 ${modulePanelClass}`}>
+                      {[
+                        { label: isArabic ? "إشغال الأسرة" : "Bed Occupancy", val: "78.4%", change: "+4.2%" },
+                        { label: isArabic ? "مدة الإقامة" : "Avg Stay", val: "3.6 " + (isArabic ? "يوم" : "d"), change: "-0.8%" },
+                        { label: isArabic ? "إعادة الدخول" : "Readmission", val: "12.7%", change: "+1.3%" },
+                      ].map((item, idx) => (
+                        <div key={`health-sub-${idx}`} className="text-center">
+                          <p className={`text-[7.5px] truncate font-semibold ${mutedTextClass}`}>{item.label}</p>
+                          <p className={`text-[10px] font-mono font-black mt-0.5 ${strongTextClass}`}>{item.val}</p>
+                          <span className={`text-[7px] font-mono ${item.change.startsWith("+") && idx !== 2 ? "text-[#10B981]" : idx === 1 ? "text-[#10B981]" : "text-[#F59E0B]"}`}>{item.change}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <div className={`relative flex-1 overflow-hidden rounded-[22px] border p-3 ${lightMode ? "border-[#d8c7aa]/60 bg-white/58" : "border-white/10 bg-white/[0.045]"}`}>
+                      <p className={`text-[10px] font-semibold uppercase tracking-[0.16em] ${mutedTextClass}`}>
+                        {workflowHeader}
+                      </p>
+                      <svg className="absolute inset-0 h-full w-full" viewBox="0 0 220 160" aria-hidden="true">
+                        <motion.path
+                          d="M32 48 C78 22 112 36 154 54 S184 92 150 116 S78 122 58 94"
+                          fill="none"
+                          stroke={color}
+                          strokeWidth="1.4"
+                          strokeDasharray="5 6"
+                          animate={{ strokeDashoffset: [0, -44] }}
+                          transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
+                          opacity="0.68"
+                        />
+                      </svg>
+                      {workflowNodes.map((node, index) => (
+                        <motion.div
+                          key={`${showcaseKey}-node-${node.label}`}
+                          className={`absolute grid h-9 px-2 place-items-center rounded-xl border text-[8px] font-semibold text-center leading-tight shadow-sm ${
+                            lightMode
+                              ? "border-[#d8c7aa]/70 bg-[#fbf8f1]/95 text-[#25304a]/78"
+                              : "border-white/10 bg-[#07101D]/95 text-white/65"
+                          }`}
+                          style={{ left: node.left, top: node.top }}
+                          animate={{ scale: [1, 1.08, 1], boxShadow: [`0 0 0 ${color}00`, `0 0 18px ${color}44`, `0 0 0 ${color}00`] }}
+                          transition={{ duration: 2.8, repeat: Infinity, delay: index * 0.35 }}
+                        >
+                          {node.label}
+                        </motion.div>
+                      ))}
+                    </div>
+
+                    <div className="grid h-20 grid-cols-3 gap-2">
+                      {[82, 64, 91].map((height, index) => (
+                        <div key={`${showcaseKey}-module-${index}`} className={`flex items-end rounded-xl border p-1.5 ${modulePanelClass}`}>
+                          <motion.span
+                            className="block w-full rounded-lg"
+                            style={{ background: `${color}${index % 2 === 0 ? "88" : "55"}` }}
+                            animate={{ height: [`${Math.max(32, height - 24)}%`, `${height}%`, `${Math.max(28, height - 10)}%`] }}
+                            transition={{ duration: 2.5, repeat: Infinity, delay: index * 0.25 }}
+                          />
+                        </div>
+                      ))}
+                    </div>
+                  </>
+                )}
               </div>
             </div>
           </div>
@@ -302,22 +1057,22 @@ function ShowcaseInterface({ showcaseKey, label, color, stats, showcaseLabel, li
       </motion.div>
 
       <motion.div
-        className={`absolute left-[2%] top-[64%] hidden w-[48%] rounded-xl border p-3 sm:block ${smallPanelClass}`}
+        className={`absolute left-[2%] top-[64%] hidden w-[48%] rounded-[26px] border p-3.5 sm:block ${smallPanelClass}`}
         animate={{ x: [0, 8, 0] }}
         transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
       >
-        <div className={`mb-2 flex items-center justify-between text-[10px] font-semibold uppercase ${mutedTextClass}`}>
-          <span>Decision log</span>
-          <span style={{ color }}>13ms</span>
+        <div className={`mb-2 flex items-center justify-between text-[10px] font-bold uppercase tracking-wider ${mutedTextClass}`}>
+          <span>{decisionTitle}</span>
+          <span className="font-mono font-bold" style={{ color }}>{decisionLatency}</span>
         </div>
-        {["Semantic cache hit", "Budget policy passed", "Worker action queued"].map((item, index) => (
+        {decisionLogs.map((item, index) => (
           <motion.div
             key={`${showcaseKey}-log-${item}`}
             className={`mb-1.5 flex items-center gap-2 text-[10px] last:mb-0 ${softTextClass}`}
             animate={{ opacity: [0.45, 1, 0.62] }}
             transition={{ duration: 2.4, repeat: Infinity, delay: index * 0.42 }}
           >
-            <span className="h-1.5 w-1.5 rounded-full" style={{ background: color }} />
+            <span className="h-1.5 w-1.5 shrink-0 rounded-full" style={{ background: color }} />
             <span className="truncate">{item}</span>
           </motion.div>
         ))}
@@ -327,24 +1082,24 @@ function ShowcaseInterface({ showcaseKey, label, color, stats, showcaseLabel, li
         {screenshotLabels.map((item, index) => (
           <motion.div
             key={`${showcaseKey}-shot-${item}`}
-            className={`absolute left-0 right-0 rounded-xl border p-3 backdrop-blur-md ${
+            className={`absolute left-0 right-0 rounded-[22px] border p-3.5 backdrop-blur-md ${
               lightMode
-                ? "border-[#d8c7aa]/70 bg-white/82 shadow-[0_18px_44px_-28px_rgba(61,43,22,0.58)]"
+                ? "border-[#d8cbb8]/80 bg-white/88 shadow-[0_18px_44px_-24px_rgba(61,43,22,0.48)]"
                 : "border-white/[0.12] bg-[#080B18]/92 shadow-2xl"
             }`}
             style={{ top: `${index * 27}%` }}
             animate={{ y: [0, index % 2 === 0 ? -7 : 7, 0], rotate: [0, index % 2 === 0 ? -1 : 1, 0] }}
             transition={{ duration: 6 + index, repeat: Infinity, ease: "easeInOut" }}
           >
-            <div className="mb-3 flex items-center justify-between">
-              <p className={`text-[10px] font-semibold uppercase tracking-[0.13em] ${lightMode ? "text-[#25304a]/62" : "text-white/50"}`}>
-                {item} screen
+            <div className="mb-2.5 flex items-center justify-between">
+              <p className={`text-[10px] font-bold uppercase tracking-[0.14em] ${lightMode ? "text-[#25304a]/72" : "text-white/60"}`}>
+                {item}
               </p>
-              <span className="h-2 w-2 rounded-full" style={{ background: color }} />
+              <span className="h-2 w-2 rounded-full shadow-sm" style={{ background: color }} />
             </div>
             <div className="space-y-2">
               {[68, 48, 82].map((width, barIndex) => (
-                <div key={`${showcaseKey}-shot-${item}-${barIndex}`} className={`h-1.5 overflow-hidden rounded-full ${lightMode ? "bg-[#d8c7aa]/42" : "bg-white/10"}`}>
+                <div key={`${showcaseKey}-shot-${item}-${barIndex}`} className={`h-1.5 overflow-hidden rounded-full ${lightMode ? "bg-[#d8cbb8]/40" : "bg-white/10"}`}>
                   <motion.span
                     className="block h-full rounded-full"
                     style={{ background: barIndex === 1 ? lightMode ? "rgba(20,33,67,0.42)" : "rgba(255,255,255,0.62)" : color }}
@@ -359,18 +1114,18 @@ function ShowcaseInterface({ showcaseKey, label, color, stats, showcaseLabel, li
       </div>
 
       <motion.div
-        className={`absolute bottom-[2%] right-[9%] hidden w-[37%] rounded-xl border p-3 sm:block ${
+        className={`absolute bottom-[2%] right-[9%] hidden w-[37%] rounded-[26px] border p-3.5 sm:block ${
           lightMode
-            ? "border-[#d8c7aa]/70 bg-white/82 shadow-[0_18px_44px_-28px_rgba(61,43,22,0.58)]"
+            ? "border-[#d8cbb8]/80 bg-white/88 shadow-[0_18px_44px_-24px_rgba(61,43,22,0.48)]"
             : "border-white/[0.12] bg-[#07101D]/95 shadow-2xl"
         }`}
         animate={{ y: [0, -6, 0] }}
         transition={{ duration: 6.5, repeat: Infinity, ease: "easeInOut" }}
       >
-        <div className={`mb-3 flex items-center justify-between text-[10px] font-semibold uppercase tracking-[0.13em] ${lightMode ? "text-[#25304a]/62" : "text-white/50"}`}>
-          <span>Guardrail cockpit</span>
+        <div className={`mb-3 flex items-center justify-between text-[10px] font-bold uppercase tracking-[0.14em] ${lightMode ? "text-[#25304a]/72" : "text-white/60"}`}>
+          <span className="truncate">{guardrailTitle}</span>
           <motion.span
-            className="h-2 w-2 rounded-full"
+            className="h-2 w-2 shrink-0 rounded-full"
             style={{ background: color }}
             animate={{ scale: [1, 1.8, 1], opacity: [0.5, 1, 0.5] }}
             transition={{ duration: 1.6, repeat: Infinity }}
@@ -378,7 +1133,7 @@ function ShowcaseInterface({ showcaseKey, label, color, stats, showcaseLabel, li
         </div>
         {[78, 55, 88].map((width, index) => (
           <div key={`${showcaseKey}-guardrail-${index}`} className="mb-2 last:mb-0">
-            <div className={`h-1.5 rounded-full ${lightMode ? "bg-[#d8c7aa]/42" : "bg-white/10"}`}>
+            <div className={`h-1.5 rounded-full overflow-hidden ${lightMode ? "bg-[#d8cbb8]/40" : "bg-white/10"}`}>
               <motion.span
                 className="block h-full rounded-full"
                 style={{ background: color }}
@@ -415,7 +1170,7 @@ export default function Home() {
   const { locale, setLocale, t } = useI18n();
   const [mode, setMode] = useState<PersonaMode>("balanced");
   const [wordIndex, setWordIndex] = useState(0);
-  const [activeShowcaseKey, setActiveShowcaseKey] = useState<ShowcaseKey>("finance");
+  const [activeShowcaseKey, setActiveShowcaseKey] = useState<ShowcaseKey>("healthcare");
   const [contactIndustry, setContactIndustry] = useState<ContactIndustryKey>("education");
   const [contactGoal, setContactGoal] = useState<ContactGoalKey>("llmAutomation");
   const [contactScale, setContactScale] = useState<ContactScaleKey>("initialPilot");
@@ -433,6 +1188,7 @@ export default function Home() {
 
   const customerShowcases = showcaseKeys.map((key) => {
     const stats = t(`customers.showcases.${key}.stats`);
+    const rawFeatures = t(`customers.showcases.${key}.features`);
 
     return {
       key,
@@ -441,6 +1197,7 @@ export default function Home() {
       body: t(`customers.showcases.${key}.body`),
       tag: t(`customers.showcases.${key}.tag`),
       meta: t(`customers.showcases.${key}.meta`),
+      features: Array.isArray(rawFeatures) ? rawFeatures : [],
       stats: Array.isArray(stats) ? stats : [],
       ...showcaseVisuals[key],
     };
@@ -1278,172 +2035,225 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Who We Serve Section */}
+      {/* Customer / Portfolio Showcase Section */}
       <section
         id="customers"
-        className={`relative z-10 overflow-hidden py-20 px-6 ${
-          lightHero ? "bg-[#f7f3ea]" : ""
+        className={`relative z-10 overflow-hidden py-20 px-4 sm:px-6 ${
+          lightHero ? "bg-[#fbf9f4]" : ""
         }`}
       >
-        {/* Subtle background glow */}
+        {/* Ambient background decoration */}
         <div
           className="pointer-events-none absolute inset-0"
           style={{
             background: lightHero
-              ? "radial-gradient(circle at 18% 24%, rgba(255,255,255,0.72), transparent 34%), radial-gradient(circle at 78% 38%, rgba(154,104,71,0.14), transparent 36%), linear-gradient(180deg, #f7f3ea 0%, #f5efe3 78%, #f7f3ea 100%)"
+              ? "radial-gradient(circle at 18% 24%, rgba(255,255,255,0.72), transparent 34%), radial-gradient(circle at 78% 38%, rgba(154,104,71,0.14), transparent 36%), linear-gradient(180deg, #fbf9f4 0%, #f5efe3 78%, #fbf9f4 100%)"
               : "radial-gradient(ellipse 55% 40% at 50% 60%, rgba(228,76,255,0.06) 0%, transparent 75%)",
           }}
         />
-        {lightHero && (
-          <>
-            <div className="absolute inset-0 opacity-[0.12] [background-image:radial-gradient(#19223a_0.75px,transparent_0.75px)] [background-size:42px_42px]" />
-            <div className="pointer-events-none absolute -left-20 top-24 h-72 w-72 rounded-full border border-[#c6ad89]/22" />
-            <div className="pointer-events-none absolute right-[4%] top-16 hidden h-[440px] w-[440px] rounded-full border border-[#142143]/10 md:block" />
-          </>
-        )}
 
         <div className="relative z-10 max-w-7xl mx-auto">
-          {/* Heading */}
-          <div className="text-center mb-4">
-            <h2
-              className={`text-4xl md:text-5xl font-bold mb-6 tracking-tight ${
-                lightHero ? "text-[#10172d]" : ""
-              }`}
-              style={{ color: lightHeroInk }}
-            >
+          {/* Section Header */}
+          <div className="text-center mb-6">
+            <h2 className="text-4xl md:text-5xl font-extrabold tracking-tight text-[#10172d] dark:text-white">
               {t("customers.heading")}{" "}
-              <span
-                className="bg-clip-text text-transparent"
-                style={{
-                  backgroundImage: lightHero
-                    ? "linear-gradient(to right, #10172d, #9A6847)"
-                    : "linear-gradient(to right, #E44CFF, #4EF0FF)",
-                }}
-              >
+              <span className="text-[#10172d] dark:text-white">
                 {t("customers.headingHighlight")}
               </span>
             </h2>
-            <p
-              className={`text-xl max-w-3xl mx-auto ${
-                lightHero ? "text-[#25304a]/78" : "text-gray-400"
-              }`}
-              style={{ color: lightHeroMutedInk }}
-            >
+            <p className="mt-3 text-base md:text-lg text-[#25304a]/75 dark:text-slate-300 max-w-2xl mx-auto">
               {t("customers.subheading")}
             </p>
+            {/* Golden decorative accent line */}
+            <div className="w-20 h-1 bg-[#D97706] rounded-full mx-auto mt-4 mb-6" />
           </div>
 
-          {/* Industry showcase */}
-          <div className="mt-12 grid grid-cols-1 gap-8 lg:grid-cols-[1fr_0.92fr] lg:items-stretch">
-            <div
-              className="relative min-h-[430px] overflow-visible md:min-h-[460px]"
+          {/* Top Filter Tabs / Pills */}
+          <div className="flex flex-wrap items-center justify-center gap-2.5 mb-8">
+            <button
+              type="button"
+              onClick={() => setActiveShowcaseKey("healthcare")}
+              className={`flex items-center gap-2 px-5 py-2 rounded-full text-xs md:text-sm font-bold tracking-wide transition-all duration-300 ${
+                activeShowcaseKey === "healthcare"
+                  ? "bg-[#0F172A] text-white shadow-md"
+                  : "bg-white/80 dark:bg-white/5 border border-slate-200/80 dark:border-white/10 text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-white/10"
+              }`}
             >
-              <AnimatePresence mode="wait">
-                <ShowcaseInterface
-                  showcaseKey={activeShowcase.key}
-                  label={activeShowcase.label}
-                  color={activeShowcaseThemeColor}
-                  stats={activeShowcase.stats}
-                  showcaseLabel={t("customers.showcaseLabel")}
-                  lightMode={lightHero}
-                />
-              </AnimatePresence>
-              <div
-                className={`absolute inset-0 ${
-                  lightHero
-                    ? "bg-[radial-gradient(circle_at_82%_18%,rgba(154,104,71,0.08),transparent_24%)]"
-                    : "bg-[radial-gradient(circle_at_82%_18%,rgba(255,255,255,0.08),transparent_24%)]"
-                }`}
-              />
+              <Layers className="w-3.5 h-3.5" />
+              <span>{t("customers.all")}</span>
+            </button>
 
-            </div>
-
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={activeShowcase.key}
-                initial={{ opacity: 0, y: 18 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -18 }}
-                transition={{ duration: 0.35, ease: "easeOut" }}
-                className="flex min-h-[360px] flex-col justify-center py-4 md:pl-6"
-              >
-                <WrittenText
-                  as="p"
-                  text={activeShowcase.tag}
-                  delay={80}
-                  className="mb-4 text-sm font-semibold uppercase tracking-[0.22em]"
-                  style={{ color: activeShowcaseThemeColor }}
-                />
-                <WrittenText
-                  as="h3"
-                  text={activeShowcase.title}
-                  delay={220}
-                  speed={13}
-                  className={`text-3xl font-bold leading-tight md:text-4xl ${
-                    lightHero ? "text-[#10172d]" : "text-white"
-                  }`}
-                  style={{ color: lightHeroInk }}
-                />
-                <WrittenText
-                  as="p"
-                  text={activeShowcase.body}
-                  delay={620}
-                  speed={7}
-                  className={`mt-5 text-base leading-relaxed md:text-lg ${
-                    lightHero ? "text-[#25304a]/78" : "text-gray-300"
-                  }`}
-                  style={{ color: lightHeroMutedInk }}
-                />
-                <div className="mt-8 flex flex-wrap gap-x-6 gap-y-3">
-                  {activeShowcase.stats.map((stat) => (
-                    <div
-                      key={stat}
-                      className={`flex items-center gap-2 text-sm font-semibold ${
-                        lightHero ? "text-[#25304a]/82" : "text-white/85"
-                      }`}
-                      style={{ color: lightHero ? "rgba(37,48,74,0.82)" : undefined }}
-                    >
-                      <span
-                        className="h-1.5 w-1.5 rounded-full"
-                        style={{ background: activeShowcaseThemeColor }}
-                      />
-                      {stat}
-                    </div>
-                  ))}
-                </div>
-              </motion.div>
-            </AnimatePresence>
-          </div>
-
-          {/* Industry pills */}
-          <div className="flex flex-wrap items-center justify-center gap-3 mt-8">
-            {customerShowcases.map(({ key, label, color }) => {
-              const pillColor = lightHero ? "#9A6847" : color;
+            {customerShowcases.map(({ key, label }) => {
               const isActive = activeShowcaseKey === key;
+              const iconsMap: Record<string, React.ReactNode> = {
+                healthcare: <HeartPulse className="w-4 h-4" />,
+                education: <GraduationCap className="w-4 h-4" />,
+                realEstate: <Building2 className="w-4 h-4" />,
+                logistics: <Truck className="w-4 h-4" />,
+                finance: <Landmark className="w-4 h-4" />,
+              };
               return (
-              <button
-                key={key}
-                type="button"
-                aria-pressed={isActive}
-                onClick={() => setActiveShowcaseKey(key)}
-                className={`px-5 py-2 rounded-full text-sm font-semibold tracking-wide transition-all duration-300 hover:-translate-y-0.5 focus:outline-none focus:ring-2 ${
-                  lightHero ? "focus:ring-[#9A6847]/35" : "focus:ring-white/40"
-                }`}
-                style={{
-                  background: lightHero
-                    ? isActive ? "rgba(255,255,255,0.72)" : "rgba(250,246,237,0.62)"
-                    : isActive ? `${color}28` : `${color}12`,
-                  border: `1px solid ${isActive ? pillColor : `${pillColor}44`}`,
-                  color: lightHero ? isActive ? "#10172d" : "#6f604f" : isActive ? "#FFFFFF" : color,
-                  boxShadow: lightHero
-                    ? isActive ? "0 12px 28px -20px rgba(61,43,22,0.72)" : "0 0 12px rgba(154,104,71,0.12)"
-                    : isActive ? `0 0 18px ${color}44` : `0 0 12px ${color}18`,
-                }}
-              >
-                {label}
-              </button>
+                <button
+                  key={key}
+                  type="button"
+                  aria-pressed={isActive}
+                  onClick={() => setActiveShowcaseKey(key)}
+                  className={`flex items-center gap-2 px-5 py-2 rounded-full text-xs md:text-sm font-bold tracking-wide transition-all duration-300 hover:-translate-y-0.5 ${
+                    isActive
+                      ? "bg-[#0F172A] text-white shadow-md"
+                      : "bg-white/80 dark:bg-white/5 border border-slate-200/80 dark:border-white/10 text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-white/10"
+                  }`}
+                >
+                  {iconsMap[key]}
+                  <span>{label}</span>
+                </button>
               );
             })}
+          </div>
+
+          {/* Main Carousel Card Container */}
+          <div className="relative">
+            {/* Floating Carousel Navigation Arrow - Left */}
+            <button
+              type="button"
+              onClick={() => {
+                const curIdx = showcaseKeys.indexOf(activeShowcaseKey);
+                const nextIdx = (curIdx - 1 + showcaseKeys.length) % showcaseKeys.length;
+                setActiveShowcaseKey(showcaseKeys[nextIdx]);
+              }}
+              aria-label="Previous Showcase"
+              className="absolute -left-3 sm:-left-5 top-1/2 -translate-y-1/2 z-30 h-11 w-11 sm:h-12 sm:w-12 rounded-full bg-white dark:bg-slate-800 border border-slate-200/90 dark:border-white/15 shadow-xl flex items-center justify-center text-slate-700 dark:text-white hover:scale-110 active:scale-95 transition-all"
+            >
+              <ChevronLeft className="w-5 h-5 sm:w-6 sm:h-6" />
+            </button>
+
+            {/* Floating Carousel Navigation Arrow - Right */}
+            <button
+              type="button"
+              onClick={() => {
+                const curIdx = showcaseKeys.indexOf(activeShowcaseKey);
+                const nextIdx = (curIdx + 1) % showcaseKeys.length;
+                setActiveShowcaseKey(showcaseKeys[nextIdx]);
+              }}
+              aria-label="Next Showcase"
+              className="absolute -right-3 sm:-right-5 top-1/2 -translate-y-1/2 z-30 h-11 w-11 sm:h-12 sm:w-12 rounded-full bg-white dark:bg-slate-800 border border-slate-200/90 dark:border-white/15 shadow-xl flex items-center justify-center text-slate-700 dark:text-white hover:scale-110 active:scale-95 transition-all"
+            >
+              <ChevronRight className="w-5 h-5 sm:w-6 sm:h-6" />
+            </button>
+
+            {/* Card Body */}
+            <div className="overflow-hidden rounded-[32px] md:rounded-[36px] border border-slate-200/80 dark:border-white/10 bg-white/95 dark:bg-[#070e24]/95 p-5 sm:p-7 md:p-9 shadow-[0_25px_70px_-20px_rgba(0,0,0,0.07)] backdrop-blur-md">
+              <div className="grid grid-cols-1 gap-8 lg:grid-cols-12 lg:items-center">
+                {/* Project Details & Action Card (Left side in LTR / Start side in RTL) */}
+                <div className="lg:col-span-5 flex flex-col justify-center px-1 sm:px-4" dir={locale === "ar" ? "rtl" : "ltr"}>
+                  <AnimatePresence mode="wait">
+                    <motion.div
+                      key={activeShowcase.key}
+                      initial={{ opacity: 0, x: locale === "ar" ? 15 : -15 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      exit={{ opacity: 0, x: locale === "ar" ? -15 : 15 }}
+                      transition={{ duration: 0.35, ease: "easeOut" }}
+                    >
+                      {/* Category Pill */}
+                      <div className="mb-3.5">
+                        <span className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full border border-slate-200/90 dark:border-white/15 bg-slate-50/90 dark:bg-white/5 text-xs font-bold text-slate-800 dark:text-white shadow-sm">
+                          {activeShowcase.key === "healthcare" ? <HeartPulse className="w-3.5 h-3.5 text-[#00D2FF]" /> : activeShowcase.key === "education" ? <GraduationCap className="w-3.5 h-3.5 text-[#E44CFF]" /> : activeShowcase.key === "realEstate" ? <Building2 className="w-3.5 h-3.5 text-[#8B56FF]" /> : activeShowcase.key === "logistics" ? <Truck className="w-3.5 h-3.5 text-[#5861F2]" /> : <Landmark className="w-3.5 h-3.5 text-[#4EF0FF]" />}
+                          <span>{activeShowcase.label}</span>
+                        </span>
+                      </div>
+
+                      {/* Project Title */}
+                      <h3 className="text-2xl sm:text-3xl font-extrabold text-[#0F172A] dark:text-white leading-tight mb-3.5">
+                        {activeShowcase.title}
+                      </h3>
+
+                      {/* Project Description */}
+                      <p className="text-sm md:text-base text-slate-600 dark:text-slate-300 leading-relaxed mb-6">
+                        {activeShowcase.body}
+                      </p>
+
+                      {/* Feature Checklist */}
+                      <div className="space-y-3 mb-7">
+                        {activeShowcase.features.map((feature, idx) => (
+                          <div key={idx} className="flex items-start gap-2.5 text-sm font-semibold text-slate-700 dark:text-slate-200">
+                            <span className="flex-shrink-0 h-5 w-5 rounded-full bg-amber-500/15 text-amber-600 dark:text-amber-400 flex items-center justify-center text-xs font-black mt-0.5">
+                              ✓
+                            </span>
+                            <span className="leading-snug">{feature}</span>
+                          </div>
+                        ))}
+                      </div>
+
+                      {/* CTA Button */}
+                      <div className="pt-1">
+                        <a
+                          href="#contact"
+                          className="inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-xl font-bold text-white bg-[#0F172A] hover:bg-[#1E293B] dark:bg-white dark:text-[#0F172A] dark:hover:bg-slate-100 shadow-md hover:shadow-xl transition-all duration-300 text-sm md:text-base w-full sm:w-auto"
+                        >
+                          <span>{t("customers.viewProject")}</span>
+                          <span className={locale === "ar" ? "rotate-180 inline-block" : "inline-block"}>➔</span>
+                        </a>
+                      </div>
+
+                      {/* Pagination Dots */}
+                      <div className="flex items-center justify-center gap-2 pt-8">
+                        <button
+                          type="button"
+                          onClick={() => {
+                            const curIdx = showcaseKeys.indexOf(activeShowcaseKey);
+                            const nextIdx = (curIdx - 1 + showcaseKeys.length) % showcaseKeys.length;
+                            setActiveShowcaseKey(showcaseKeys[nextIdx]);
+                          }}
+                          className="text-slate-400 hover:text-slate-700 dark:hover:text-white px-1 text-sm font-mono transition-colors"
+                        >
+                          &lt;
+                        </button>
+                        {customerShowcases.map((sc) => (
+                          <button
+                            key={sc.key}
+                            type="button"
+                            onClick={() => setActiveShowcaseKey(sc.key)}
+                            aria-label={sc.label}
+                            className={`h-2 rounded-full transition-all duration-300 ${
+                              activeShowcaseKey === sc.key
+                                ? "w-6 bg-amber-500"
+                                : "w-2 bg-slate-300 dark:bg-white/20 hover:bg-slate-400"
+                            }`}
+                          />
+                        ))}
+                        <button
+                          type="button"
+                          onClick={() => {
+                            const curIdx = showcaseKeys.indexOf(activeShowcaseKey);
+                            const nextIdx = (curIdx + 1) % showcaseKeys.length;
+                            setActiveShowcaseKey(showcaseKeys[nextIdx]);
+                          }}
+                          className="text-slate-400 hover:text-slate-700 dark:hover:text-white px-1 text-sm font-mono transition-colors"
+                        >
+                          &gt;
+                        </button>
+                      </div>
+                    </motion.div>
+                  </AnimatePresence>
+                </div>
+
+                {/* Mockup Dashboard Display (Right side in LTR / Left side in RTL) */}
+                <div className="lg:col-span-7 relative min-h-[420px] md:min-h-[460px]">
+                  <AnimatePresence mode="wait">
+                    <ShowcaseInterface
+                      key={activeShowcase.key}
+                      showcaseKey={activeShowcase.key}
+                      label={activeShowcase.label}
+                      color={activeShowcaseThemeColor}
+                      stats={activeShowcase.stats}
+                      showcaseLabel={t("customers.showcaseLabel")}
+                      lightMode={lightHero}
+                      locale={locale}
+                    />
+                  </AnimatePresence>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </section>
@@ -2230,405 +3040,328 @@ export default function Home() {
                     {t("contact.configurator.blueprintTitle")}
                   </h3>
 
-                  <div className={`relative mt-12 h-64 overflow-hidden rounded-2xl ${lightHero ? "bg-[#f5efe3]/45" : ""}`}>
+                  <div className={`relative mt-8 overflow-hidden rounded-2xl border ${
+                    lightHero
+                      ? "border-[#c6ad89]/30 bg-gradient-to-b from-[#fbf8f2] to-[#f4ede0]/80 shadow-[inset_0_1px_3px_rgba(255,255,255,0.8),0_12px_30px_-15px_rgba(61,43,22,0.15)]"
+                      : "border-white/10 bg-white/[0.02]"
+                  }`}>
                     <svg
-                      viewBox="0 0 520 250"
-                      className="absolute inset-0 h-full w-full"
-                      aria-hidden="true"
-                    >
-                      {[
-                        "M82 54 C120 54 126 88 116 106 C112 118 122 125 126 125",
-                        "M82 125 H126",
-                        "M82 196 C122 196 126 160 126 137",
-                      ].map((path, index) => (
-                        <motion.path
-                          key={`input-path-${index}`}
-                          d={path}
-                          stroke={lightHero ? "rgba(154,104,71,0.46)" : "rgba(172,160,251,0.5)"}
-                          strokeWidth="3"
-                          fill="none"
-                          strokeDasharray="8 10"
-                          animate={{ strokeDashoffset: [0, -36] }}
-                          transition={{ duration: 3.6 + index * 0.35, repeat: Infinity, ease: "linear" }}
-                        />
-                      ))}
-                      {[
-                        "M206 125 H214",
-                        "M320 125 C342 125 338 88 360 84",
-                        "M320 125 C342 125 338 162 360 166",
-                        "M430 84 C452 72 442 25 463 25",
-                        "M430 84 C448 82 445 78 463 78",
-                        "M430 164 C452 154 442 131 463 131",
-                        "M430 176 C448 176 445 184 463 184",
-                        "M430 188 C452 202 442 232 463 232",
-                      ].map((path, index) => (
-                        <motion.path
-                          key={`output-path-${index}`}
-                          d={path}
-                          stroke={lightHero ? "rgba(20,33,67,0.48)" : "rgba(78,240,255,0.58)"}
-                          strokeWidth="3"
-                          fill="none"
-                          strokeDasharray="10 12"
-                          animate={{ strokeDashoffset: [0, -44] }}
-                          transition={{ duration: 3.2 + index * 0.3, repeat: Infinity, ease: "linear" }}
-                        />
-                      ))}
-                    </svg>
-
-                    {[
-                      { key: "top", className: "left-4 top-5", delay: 0 },
-                      { key: "middle", className: "left-4 top-[92px]", delay: 0.18 },
-                      { key: "bottom", className: "left-4 bottom-5", delay: 0.36 },
-                    ].map((node) => (
-                      <motion.div
-                        key={`blueprint-input-${node.key}`}
-                        className={`absolute flex h-16 w-16 items-center justify-center rounded-2xl border ${node.className} ${
-                          lightHero
-                            ? "border-[#c6ad89]/26 bg-white/28 shadow-[0_18px_32px_-28px_rgba(61,43,22,0.45)]"
-                            : "border-white/10 bg-white/[0.04]"
-                        }`}
-                        animate={{ opacity: [0.52, 0.94, 0.52], y: [0, -3, 0] }}
-                        transition={{ duration: 3.4, repeat: Infinity, ease: "easeInOut", delay: node.delay }}
-                      >
-                        <span
-                          className="h-7 w-7 rounded-full border-[6px]"
-                          style={{ borderColor: lightHero ? "rgba(154,104,71,0.72)" : "rgba(228,76,255,0.70)" }}
-                        />
-                      </motion.div>
-                    ))}
-
-                    <motion.div
-                      className={`absolute left-[24%] top-1/2 flex h-20 w-20 -translate-y-1/2 flex-col justify-center rounded-2xl border px-5 ${
-                        lightHero
-                          ? "border-[#10172d]/70 bg-[#fbf8f1]/78 shadow-[0_18px_34px_-26px_rgba(61,43,22,0.5)]"
-                          : "border-white/35 bg-white/[0.08]"
-                      }`}
-                      animate={{ x: [0, 4, 0] }}
-                      transition={{ duration: 4.2, repeat: Infinity, ease: "easeInOut" }}
-                    >
-                      {[42, 58, 34].map((width, index) => (
-                        <motion.span
-                          key={`blueprint-document-line-${index}`}
-                          className="mb-2 block h-2 rounded-full last:mb-0"
-                          style={{ background: lightHero ? "rgba(20,33,67,0.42)" : "rgba(172,160,251,0.60)" }}
-                          animate={{ width: [`${Math.max(20, width - 12)}px`, `${width}px`, `${Math.max(18, width - 5)}px`] }}
-                          transition={{ duration: 2.2, repeat: Infinity, delay: index * 0.22 }}
-                        />
-                      ))}
-                    </motion.div>
-
-                    <motion.div
-                      className={`absolute left-1/2 top-1/2 flex h-24 w-24 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-2xl border ${
-                        lightHero
-                          ? "border-[#142143]/18 bg-[linear-gradient(135deg,rgba(255,255,255,0.62),rgba(154,104,71,0.18))] shadow-[0_18px_34px_-24px_rgba(61,43,22,0.72)]"
-                          : "border-[#4EF0FF]/50 bg-[linear-gradient(135deg,rgba(78,240,255,0.22),rgba(228,76,255,0.22))] shadow-[0_0_35px_rgba(78,240,255,0.22)]"
-                      }`}
-                      animate={{
-                        scale: [1, 1.08, 1],
-                        boxShadow: [
-                          lightHero ? "0 18px 34px -24px rgba(61,43,22,0.58)" : "0 0 25px rgba(78,240,255,0.18)",
-                          lightHero ? "0 24px 44px -24px rgba(61,43,22,0.74)" : "0 0 48px rgba(78,240,255,0.34)",
-                          lightHero ? "0 18px 34px -24px rgba(61,43,22,0.58)" : "0 0 25px rgba(78,240,255,0.18)",
-                        ],
-                      }}
-                      transition={{ duration: 2.8, repeat: Infinity, ease: "easeInOut" }}
-                    >
-                      <div className="relative h-10 w-10">
-                        <span className={`absolute left-1 top-3 h-3 w-3 rounded-full border-2 ${lightHero ? "border-[#10172d]/80" : "border-white/80"}`} />
-                        <span className={`absolute right-1 top-1 h-3 w-3 rounded-full border-2 ${lightHero ? "border-[#10172d]/80" : "border-white/80"}`} />
-                        <span className={`absolute right-1 bottom-1 h-3 w-3 rounded-full border-2 ${lightHero ? "border-[#10172d]/80" : "border-white/80"}`} />
-                        <span className={`absolute left-4 top-5 h-px w-5 rotate-[-35deg] ${lightHero ? "bg-[#10172d]/70" : "bg-white/70"}`} />
-                        <span className={`absolute left-4 top-5 h-px w-5 rotate-[35deg] ${lightHero ? "bg-[#10172d]/70" : "bg-white/70"}`} />
-                      </div>
-                    </motion.div>
-
-                    {[
-                      { key: "chart", className: "right-[18%] top-[52px]", Icon: BarChart3 },
-                      { key: "folder", className: "right-[18%] bottom-[42px]", Icon: Folder },
-                    ].map(({ key, className, Icon }, index) => (
-                      <motion.div
-                        key={`blueprint-output-card-${key}`}
-                        className={`absolute flex h-16 w-16 items-center justify-center rounded-2xl border ${className} ${
-                          lightHero
-                            ? "border-[#10172d]/55 bg-[#fbf8f1]/78 text-[#10172d]/70 shadow-[0_14px_28px_-22px_rgba(61,43,22,0.5)]"
-                            : "border-[#4EF0FF]/25 bg-[#4EF0FF]/10 text-white/70"
-                        }`}
-                        animate={{ scale: [1, 1.05, 1] }}
-                        transition={{ duration: 3 + index * 0.45, repeat: Infinity, ease: "easeInOut" }}
-                      >
-                        <Icon className="h-8 w-8" />
-                      </motion.div>
-                    ))}
-
-                    {[
-                      { key: "gear-top", className: "right-3 top-1", Icon: Settings, delay: 0 },
-                      { key: "gear-mid", className: "right-3 top-[54px]", Icon: Settings, delay: 0.15 },
-                      { key: "chip", className: "right-3 top-[107px]", Icon: Cpu, delay: 0.3 },
-                      { key: "activity", className: "right-3 top-[160px]", Icon: Activity, delay: 0.45 },
-                      { key: "blank", className: "right-3 bottom-0", Icon: null, delay: 0.6 },
-                    ].map(({ key, className, Icon, delay }) => (
-                      <motion.div
-                        key={`blueprint-output-circle-${key}`}
-                        className={`absolute flex h-12 w-12 items-center justify-center rounded-full border ${className} ${
-                          lightHero
-                            ? "border-[#10172d]/42 bg-[#fbf8f1]/44 text-[#10172d]/18"
-                            : "border-white/20 bg-white/[0.05] text-white/18"
-                        }`}
-                        animate={{ opacity: [0.5, 0.9, 0.5], y: [0, -4, 0] }}
-                        transition={{ duration: 3.4, repeat: Infinity, ease: "easeInOut", delay }}
-                      >
-                        {Icon ? <Icon className="h-7 w-7" /> : null}
-                      </motion.div>
-                    ))}
-                    <svg
-                      viewBox="0 0 820 360"
-                      className="absolute inset-0 z-20 h-full w-full"
+                      viewBox="0 0 740 260"
+                      className="w-full h-auto select-none"
                       preserveAspectRatio="xMidYMid meet"
                       aria-hidden="true"
                     >
                       <defs>
+                        {/* Custom Arrow Markers */}
                         <marker
-                          id="blueprint-reference-arrow"
-                          markerWidth="9"
-                          markerHeight="9"
-                          refX="7"
-                          refY="4.5"
+                          id="bp-arrow-brown"
+                          markerWidth="7"
+                          markerHeight="7"
+                          refX="5"
+                          refY="3.5"
                           orient="auto"
-                          markerUnits="strokeWidth"
                         >
-                          <path
-                            d="M0 0 L9 4.5 L0 9 Z"
-                            fill={lightHero ? "rgba(154,104,71,0.78)" : "rgba(172,160,251,0.88)"}
+                          <polygon
+                            points="0 0, 7 3.5, 0 7"
+                            fill={lightHero ? "#9A6847" : "#AC9BFB"}
                           />
                         </marker>
-                        <filter id="blueprint-reference-shadow" x="-30%" y="-30%" width="160%" height="160%">
-                          <feDropShadow dx="0" dy="18" stdDeviation="14" floodColor="rgba(61,43,22,0.20)" />
+                        <marker
+                          id="bp-arrow-blue"
+                          markerWidth="7"
+                          markerHeight="7"
+                          refX="5"
+                          refY="3.5"
+                          orient="auto"
+                        >
+                          <polygon
+                            points="0 0, 7 3.5, 0 7"
+                            fill={lightHero ? "#1E293B" : "#4EF0FF"}
+                          />
+                        </marker>
+
+                        {/* Subtle Card Glow Filters */}
+                        <filter id="bp-glow-center" x="-20%" y="-20%" width="140%" height="140%">
+                          <feDropShadow dx="0" dy="6" stdDeviation="10" floodColor={lightHero ? "rgba(154,104,71,0.22)" : "rgba(78,240,255,0.25)"} />
+                        </filter>
+                        <filter id="bp-card-shadow" x="-10%" y="-10%" width="120%" height="120%">
+                          <feDropShadow dx="0" dy="4" stdDeviation="6" floodColor="rgba(0,0,0,0.06)" />
                         </filter>
                       </defs>
 
-                      <rect
-                        x="0"
-                        y="0"
-                        width="820"
-                        height="360"
-                        rx="24"
-                        fill={lightHero ? "#f5efe3" : "#080b22"}
-                      />
-                      <rect
-                        x="0"
-                        y="0"
-                        width="820"
-                        height="360"
-                        rx="24"
-                        fill={lightHero ? "url(#blueprint-reference-warm)" : "transparent"}
-                      />
-                      <defs>
-                        <radialGradient id="blueprint-reference-warm" cx="42%" cy="36%" r="78%">
-                          <stop offset="0%" stopColor="rgba(255,255,255,0.82)" />
-                          <stop offset="54%" stopColor="rgba(255,255,255,0.18)" />
-                          <stop offset="100%" stopColor="rgba(154,104,71,0.12)" />
-                        </radialGradient>
-                      </defs>
+                      {/* Animated Input Connection Flow Lines */}
+                      {[
+                        "M 70 52 C 120 52, 130 115, 175 125",
+                        "M 70 130 L 175 130",
+                        "M 70 208 C 120 208, 130 145, 175 135",
+                      ].map((path, idx) => (
+                        <g key={`input-flow-${idx}`}>
+                          <path
+                            d={path}
+                            fill="none"
+                            stroke={lightHero ? "rgba(154,104,71,0.20)" : "rgba(255,255,255,0.12)"}
+                            strokeWidth="3"
+                          />
+                          <motion.path
+                            d={path}
+                            fill="none"
+                            stroke={lightHero ? "rgba(154,104,71,0.75)" : "rgba(172,160,251,0.85)"}
+                            strokeWidth="3"
+                            strokeLinecap="round"
+                            strokeDasharray="6 10"
+                            markerEnd="url(#bp-arrow-brown)"
+                            animate={{ strokeDashoffset: [0, -32] }}
+                            transition={{ duration: 3.2 + idx * 0.3, repeat: Infinity, ease: "linear" }}
+                          />
+                        </g>
+                      ))}
 
-                      <g opacity="0.24">
-                        <path d="M612 -12 V28 Q612 46 630 46 H742" fill="none" stroke={lightHero ? "#d8c7aa" : "rgba(255,255,255,0.24)"} strokeWidth="1.5" />
-                        <path d="M674 -10 V32 Q674 54 696 54 H808" fill="none" stroke={lightHero ? "#d8c7aa" : "rgba(255,255,255,0.24)"} strokeWidth="1.5" />
-                        <path d="M708 -5 H808" fill="none" stroke={lightHero ? "#d8c7aa" : "rgba(255,255,255,0.18)"} strokeWidth="1.5" />
+                      {/* Connection Line: Step 1 -> Step 2 */}
+                      <g>
+                        <line
+                          x1="262"
+                          y1="130"
+                          x2="310"
+                          y2="130"
+                          stroke={lightHero ? "rgba(154,104,71,0.25)" : "rgba(255,255,255,0.15)"}
+                          strokeWidth="3"
+                        />
+                        <motion.line
+                          x1="262"
+                          y1="130"
+                          x2="310"
+                          y2="130"
+                          stroke={lightHero ? "rgba(154,104,71,0.85)" : "rgba(172,160,251,0.95)"}
+                          strokeWidth="3"
+                          strokeLinecap="round"
+                          strokeDasharray="6 8"
+                          markerEnd="url(#bp-arrow-brown)"
+                          animate={{ strokeDashoffset: [0, -28] }}
+                          transition={{ duration: 2.4, repeat: Infinity, ease: "linear" }}
+                        />
                       </g>
 
+                      {/* Connection Lines: Step 2 -> Output Cards */}
                       {[
-                        "M108 78 C160 78 178 112 170 145 C166 164 188 176 220 176",
-                        "M108 176 H220",
-                        "M108 278 C160 278 178 234 170 208 C166 190 188 176 220 176",
-                      ].map((path, index) => (
-                        <motion.path
-                          key={`reference-input-flow-${index}`}
-                          d={path}
-                          fill="none"
-                          stroke={lightHero ? "rgba(154,104,71,0.60)" : "rgba(172,160,251,0.62)"}
-                          strokeWidth="5"
-                          strokeLinecap="round"
-                          strokeDasharray="14 18"
-                          markerEnd="url(#blueprint-reference-arrow)"
-                          animate={{ strokeDashoffset: [0, -64] }}
-                          transition={{ duration: 4.4 + index * 0.22, repeat: Infinity, ease: "linear" }}
-                        />
+                        "M 416 120 C 445 110, 445 78, 478 78",
+                        "M 416 140 C 445 150, 445 182, 478 182",
+                      ].map((path, idx) => (
+                        <g key={`mid-out-flow-${idx}`}>
+                          <path
+                            d={path}
+                            fill="none"
+                            stroke={lightHero ? "rgba(30,41,59,0.20)" : "rgba(78,240,255,0.18)"}
+                            strokeWidth="3"
+                          />
+                          <motion.path
+                            d={path}
+                            fill="none"
+                            stroke={lightHero ? "rgba(30,41,59,0.80)" : "rgba(78,240,255,0.85)"}
+                            strokeWidth="3"
+                            strokeLinecap="round"
+                            strokeDasharray="6 10"
+                            markerEnd="url(#bp-arrow-blue)"
+                            animate={{ strokeDashoffset: [0, -32] }}
+                            transition={{ duration: 2.8 + idx * 0.4, repeat: Infinity, ease: "linear" }}
+                          />
+                        </g>
                       ))}
 
+                      {/* Connection Lines: Output Cards -> Endpoints */}
                       {[
-                        "M316 176 H390",
-                        "M510 176 C548 176 540 106 580 106",
-                        "M510 176 C548 176 540 256 580 256",
-                        "M668 92 C704 78 694 44 716 44",
-                        "M668 116 H716",
-                        "M668 242 C704 232 694 176 716 176",
-                        "M668 256 H716",
-                        "M668 270 C704 288 694 316 716 316",
-                      ].map((path, index) => (
-                        <motion.path
-                          key={`reference-output-flow-${index}`}
-                          d={path}
-                          fill="none"
-                          stroke={lightHero ? "rgba(16,23,45,0.48)" : "rgba(78,240,255,0.62)"}
-                          strokeWidth="5"
-                          strokeLinecap="round"
-                          strokeDasharray="14 18"
-                          markerEnd={index < 3 ? "url(#blueprint-reference-arrow)" : undefined}
-                          animate={{ strokeDashoffset: [0, -64] }}
-                          transition={{ duration: 4 + index * 0.12, repeat: Infinity, ease: "linear" }}
-                        />
+                        { d: "M 560 65 C 595 55, 605 45, 638 45", delay: 0 },
+                        { d: "M 560 88 C 595 95, 605 102, 638 102", delay: 0.15 },
+                        { d: "M 560 172 C 595 162, 605 158, 638 158", delay: 0.3 },
+                        { d: "M 560 195 C 595 205, 605 215, 638 215", delay: 0.45 },
+                      ].map((conn, idx) => (
+                        <g key={`end-flow-${idx}`}>
+                          <path
+                            d={conn.d}
+                            fill="none"
+                            stroke={lightHero ? "rgba(30,41,59,0.15)" : "rgba(255,255,255,0.10)"}
+                            strokeWidth="2.5"
+                          />
+                          <motion.path
+                            d={conn.d}
+                            fill="none"
+                            stroke={lightHero ? "rgba(30,41,59,0.65)" : "rgba(78,240,255,0.70)"}
+                            strokeWidth="2.5"
+                            strokeLinecap="round"
+                            strokeDasharray="5 8"
+                            animate={{ strokeDashoffset: [0, -26] }}
+                            transition={{ duration: 3 + idx * 0.2, repeat: Infinity, ease: "linear" }}
+                          />
+                        </g>
                       ))}
 
-                      {[78, 176, 278].map((cy, index) => (
+                      {/* Left: 3 Input Data Stream Nodes */}
+                      {[
+                        { cy: 52, label: "DB" },
+                        { cy: 130, label: "API" },
+                        { cy: 208, label: "DOC" },
+                      ].map((pod, idx) => (
                         <motion.g
-                          key={`reference-input-node-${cy}`}
-                          animate={{ opacity: [0.5, 0.88, 0.5] }}
-                          transition={{ duration: 3.3, repeat: Infinity, delay: index * 0.2 }}
+                          key={`input-pod-${idx}`}
+                          animate={{ scale: [1, 1.06, 1], opacity: [0.75, 1, 0.75] }}
+                          transition={{ duration: 3.2, repeat: Infinity, delay: idx * 0.25, ease: "easeInOut" }}
                         >
                           <rect
-                            x="22"
-                            y={cy - 43}
-                            width="86"
-                            height="86"
-                            rx="22"
-                            fill={lightHero ? "rgba(255,255,255,0.24)" : "rgba(255,255,255,0.04)"}
-                            stroke={lightHero ? "rgba(216,199,170,0.28)" : "rgba(255,255,255,0.12)"}
+                            x="20"
+                            y={pod.cy - 24}
+                            width="48"
+                            height="48"
+                            rx="14"
+                            fill={lightHero ? "#ffffff" : "rgba(255,255,255,0.06)"}
+                            stroke={lightHero ? "rgba(154,104,71,0.35)" : "rgba(255,255,255,0.15)"}
+                            strokeWidth="1.5"
+                            filter="url(#bp-card-shadow)"
                           />
                           <circle
-                            cx="65"
-                            cy={cy}
-                            r="18"
+                            cx="44"
+                            cy={pod.cy}
+                            r="11"
                             fill="none"
-                            stroke={lightHero ? "rgba(154,104,71,0.76)" : "rgba(228,76,255,0.72)"}
-                            strokeWidth="9"
+                            stroke={lightHero ? "#9A6847" : "#AC9BFB"}
+                            strokeWidth="4"
+                          />
+                          <circle
+                            cx="44"
+                            cy={pod.cy}
+                            r="4"
+                            fill={lightHero ? "#9A6847" : "#AC9BFB"}
                           />
                         </motion.g>
                       ))}
 
+                      {/* Step 1: Document Processing Card */}
                       <motion.g
-                        filter="url(#blueprint-reference-shadow)"
-                        animate={{ x: [0, 4, 0] }}
-                        transition={{ duration: 4.2, repeat: Infinity, ease: "easeInOut" }}
+                        filter="url(#bp-card-shadow)"
+                        animate={{ y: [0, -3, 0] }}
+                        transition={{ duration: 3.8, repeat: Infinity, ease: "easeInOut" }}
                       >
                         <rect
-                          x="220"
-                          y="128"
-                          width="96"
-                          height="96"
+                          x="180"
+                          y="90"
+                          width="80"
+                          height="80"
+                          rx="20"
+                          fill={lightHero ? "#ffffff" : "rgba(255,255,255,0.08)"}
+                          stroke={lightHero ? "#1E293B" : "rgba(255,255,255,0.30)"}
+                          strokeWidth="2"
+                        />
+                        {/* Document Content Lines */}
+                        <rect x="202" y="112" width="36" height="5" rx="2.5" fill={lightHero ? "#1E293B" : "#ffffff"} />
+                        <rect x="202" y="127" width="26" height="5" rx="2.5" fill={lightHero ? "#9A6847" : "#AC9BFB"} />
+                        <rect x="202" y="142" width="32" height="5" rx="2.5" fill={lightHero ? "#1E293B" : "#ffffff"} opacity="0.6" />
+                      </motion.g>
+
+                      {/* Step 2: Central AI Brain / Neural Core */}
+                      <motion.g
+                        filter="url(#bp-glow-center)"
+                        animate={{ scale: [1, 1.04, 1] }}
+                        transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+                        style={{ transformOrigin: "365px 130px" }}
+                      >
+                        <rect
+                          x="315"
+                          y="75"
+                          width="100"
+                          height="110"
                           rx="24"
-                          fill={lightHero ? "rgba(251,248,241,0.84)" : "rgba(255,255,255,0.08)"}
-                          stroke={lightHero ? "rgba(16,23,45,0.72)" : "rgba(255,255,255,0.38)"}
+                          fill={lightHero ? "rgba(255,255,255,0.95)" : "rgba(78,240,255,0.08)"}
+                          stroke={lightHero ? "#9A6847" : "#4EF0FF"}
                           strokeWidth="2.5"
                         />
-                        <rect x="248" y="154" width="38" height="8" rx="4" fill={lightHero ? "rgba(16,23,45,0.44)" : "rgba(255,255,255,0.55)"} />
-                        <rect x="248" y="174" width="58" height="8" rx="4" fill={lightHero ? "rgba(16,23,45,0.34)" : "rgba(255,255,255,0.45)"} />
-                        <rect x="248" y="194" width="40" height="8" rx="4" fill={lightHero ? "rgba(16,23,45,0.36)" : "rgba(255,255,255,0.48)"} />
+                        {/* Neural Graph Elements */}
+                        <circle cx="348" cy="130" r="8" fill={lightHero ? "#9A6847" : "#4EF0FF"} />
+                        <circle cx="382" cy="106" r="8" fill={lightHero ? "#1E293B" : "#E44CFF"} />
+                        <circle cx="382" cy="154" r="8" fill={lightHero ? "#1E293B" : "#E44CFF"} />
+
+                        <line x1="354" y1="126" x2="376" y2="110" stroke={lightHero ? "#1E293B" : "#ffffff"} strokeWidth="2.5" />
+                        <line x1="354" y1="134" x2="376" y2="150" stroke={lightHero ? "#1E293B" : "#ffffff"} strokeWidth="2.5" />
+                        <line x1="382" y1="114" x2="382" y2="146" stroke={lightHero ? "rgba(154,104,71,0.6)" : "#4EF0FF"} strokeWidth="2" strokeDasharray="3 3" />
                       </motion.g>
 
+                      {/* Step 3: Top Output Card (Analytics & KPI) */}
                       <motion.g
-                        filter="url(#blueprint-reference-shadow)"
-                        animate={{ scale: [1, 1.04, 1], transformOrigin: "450px 176px" }}
-                        transition={{ duration: 3.1, repeat: Infinity, ease: "easeInOut" }}
+                        filter="url(#bp-card-shadow)"
+                        animate={{ y: [0, -2, 0] }}
+                        transition={{ duration: 3.4, repeat: Infinity, ease: "easeInOut", delay: 0.2 }}
                       >
                         <rect
-                          x="390"
-                          y="116"
-                          width="120"
-                          height="120"
-                          rx="26"
-                          fill={lightHero ? "rgba(154,104,71,0.16)" : "rgba(78,240,255,0.16)"}
-                          stroke={lightHero ? "rgba(255,255,255,0.42)" : "rgba(78,240,255,0.46)"}
+                          x="480"
+                          y="40"
+                          width="78"
+                          height="76"
+                          rx="18"
+                          fill={lightHero ? "#ffffff" : "rgba(255,255,255,0.08)"}
+                          stroke={lightHero ? "#1E293B" : "rgba(255,255,255,0.30)"}
+                          strokeWidth="2"
                         />
-                        <circle cx="431" cy="176" r="11" fill="none" stroke={lightHero ? "rgba(16,23,45,0.88)" : "rgba(255,255,255,0.88)"} strokeWidth="4" />
-                        <circle cx="470" cy="153" r="11" fill="none" stroke={lightHero ? "rgba(16,23,45,0.88)" : "rgba(255,255,255,0.88)"} strokeWidth="4" />
-                        <circle cx="470" cy="199" r="11" fill="none" stroke={lightHero ? "rgba(16,23,45,0.88)" : "rgba(255,255,255,0.88)"} strokeWidth="4" />
-                        <path d="M440 172 L461 158 M440 181 L461 195 M454 164 L446 188" stroke={lightHero ? "rgba(16,23,45,0.72)" : "rgba(255,255,255,0.72)"} strokeWidth="3" strokeLinecap="round" />
+                        {/* Analytics Bar Chart */}
+                        <rect x="498" y="76" width="8" height="22" rx="3" fill={lightHero ? "#9A6847" : "#AC9BFB"} />
+                        <rect x="514" y="60" width="8" height="38" rx="3" fill={lightHero ? "#1E293B" : "#4EF0FF"} />
+                        <rect x="530" y="70" width="8" height="28" rx="3" fill={lightHero ? "#9A6847" : "#AC9BFB"} opacity="0.8" />
                       </motion.g>
 
-                      {[
-                        { y: 66, kind: "chart" },
-                        { y: 216, kind: "folder" },
-                      ].map(({ y, kind }, index) => (
-                        <motion.g
-                          key={`reference-output-card-${kind}`}
-                          filter="url(#blueprint-reference-shadow)"
-                          animate={{ scale: [1, 1.035, 1], transformOrigin: `624px ${y + 44}px` }}
-                          transition={{ duration: 3.2 + index * 0.32, repeat: Infinity, ease: "easeInOut" }}
-                        >
-                          <rect
-                            x="580"
-                            y={y}
-                            width="88"
-                            height="88"
-                            rx="22"
-                            fill={lightHero ? "rgba(251,248,241,0.78)" : "rgba(255,255,255,0.08)"}
-                            stroke={lightHero ? "rgba(16,23,45,0.68)" : "rgba(255,255,255,0.38)"}
-                            strokeWidth="2.5"
-                          />
-                          {kind === "chart" ? (
-                            <>
-                              <rect x="604" y="112" width="10" height="24" rx="4" fill="none" stroke={lightHero ? "rgba(16,23,45,0.72)" : "rgba(255,255,255,0.72)"} strokeWidth="4" />
-                              <rect x="622" y="94" width="10" height="42" rx="4" fill="none" stroke={lightHero ? "rgba(16,23,45,0.72)" : "rgba(255,255,255,0.72)"} strokeWidth="4" />
-                              <rect x="640" y="80" width="10" height="56" rx="4" fill="none" stroke={lightHero ? "rgba(16,23,45,0.72)" : "rgba(255,255,255,0.72)"} strokeWidth="4" />
-                            </>
-                          ) : (
-                            <path d="M604 257 H650 V288 H598 V246 H619 L626 257 H650" fill="none" stroke={lightHero ? "rgba(16,23,45,0.72)" : "rgba(255,255,255,0.72)"} strokeWidth="4" strokeLinejoin="round" strokeLinecap="round" />
-                          )}
-                        </motion.g>
-                      ))}
+                      {/* Step 3: Bottom Output Card (Workflow / Folder) */}
+                      <motion.g
+                        filter="url(#bp-card-shadow)"
+                        animate={{ y: [0, 2, 0] }}
+                        transition={{ duration: 3.6, repeat: Infinity, ease: "easeInOut", delay: 0.4 }}
+                      >
+                        <rect
+                          x="480"
+                          y="144"
+                          width="78"
+                          height="76"
+                          rx="18"
+                          fill={lightHero ? "#ffffff" : "rgba(255,255,255,0.08)"}
+                          stroke={lightHero ? "#1E293B" : "rgba(255,255,255,0.30)"}
+                          strokeWidth="2"
+                        />
+                        {/* Folder / Workflow Icon */}
+                        <path
+                          d="M 498 174 L 507 165 L 522 165 L 527 174 L 542 174 C 545 174, 546 176, 546 178 L 546 198 C 546 201, 544 203, 542 203 L 498 203 C 495 203, 494 201, 494 198 L 494 178 C 494 176, 496 174, 498 174 Z"
+                          fill="none"
+                          stroke={lightHero ? "#1E293B" : "#ffffff"}
+                          strokeWidth="2.5"
+                          strokeLinejoin="round"
+                        />
+                      </motion.g>
 
+                      {/* Step 4: Output Delivery Targets (Endpoints) */}
                       {[
-                        { cy: 44, kind: "gear" },
-                        { cy: 116, kind: "gear" },
-                        { cy: 176, kind: "chip" },
-                        { cy: 256, kind: "spiral" },
-                        { cy: 316, kind: "blank" },
-                      ].map(({ cy, kind }, index) => (
+                        { cy: 45, icon: "sun" },
+                        { cy: 102, icon: "cpu" },
+                        { cy: 158, icon: "activity" },
+                        { cy: 215, icon: "check" },
+                      ].map((target, idx) => (
                         <motion.g
-                          key={`reference-output-circle-${kind}-${cy}`}
-                          animate={{ opacity: [0.54, 0.9, 0.54] }}
-                          transition={{ duration: 3.4, repeat: Infinity, delay: index * 0.16 }}
+                          key={`target-endpoint-${idx}`}
+                          animate={{ scale: [1, 1.08, 1], opacity: [0.8, 1, 0.8] }}
+                          transition={{ duration: 2.8, repeat: Infinity, delay: idx * 0.2, ease: "easeInOut" }}
                         >
                           <circle
-                            cx="748"
-                            cy={cy}
-                            r="32"
-                            fill={lightHero ? "rgba(251,248,241,0.44)" : "rgba(255,255,255,0.05)"}
-                            stroke={lightHero ? "rgba(16,23,45,0.48)" : "rgba(255,255,255,0.24)"}
-                            strokeWidth="2.5"
+                            cx="665"
+                            cy={target.cy}
+                            r="20"
+                            fill={lightHero ? "#ffffff" : "rgba(255,255,255,0.06)"}
+                            stroke={lightHero ? "rgba(30,41,59,0.35)" : "rgba(255,255,255,0.20)"}
+                            strokeWidth="1.5"
+                            filter="url(#bp-card-shadow)"
                           />
-                          {kind === "gear" && (
-                            <>
-                              <circle cx="748" cy={cy} r="11" fill="none" stroke={lightHero ? "rgba(16,23,45,0.13)" : "rgba(255,255,255,0.16)"} strokeWidth="4" />
-                              {[0, 45, 90, 135, 180, 225, 270, 315].map((angle) => (
-                                <line
-                                  key={angle}
-                                  x1="748"
-                                  y1={cy - 23}
-                                  x2="748"
-                                  y2={cy - 17}
-                                  stroke={lightHero ? "rgba(16,23,45,0.11)" : "rgba(255,255,255,0.14)"}
-                                  strokeWidth="3"
-                                  strokeLinecap="round"
-                                  transform={`rotate(${angle} 748 ${cy})`}
-                                />
-                              ))}
-                            </>
+                          {target.icon === "sun" && (
+                            <circle cx="665" cy={target.cy} r="6" fill={lightHero ? "#D97706" : "#4EF0FF"} />
                           )}
-                          {kind === "chip" && (
-                            <>
-                              <rect x="736" y={cy - 12} width="24" height="24" rx="3" fill="none" stroke={lightHero ? "rgba(16,23,45,0.16)" : "rgba(255,255,255,0.18)"} strokeWidth="4" />
-                              <rect x="742" y={cy - 6} width="12" height="12" rx="2" fill={lightHero ? "rgba(16,23,45,0.08)" : "rgba(255,255,255,0.10)"} />
-                            </>
+                          {target.icon === "cpu" && (
+                            <rect x="659" y={target.cy - 6} width="12" height="12" rx="2" fill={lightHero ? "#1E293B" : "#E44CFF"} />
                           )}
-                          {kind === "spiral" && (
-                            <path
-                              d={`M748 ${cy} m-18 0 a18 18 0 1 0 36 0 a18 18 0 1 0 -36 0 M748 ${cy} m-9 0 a9 9 0 1 0 18 0 a9 9 0 1 0 -18 0`}
-                              fill="none"
-                              stroke={lightHero ? "rgba(16,23,45,0.12)" : "rgba(255,255,255,0.14)"}
-                              strokeWidth="3"
-                              strokeDasharray="2 4"
-                            />
+                          {target.icon === "activity" && (
+                            <circle cx="665" cy={target.cy} r="6" fill={lightHero ? "#9A6847" : "#AC9BFB"} />
+                          )}
+                          {target.icon === "check" && (
+                            <circle cx="665" cy={target.cy} r="5" fill={lightHero ? "#10B981" : "#10B981"} />
                           )}
                         </motion.g>
                       ))}
